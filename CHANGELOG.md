@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.1.1
+
+- La lista de jugadores de Foundry ya **no se mueve**: la lista sustitutiva pasa a ser opcional y viene desactivada (también en mundos que ya tenían el módulo).
+- Nueva opción **Ocultar la lista de jugadores de Foundry**, igual que la de la barra de macros (en Configuración → General y en el menú de la barra).
+- Créditos al autor original, malatestaabrx, en el README y el manifiesto.
+
 ## 1.1.0
 
 Revisión completa del módulo: fallos corregidos, interfaz rehecha y accesibilidad.

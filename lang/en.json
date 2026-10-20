@@ -63,9 +63,9 @@
   "PCP.Config.Remove": "Remove",
   "PCP.Config.PlayerList": "Player list",
   "PCP.Config.PlayersEnabled": "Replace Foundry's player list",
-  "PCP.Config.PlayersEnabledHint": "Shows a compact list with the same connection information and its own right-click menu.",
+  "PCP.Config.PlayersEnabledHint": "Optional. Shows its own list in the corner you choose, with a context menu. When off, Foundry's list stays where it is.",
   "PCP.Config.HideCorePlayers": "Hide the original player list",
-  "PCP.Config.HideCorePlayersHint": "Only applies while the replacement list is enabled.",
+  "PCP.Config.HideCorePlayersHint": "Only applies while the replacement list is on.",
   "PCP.Config.ShowGM": "Show the GM",
   "PCP.Config.ShowCharacter": "Show each player's character",
   "PCP.Config.ShowStatus": "Show connected count",
@@ -213,5 +213,8 @@
   "PCP.Config.BarAuto": "Automatic",
   "PCP.Config.NoOwner": "No player assigned",
   "PCP.Config.MoreOptions": "More options for this character",
-  "PCP.Config.AvoidHint": "The list steps aside from Foundry's scene controls and sidebar so it never covers them."
+  "PCP.Config.AvoidHint": "The list steps aside from Foundry's scene controls and sidebar so it never covers them.",
+  "PCP.Config.HidePlayers": "Hide Foundry's player list",
+  "PCP.Config.HidePlayersHint": "Hides the original player list for everyone, like the macro bar. It never moves the list if you leave it visible.",
+  "PCP.Menu.Hud.HidePlayers": "Hide the player list"
 }

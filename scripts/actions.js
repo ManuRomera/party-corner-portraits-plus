@@ -693,6 +693,12 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
         action: () => toggleConfigValue("ui.hideHotbar")
       },
       {
+        label: localize("PCP.Menu.Hud.HidePlayers"),
+        icon: "fa-solid fa-users-slash",
+        checked: config.ui.hidePlayers,
+        action: () => toggleConfigValue("ui.hidePlayers")
+      },
+      {
         label: localize("PCP.Menu.Hud.PlayerList"),
         icon: "fa-solid fa-users",
         children: [

@@ -167,6 +167,7 @@ function collectFormData(form) {
   config.players.title = value("players.title", "").trim();
 
   config.ui.hideHotbar = checked("hideHotbar");
+  config.ui.hidePlayers = checked("hidePlayers");
 
   const previousIndex = new Map((old.order || []).map((id, index) => [id, index]));
   const selected = [];

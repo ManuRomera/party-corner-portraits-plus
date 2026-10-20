@@ -92,6 +92,7 @@ export const SYSTEM_BAR_PRESETS = {
 export function createDefaultConfig() {
   return {
     initialized: false,
+    migrated: false,
     bar: {
       position: "bottom-left",
       orientation: "horizontal",
@@ -125,7 +126,7 @@ export function createDefaultConfig() {
       barHeight: 6
     },
     players: {
-      enabled: true,
+      enabled: false,
       hideCore: true,
       position: "top-left",
       offsetX: 16,
@@ -137,7 +138,8 @@ export function createDefaultConfig() {
       title: ""
     },
     ui: {
-      hideHotbar: false
+      hideHotbar: false,
+      hidePlayers: false
     },
     order: [],
     actors: {}

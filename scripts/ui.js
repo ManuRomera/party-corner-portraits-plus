@@ -14,6 +14,6 @@ export function applyUiConfig() {
   body.classList.toggle("pcp-hide-hotbar", Boolean(config.ui.hideHotbar));
   body.classList.toggle(
     "pcp-hide-core-players",
-    Boolean(config.players.enabled && config.players.hideCore)
+    Boolean(config.ui.hidePlayers || (config.players.enabled && config.players.hideCore))
   );
 }

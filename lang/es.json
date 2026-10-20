@@ -63,7 +63,7 @@
   "PCP.Config.Remove": "Eliminar",
   "PCP.Config.PlayerList": "Lista de jugadores",
   "PCP.Config.PlayersEnabled": "Sustituir la lista de jugadores de Foundry",
-  "PCP.Config.PlayersEnabledHint": "Muestra una lista compacta con la misma información de conexión y su propio menú contextual.",
+  "PCP.Config.PlayersEnabledHint": "Opcional. Muestra una lista propia en la esquina que elijas, con su menú contextual. Desactivada, la lista de Foundry se queda donde está.",
   "PCP.Config.HideCorePlayers": "Ocultar la lista de jugadores original",
   "PCP.Config.HideCorePlayersHint": "Solo se aplica mientras la lista sustitutiva esté activada.",
   "PCP.Config.ShowGM": "Mostrar al máster",
@@ -213,5 +213,8 @@
   "PCP.Config.BarAuto": "Automático",
   "PCP.Config.NoOwner": "Sin jugador asignado",
   "PCP.Config.MoreOptions": "Más opciones de este personaje",
-  "PCP.Config.AvoidHint": "La lista se aparta sola de los controles de escena y de la barra lateral de Foundry para no taparlos."
+  "PCP.Config.AvoidHint": "La lista se aparta sola de los controles de escena y de la barra lateral de Foundry para no taparlos.",
+  "PCP.Config.HidePlayers": "Ocultar la lista de jugadores de Foundry",
+  "PCP.Config.HidePlayersHint": "Oculta la lista original de jugadores para todos, como la barra de macros. No cambia su posición si la dejas visible.",
+  "PCP.Menu.Hud.HidePlayers": "Ocultar la lista de jugadores"
 }

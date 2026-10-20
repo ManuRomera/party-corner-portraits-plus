@@ -109,6 +109,7 @@ export function normalizeConfig(raw) {
   const merged = mergeDefaults(createDefaultConfig(), raw || {});
 
   merged.initialized = Boolean(merged.initialized);
+  merged.migrated = Boolean(merged.migrated);
 
   merged.bar = merged.bar || {};
   merged.bar.position = isKnownPosition(merged.bar.position) ? merged.bar.position : "bottom-left";
@@ -147,7 +148,7 @@ export function normalizeConfig(raw) {
   merged.data.bars = (Array.isArray(merged.data.bars) ? merged.data.bars : []).map(sanitizeBar);
 
   merged.players = merged.players || {};
-  merged.players.enabled = merged.players.enabled !== false;
+  merged.players.enabled = merged.players.enabled === true;
   merged.players.hideCore = merged.players.hideCore !== false;
   merged.players.position = isKnownPosition(merged.players.position) ? merged.players.position : "top-left";
   merged.players.offsetX = clamp(merged.players.offsetX, 0, 2000, 16);
@@ -160,6 +161,7 @@ export function normalizeConfig(raw) {
 
   merged.ui = merged.ui || {};
   merged.ui.hideHotbar = Boolean(merged.ui.hideHotbar);
+  merged.ui.hidePlayers = Boolean(merged.ui.hidePlayers);
 
   const actors = merged.actors && typeof merged.actors === "object" ? merged.actors : {};
   merged.actors = {};
@@ -234,10 +236,19 @@ export async function ensureInitialized() {
   if (!game.user?.isGM) return;
 
   const raw = game.settings.get(MODULE_ID, SETTING_CONFIG) || {};
+  if (raw.initialized && !raw.migrated) {
+    // 1.1.1: la lista de jugadores original se queda en su sitio salvo que se pida lo contrario.
+    const config = normalizeConfig(raw);
+    config.migrated = true;
+    config.players.enabled = false;
+    await game.settings.set(MODULE_ID, SETTING_CONFIG, config);
+    return;
+  }
   if (raw.initialized) return;
 
   const config = normalizeConfig(raw);
   config.initialized = true;
+  config.migrated = true;
   if (!config.data.bars.length) config.data.bars = presetBars();
   if (!config.order.length) {
     // On first run, pre-select player-owned actors so the bar is not empty.
