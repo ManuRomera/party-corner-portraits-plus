@@ -1,4 +1,4 @@
-# Party Corner Portraits +
+# MR- Party Corner Portraits +
 
 Fork de [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits) para **Foundry VTT 13** que añade datos de ficha, barras configurables, posición libre, menús contextuales, encuadre de retratos y sustitución de la lista de jugadores.
 
@@ -31,7 +31,7 @@ El módulo es independiente del original: su ID es `party-corner-portraits-plus`
   - ruta del valor,
   - ruta del máximo,
   - máximo fijo de reserva,
-  - color libre o `auto` (verde → rojo según el porcentaje),
+  - color libre o **automático** (verde → rojo según el porcentaje),
   - texto de valor y máximo.
 - Presets automáticos para varios sistemas conocidos (D&D 5e, PF2e, CoC 7e, Alien, WoD5, Cyberpunk RED, SWADE, Fate).
 - Sugerencias de rutas extraídas de las fichas reales del mundo.
@@ -83,10 +83,16 @@ El prefijo `system.` es opcional: `attributes.hp.value` también funciona.
   - *Máster*: abrir ficha, llevar a la escena, mostrar/ocultar en la barra, elegir personaje, configurar el usuario, susurrar, expulsar.
   - *Jugador*: abrir su ficha, configurar su usuario, elegir personaje, pedir al máster que lo muestre, susurrar al máster y preferencias locales.
 
+### Accesibilidad
+
+- Icono de accesibilidad en la cabecera de todas las ventanas del módulo, junto al de cerrar (también en el menú de la barra): **tamaño del texto** (85–160 %), **alto contraste**, **fuente de alta legibilidad** y **reducir movimiento**. Son ajustes de cada navegador: no cambian lo que ven los demás.
+- Los retratos se pueden enfocar con el teclado (Tab); Intro abre la ficha y la tecla de menú o Mayús+F10 abre el menú contextual.
+- Las ventanas recuerdan su posición, su tamaño y la pestaña activa.
+
 ### Interfaz
 
 - **Ocultar la barra de macros** para todos los clientes.
-- **Lista de jugadores sustitutiva**: muestra estado de conexión, personaje, color y corona del máster, con su propio menú contextual.
+- **Lista de jugadores sustitutiva**: muestra estado de conexión, personaje, color y corona del máster, con su propio menú contextual. Se aparta sola de los controles de escena y de la barra lateral de Foundry, así que nunca los tapa.
 - **Preferencias por jugador**: ocultar la barra solo para uno mismo, escala local, ocultar nombres o barras. No modifican la configuración del mundo.
 
 ---
@@ -127,7 +133,7 @@ Con el botón derecho sobre un retrato o sobre el asa de la barra tienes acceso 
 
 ## Compatibilidad
 
-- Foundry VTT **13**.
+- Foundry VTT **13** (probado en 13.351). Declarado también para 14, pendiente de probar.
 - Sin dependencias externas.
 - Usa `ApplicationV2`, `HandlebarsApplicationMixin` y `DialogV2`.
 - Los cambios de configuración se sincronizan con todos los clientes mediante el ajuste de mundo de Foundry.
@@ -138,4 +144,6 @@ Con el botón derecho sobre un retrato o sobre el asa de la barra tienes acceso 
 
 - Módulo original: [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits) por **malatestaabrx**.
 - Fork y funciones añadidas: **ManuRomera**.
-- Este fork conserva la idea, la estética y parte de la estructura original, y añade las funciones descritas.
+- Este fork conserva la idea y parte de la estructura original, y añade las funciones descritas. Desde la 1.1.0 la interfaz se ha rehecho con otro diseño (cristal oscuro, una columna, accesibilidad).
+
+Registro de cambios en [CHANGELOG.md](CHANGELOG.md).

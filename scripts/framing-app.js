@@ -13,6 +13,8 @@ import {
   localize
 } from "./utils.js";
 import { refreshAll } from "./events.js";
+import { WithMemory } from "./memory.js";
+import { addA11yButton } from "./a11y.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -37,11 +39,14 @@ async function submitFraming(_event, form) {
   ui.notifications.info(localize("PCP.Notifications.FramingSaved", { name: app.actor?.name ?? "" }));
 }
 
-export class FramingApp extends HandlebarsApplicationMixin(ApplicationV2) {
+export class FramingApp extends WithMemory(HandlebarsApplicationMixin(ApplicationV2)) {
+  static MEMORY_ID = "framing";
+  static MEMORY_FIELDS = ["left", "top"];
+
   static DEFAULT_OPTIONS = {
     id: "pcp-plus-framing",
     tag: "form",
-    classes: ["pcp-framing-app"],
+    classes: ["pcp-plus-window", "pcp-framing-app", "themed", "theme-dark"],
     position: {
       width: 520,
       height: "auto"
@@ -107,6 +112,7 @@ export class FramingApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
   _onRender(context, options) {
     super._onRender(context, options);
+    addA11yButton(this);
 
     const stage = this.element.querySelector(".pcp-framing-stage");
     const img = stage?.querySelector("img");
@@ -139,6 +145,18 @@ export class FramingApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     let drag = null;
 
+    // Tamaño real con el que se dibuja la imagen ahora mismo, para que arrastrar
+    // la mueva tanto como el puntero (1:1) y no «a ojo».
+    const displayed = () => {
+      const box = stage.getBoundingClientRect();
+      const side = box.width;
+      const fit = stage.dataset.fit === "contain" ? Math.min : Math.max;
+      const natural = { w: img.naturalWidth || side, h: img.naturalHeight || side };
+      const base = fit(side / natural.w, side / natural.h);
+      const zoom = clamp(zoomInput.value, 1, 4, 1);
+      return { side, width: natural.w * base * zoom, height: natural.h * base * zoom };
+    };
+
     stage.addEventListener("pointerdown", event => {
       if (event.button !== 0) return;
       event.preventDefault();
@@ -149,19 +167,21 @@ export class FramingApp extends HandlebarsApplicationMixin(ApplicationV2) {
         startY: event.clientY,
         x: Number(xInput.value),
         y: Number(yInput.value),
-        zoom: clamp(zoomInput.value, 1, 4, 1),
-        width: stage.getBoundingClientRect().width
+        size: displayed()
       };
       stage.classList.add("pcp-dragging");
     });
 
     stage.addEventListener("pointermove", event => {
       if (!drag) return;
+      const { side, width, height } = drag.size;
+      // posición del borde = x · (lado − tamaño) / 100  →  Δx = 100 · Δpx / (lado − tamaño)
+      const spanX = side - width;
+      const spanY = side - height;
       const dx = event.clientX - drag.startX;
       const dy = event.clientY - drag.startY;
-      const scale = 100 / Math.max(1, drag.width);
-      xInput.value = String(clamp(drag.x - (dx * scale) / drag.zoom, 0, 100, 50));
-      yInput.value = String(clamp(drag.y - (dy * scale) / drag.zoom, 0, 100, 50));
+      if (Math.abs(spanX) > 1) xInput.value = String(clamp(drag.x + (100 * dx) / spanX, 0, 100, drag.x));
+      if (Math.abs(spanY) > 1) yInput.value = String(clamp(drag.y + (100 * dy) / spanY, 0, 100, drag.y));
       updatePreview();
     });
 

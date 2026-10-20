@@ -21,6 +21,7 @@ import {
   normalizeColor
 } from "./utils.js";
 import { dispatchMenuEvent, refreshAll } from "./events.js";
+import { avoidCoreUi } from "./layout.js";
 
 let moveMode = false;
 let suppressClick = false;
@@ -188,6 +189,9 @@ function buildCard(actor, config, client) {
   card.className = "pcp-card";
   card.dataset.actorId = actor.id;
   card.title = actor.name;
+  card.tabIndex = 0;
+  card.setAttribute("role", "button");
+  card.setAttribute("aria-label", actor.name);
   card.style.setProperty("--pcp-card-size", `${size}px`);
   card.style.setProperty("--pcp-card-border", borderColor);
   card.style.setProperty("--pcp-card-radius", `${config.appearance.radius}px`);
@@ -252,6 +256,18 @@ function buildCard(actor, config, client) {
     if (moveMode || suppressClick) return;
     event.preventDefault();
     if (actorCanOpenSheet(actor)) actor.sheet?.render(true);
+  });
+
+  card.addEventListener("keydown", event => {
+    if (moveMode) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (actorCanOpenSheet(actor)) actor.sheet?.render(true);
+    } else if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) {
+      event.preventDefault();
+      const rect = card.getBoundingClientRect();
+      dispatchMenuEvent("pcp:actor-menu", { actorId: actor.id, x: rect.left, y: rect.bottom });
+    }
   });
 
   card.addEventListener("contextmenu", event => {
@@ -446,6 +462,7 @@ export function renderHud() {
   if (game.user.isGM) hud.appendChild(createHudHandle());
   document.body.appendChild(hud);
   applyPosition(hud, config);
+  if (!config.bar.free?.enabled) avoidCoreUi(hud, config.bar.position);
   attachDrag(hud);
 
   if (moveMode) {

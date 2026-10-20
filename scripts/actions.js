@@ -33,6 +33,7 @@ import { refreshAll } from "./events.js";
 import { setMoveMode, isMoveMode } from "./hud.js";
 import { openFramingApp } from "./framing-app.js";
 import { openConfigApp } from "./config-app.js";
+import { A11yPanel } from "./a11y.js";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -373,6 +374,12 @@ function localPreferenceItems() {
         });
         refreshAll();
       }
+    },
+    { separator: true },
+    {
+      label: localize("PCP.A11y.Title"),
+      icon: "fa-solid fa-universal-access",
+      action: () => A11yPanel.open()
     }
   ];
 }
@@ -705,6 +712,11 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
       },
       { separator: true },
       {
+        label: localize("PCP.A11y.Title"),
+        icon: "fa-solid fa-universal-access",
+        action: () => A11yPanel.open()
+      },
+      {
         label: localize("PCP.Menu.Configure"),
         icon: "fa-solid fa-gear",
         action: () => openConfigApp()
@@ -843,8 +855,12 @@ async function kickUser(userId) {
     // Foundry's core player list does the same: temporarily ban the user to
     // drop the connection, then restore the previous role.
     const role = user.role;
-    await user.update({ role: CONST.USER_ROLES.NONE });
-    await user.update({ role }, { diff: false });
+    try {
+      await user.update({ role: CONST.USER_ROLES.NONE });
+    } finally {
+      // Pase lo que pase, la persona no se queda vetada por error.
+      await user.update({ role }, { diff: false });
+    }
     ui.notifications.info(localize("PCP.Notifications.Kicked", { name: user.name }));
   } catch (error) {
     console.error("Party Corner Portraits + | kick failed", error);

@@ -12,6 +12,8 @@ import { PartyPortraitsConfig, openConfigApp } from "./config-app.js";
 import { openActorMenu, openHudMenu, openUserMenu } from "./actions.js";
 import { onRefresh, refreshAll, refreshDebounced } from "./events.js";
 import { closeMenus } from "./menu.js";
+import { applyA11y } from "./a11y.js";
+import { getConfig } from "./settings.js";
 
 function wireMenuEvents() {
   window.addEventListener("pcp:actor-menu", event => {
@@ -51,11 +53,15 @@ Hooks.once("ready", async () => {
     console.error("Party Corner Portraits + | initialisation failed", error);
   }
 
-  onRefresh(renderHud);
-  onRefresh(renderPlayerList);
+  // Primero las clases de la interfaz: el resto mide dónde está el panel original.
   onRefresh(applyUiConfig);
+  onRefresh(applyA11y);
+  onRefresh(renderPlayerList);
+  onRefresh(renderHud);
 
   refreshAll();
+  // La interfaz de Foundry termina de colocarse después de «ready».
+  window.setTimeout(refreshAll, 600);
 
   game.partyCornerPortraitsPlus = {
     openConfig: openConfigApp,
@@ -69,9 +75,27 @@ Hooks.on("updateSetting", setting => {
   if (key.startsWith(MODULE_ID)) refreshDebounced(30);
 });
 
-Hooks.on("updateActor", () => refreshDebounced(120));
+// Solo repinta si el cambio toca a un personaje de la barra (o aparece uno nuevo).
+function inBar(actor) {
+  return Boolean(actor && getConfig().order.includes(actor.id));
+}
+Hooks.on("updateActor", actor => inBar(actor) && refreshDebounced(120));
 Hooks.on("createActor", () => refreshDebounced(120));
 Hooks.on("deleteActor", () => refreshDebounced(120));
+
+// Los valores derivados (CA, PG máximos…) cambian también al tocar objetos y efectos.
+for (const hook of ["createItem", "updateItem", "deleteItem", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect"]) {
+  Hooks.on(hook, doc => {
+    const actor = doc.parent?.documentName === "Actor" ? doc.parent : doc.parent?.parent;
+    if (inBar(actor)) refreshDebounced(160);
+  });
+}
+
+let resizeTimer = null;
+window.addEventListener("resize", () => {
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(() => game?.ready && refreshAll(), 150);
+});
 
 Hooks.on("updateUser", () => refreshDebounced(80));
 Hooks.on("userConnected", () => refreshDebounced(80));

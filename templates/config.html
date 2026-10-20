@@ -1,484 +1,393 @@
 <div class="pcp-config">
-  <nav class="pcp-tabs" role="tablist">
-    <button type="button" class="pcp-tab" data-tab="general">
-      <i class="fa-solid fa-sliders" aria-hidden="true"></i>
-      <span>{{localize "PCP.Tab.General"}}</span>
+  <nav class="pcp-segments" role="tablist" aria-label="{{localize 'PCP.Config.WindowTitle'}}">
+    <button type="button" role="tab" class="pcp-tab" data-tab="general">
+      <i class="fa-solid fa-sliders" aria-hidden="true"></i><span>{{localize "PCP.Tab.General"}}</span>
     </button>
-    <button type="button" class="pcp-tab" data-tab="appearance">
-      <i class="fa-solid fa-palette" aria-hidden="true"></i>
-      <span>{{localize "PCP.Tab.Appearance"}}</span>
+    <button type="button" role="tab" class="pcp-tab" data-tab="appearance">
+      <i class="fa-solid fa-palette" aria-hidden="true"></i><span>{{localize "PCP.Tab.Appearance"}}</span>
     </button>
-    <button type="button" class="pcp-tab" data-tab="data">
-      <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
-      <span>{{localize "PCP.Tab.Data"}}</span>
+    <button type="button" role="tab" class="pcp-tab" data-tab="data">
+      <i class="fa-solid fa-chart-simple" aria-hidden="true"></i><span>{{localize "PCP.Tab.Data"}}</span>
     </button>
-    <button type="button" class="pcp-tab" data-tab="players">
-      <i class="fa-solid fa-users" aria-hidden="true"></i>
-      <span>{{localize "PCP.Tab.Players"}}</span>
+    <button type="button" role="tab" class="pcp-tab" data-tab="players">
+      <i class="fa-solid fa-users" aria-hidden="true"></i><span>{{localize "PCP.Tab.Players"}}</span>
     </button>
-    <button type="button" class="pcp-tab" data-tab="characters">
-      <i class="fa-solid fa-address-book" aria-hidden="true"></i>
-      <span>{{localize "PCP.Tab.Characters"}}</span>
+    <button type="button" role="tab" class="pcp-tab" data-tab="characters">
+      <i class="fa-solid fa-address-book" aria-hidden="true"></i><span>{{localize "PCP.Tab.Characters"}}</span>
     </button>
   </nav>
 
   <div class="pcp-panels">
-    <section class="pcp-panel" data-panel="general">
-      <div class="pcp-grid">
-        <div class="form-group">
-          <label>{{localize "PCP.Config.Corner"}}</label>
+    {{!-- ───────────── General ───────────── --}}
+    <section class="pcp-panel" role="tabpanel" data-panel="general">
+      <h4 class="pcp-heading">{{localize "PCP.Config.Placement"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Corner"}}</span>
           <select name="position">
-            {{#each positions}}
-              <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-            {{/each}}
+            {{#each positions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.Layout"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Layout"}}</span>
           <select name="orientation">
-            {{#each orientations}}
-              <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-            {{/each}}
+            {{#each orientations}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.PortraitSize"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.PortraitSize"}}<small>{{localize "PCP.Config.PortraitSizeHint"}}</small></span>
           <input type="number" name="size" value="{{config.bar.size}}" min="32" max="320" step="1">
-          <p class="notes">{{localize "PCP.Config.PortraitSizeHint"}}</p>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.Gap"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Gap"}}</span>
           <input type="number" name="gap" value="{{config.bar.gap}}" min="0" max="40" step="1">
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.OffsetX"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.OffsetX"}}</span>
           <input type="number" name="offsetX" value="{{config.bar.offsetX}}" min="0" max="2000" step="1">
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.OffsetY"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.OffsetY"}}</span>
           <input type="number" name="offsetY" value="{{config.bar.offsetY}}" min="0" max="2000" step="1">
+        </label>
+      </div>
+      <p class="pcp-note">{{localize "PCP.Config.GeneralHelp"}}</p>
+
+      <h4 class="pcp-heading">{{localize "PCP.Config.FreePosition"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.FreePosition"}}<small>{{localize "PCP.Config.FreePositionHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="free.enabled" {{#if config.bar.free.enabled}}checked{{/if}}>
+        </label>
+        <div class="pcp-row pcp-row-pair">
+          <span class="pcp-row-text">{{localize "PCP.Config.FreeCoords"}}</span>
+          <span class="pcp-pair">
+            <label>X <input type="number" name="free.x" value="{{config.bar.free.x}}" min="0" max="10000" step="1"></label>
+            <label>Y <input type="number" name="free.y" value="{{config.bar.free.y}}" min="0" max="10000" step="1"></label>
+          </span>
         </div>
       </div>
 
-      <div class="pcp-inline-group">
-        <label class="pcp-check">
-          <input type="checkbox" name="free.enabled" {{#if config.bar.free.enabled}}checked{{/if}}>
-          <span>{{localize "PCP.Config.FreePosition"}}</span>
-        </label>
-        <label class="pcp-inline-field">
-          <span>{{localize "PCP.Config.FreeX"}}</span>
-          <input type="number" name="free.x" value="{{config.bar.free.x}}" min="0" max="10000" step="1">
-        </label>
-        <label class="pcp-inline-field">
-          <span>{{localize "PCP.Config.FreeY"}}</span>
-          <input type="number" name="free.y" value="{{config.bar.free.y}}" min="0" max="10000" step="1">
+      <h4 class="pcp-heading">{{localize "PCP.Config.Interface"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.HideHotbar"}}<small>{{localize "PCP.Config.HideHotbarHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="hideHotbar" {{#if config.ui.hideHotbar}}checked{{/if}}>
         </label>
       </div>
-      <p class="notes">{{localize "PCP.Config.FreePositionHint"}}</p>
-
-      <hr>
-
-      <h3><i class="fa-solid fa-keyboard"></i> {{localize "PCP.Config.Interface"}}</h3>
-      <label class="pcp-check">
-        <input type="checkbox" name="hideHotbar" {{#if config.ui.hideHotbar}}checked{{/if}}>
-        <span>{{localize "PCP.Config.HideHotbar"}}</span>
-      </label>
-      <p class="notes">{{localize "PCP.Config.HideHotbarHint"}}</p>
-
-      <p class="pcp-help">{{localize "PCP.Config.GeneralHelp"}}</p>
     </section>
 
-    <section class="pcp-panel" data-panel="appearance">
-      <div class="pcp-grid">
-        <div class="form-group">
-          <label>{{localize "PCP.Config.BorderColor"}}</label>
-          <input type="color" name="borderColor" value="{{config.appearance.borderColor}}">
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.BorderWidth"}}</label>
-          <input type="range" name="borderWidth" min="0" max="10" step="1" value="{{config.appearance.borderWidth}}" data-output="borderWidth" data-suffix="px">
-          <output data-for="borderWidth">{{config.appearance.borderWidth}}px</output>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.Radius"}}</label>
-          <input type="range" name="radius" min="0" max="60" step="1" value="{{config.appearance.radius}}" data-output="radius" data-suffix="px">
-          <output data-for="radius">{{config.appearance.radius}}px</output>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.Opacity"}}</label>
-          <input type="range" name="opacity" min="0.1" max="1" step="0.05" value="{{config.appearance.opacity}}" data-output="opacity">
-          <output data-for="opacity">{{config.appearance.opacity}}</output>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.HoverScale"}}</label>
-          <input type="range" name="hoverScale" min="1" max="1.5" step="0.01" value="{{config.appearance.hoverScale}}" data-output="hoverScale">
-          <output data-for="hoverScale">{{config.appearance.hoverScale}}</output>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.Frame"}}</label>
+    {{!-- ───────────── Aspecto ───────────── --}}
+    <section class="pcp-panel" role="tabpanel" data-panel="appearance">
+      <h4 class="pcp-heading">{{localize "PCP.Config.Portrait"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Frame"}}</span>
           <select name="frame">
-            {{#each frames}}
-              <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-            {{/each}}
+            {{#each frames}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.ImageFit"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.ImageFit"}}</span>
           <select name="imageFit">
-            {{#each fits}}
-              <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-            {{/each}}
+            {{#each fits}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.Background"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Background"}}</span>
           <select name="background">
-            {{#each backgrounds}}
-              <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-            {{/each}}
+            {{#each backgrounds}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.NamePosition"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.NamePosition"}}</span>
           <select name="namePosition">
-            {{#each namePositions}}
-              <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-            {{/each}}
+            {{#each namePositions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
-        </div>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.Grayscale"}}</span>
+          <input type="checkbox" class="pcp-switch" name="grayscale" {{#if config.appearance.grayscale}}checked{{/if}}>
+        </label>
+      </div>
+      <p class="pcp-note">{{localize "PCP.Config.AppearanceHelp"}}</p>
 
-        <div class="form-group">
-          <label>{{localize "PCP.Config.NameColor"}}</label>
+      <h4 class="pcp-heading">{{localize "PCP.Config.Edges"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.BorderColor"}}</span>
+          <input type="color" name="borderColor" value="{{config.appearance.borderColor}}">
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.NameColor"}}</span>
           <input type="color" name="nameColor" value="{{config.appearance.nameColor}}">
-        </div>
-      </div>
-
-      <div class="pcp-inline-group">
-        <label class="pcp-check">
-          <input type="checkbox" name="shadow" {{#if config.appearance.shadow}}checked{{/if}}>
-          <span>{{localize "PCP.Config.Shadow"}}</span>
         </label>
-        <label class="pcp-check">
-          <input type="checkbox" name="grayscale" {{#if config.appearance.grayscale}}checked{{/if}}>
-          <span>{{localize "PCP.Config.Grayscale"}}</span>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.BorderWidth"}}</span>
+          <span class="pcp-range"><input type="range" name="borderWidth" min="0" max="10" step="1" value="{{config.appearance.borderWidth}}" data-output="borderWidth" data-suffix="px"><output data-for="borderWidth">{{config.appearance.borderWidth}}px</output></span>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Radius"}}</span>
+          <span class="pcp-range"><input type="range" name="radius" min="0" max="60" step="1" value="{{config.appearance.radius}}" data-output="radius" data-suffix="px"><output data-for="radius">{{config.appearance.radius}}px</output></span>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.Shadow"}}</span>
+          <input type="checkbox" class="pcp-switch" name="shadow" {{#if config.appearance.shadow}}checked{{/if}}>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Opacity"}}</span>
+          <span class="pcp-range"><input type="range" name="opacity" min="0.1" max="1" step="0.05" value="{{config.appearance.opacity}}" data-output="opacity"><output data-for="opacity">{{config.appearance.opacity}}</output></span>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.HoverScale"}}</span>
+          <span class="pcp-range"><input type="range" name="hoverScale" min="1" max="1.5" step="0.01" value="{{config.appearance.hoverScale}}" data-output="hoverScale"><output data-for="hoverScale">{{config.appearance.hoverScale}}</output></span>
         </label>
       </div>
-
-      <p class="pcp-help">{{localize "PCP.Config.AppearanceHelp"}}</p>
     </section>
 
-    <section class="pcp-panel" data-panel="data">
-      <h3><i class="fa-solid fa-signature"></i> {{localize "PCP.Config.Names"}}</h3>
-      <div class="pcp-inline-group">
-        <label class="pcp-check">
-          <input type="checkbox" name="showCharacterName" {{#if config.data.showCharacterName}}checked{{/if}}>
-          <span>{{localize "PCP.Config.ShowCharacterName"}}</span>
+    {{!-- ───────────── Datos y barras ───────────── --}}
+    <section class="pcp-panel" role="tabpanel" data-panel="data">
+      <h4 class="pcp-heading">{{localize "PCP.Config.Names"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.ShowCharacterName"}}</span>
+          <input type="checkbox" class="pcp-switch" name="showCharacterName" {{#if config.data.showCharacterName}}checked{{/if}}>
         </label>
-        <label class="pcp-check">
-          <input type="checkbox" name="showPlayerName" {{#if config.data.showPlayerName}}checked{{/if}}>
-          <span>{{localize "PCP.Config.ShowPlayerName"}}</span>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.ShowPlayerName"}}</span>
+          <input type="checkbox" class="pcp-switch" name="showPlayerName" {{#if config.data.showPlayerName}}checked{{/if}}>
         </label>
-        <label class="pcp-check">
-          <input type="checkbox" name="showPlayerStatus" {{#if config.data.showPlayerStatus}}checked{{/if}}>
-          <span>{{localize "PCP.Config.ShowPlayerStatus"}}</span>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.ShowPlayerStatus"}}</span>
+          <input type="checkbox" class="pcp-switch" name="showPlayerStatus" {{#if config.data.showPlayerStatus}}checked{{/if}}>
         </label>
       </div>
 
-      <hr>
-
-      <div class="pcp-section-head">
-        <h3><i class="fa-solid fa-chart-simple"></i> {{localize "PCP.Config.Bars"}}</h3>
-        <div class="pcp-section-actions">
+      <div class="pcp-heading-row">
+        <h4 class="pcp-heading">{{localize "PCP.Config.Bars"}}</h4>
+        <div class="pcp-heading-actions">
           {{#if systemPreset}}
-            <button type="button" class="pcp-add-system-bar">
-              <i class="fa-solid fa-wand-magic-sparkles"></i>
-              {{localize "PCP.Config.AddSystemBar"}} ({{systemPresetName}})
-            </button>
+            <button type="button" class="pcp-add-system-bar"><i class="fa-solid fa-wand-magic-sparkles"></i> {{localize "PCP.Config.AddSystemBar"}} ({{systemPresetName}})</button>
           {{/if}}
-          <button type="button" class="pcp-add-bar">
-            <i class="fa-solid fa-plus"></i>
-            {{localize "PCP.Config.AddBar"}}
-          </button>
+          <button type="button" class="pcp-add-bar"><i class="fa-solid fa-plus"></i> {{localize "PCP.Config.AddBar"}}</button>
         </div>
       </div>
-
-      <p class="notes">{{localize "PCP.Config.BarsHelp"}}</p>
-
-      <div class="pcp-bar-header">
-        <span>{{localize "PCP.Config.BarLabel"}}</span>
-        <span>{{localize "PCP.Config.BarValuePath"}}</span>
-        <span>{{localize "PCP.Config.BarMaxPath"}}</span>
-        <span>{{localize "PCP.Config.BarFixedMax"}}</span>
-        <span>{{localize "PCP.Config.BarColor"}}</span>
-        <span>{{localize "PCP.Config.ShowValue"}}</span>
-        <span>{{localize "PCP.Config.ShowMax"}}</span>
-        <span></span>
-      </div>
+      <p class="pcp-note pcp-note-top">{{localize "PCP.Config.BarsHelp"}}</p>
 
       <div class="pcp-bar-list">
-        {{#each config.data.bars}}
+        {{#each barRows}}
           <div class="pcp-bar-row" data-bar-id="{{id}}">
-            <input class="pcp-bar-label" type="text" value="{{label}}" placeholder="HP">
-            <input class="pcp-bar-value" type="text" list="pcp-path-list" value="{{valuePath}}" placeholder="system.attributes.hp.value">
-            <input class="pcp-bar-max" type="text" list="pcp-path-list" value="{{maxPath}}" placeholder="system.attributes.hp.max">
-            <input class="pcp-bar-maximum" type="number" value="{{max}}" min="1" max="1000000" step="1">
-            <input class="pcp-bar-color" type="text" value="{{color}}" placeholder="#4ade80 / auto">
-            <label class="pcp-check"><input class="pcp-bar-show-text" type="checkbox" {{#if showText}}checked{{/if}}><span>{{localize "PCP.Config.ShowValue"}}</span></label>
-            <label class="pcp-check"><input class="pcp-bar-show-max" type="checkbox" {{#if showMax}}checked{{/if}}><span>{{localize "PCP.Config.ShowMax"}}</span></label>
-            <button type="button" class="pcp-bar-remove" title="{{localize 'PCP.Config.Remove'}}"><i class="fa-solid fa-trash"></i></button>
+            <div class="pcp-bar-line">
+              <label class="pcp-mini pcp-grow"><span>{{localize "PCP.Config.BarLabel"}}</span><input class="pcp-bar-label" type="text" value="{{label}}" placeholder="HP"></label>
+              <label class="pcp-mini"><span>{{localize "PCP.Config.BarColor"}}</span><input class="pcp-bar-color" type="color" value="{{hex}}" {{#if auto}}disabled{{/if}}></label>
+              <label class="pcp-mini pcp-mini-check"><span>{{localize "PCP.Config.BarAuto"}}</span><input class="pcp-bar-auto pcp-switch" type="checkbox" {{#if auto}}checked{{/if}}></label>
+              <label class="pcp-mini"><span>{{localize "PCP.Config.BarFixedMax"}}</span><input class="pcp-bar-maximum" type="number" value="{{max}}" min="1" max="1000000" step="1"></label>
+              <label class="pcp-mini pcp-mini-check"><span>{{localize "PCP.Config.ShowValue"}}</span><input class="pcp-bar-show-text pcp-switch" type="checkbox" {{#if showText}}checked{{/if}}></label>
+              <label class="pcp-mini pcp-mini-check"><span>{{localize "PCP.Config.ShowMax"}}</span><input class="pcp-bar-show-max pcp-switch" type="checkbox" {{#if showMax}}checked{{/if}}></label>
+              <button type="button" class="pcp-bar-remove pcp-icon-button" title="{{localize 'PCP.Config.Remove'}}" aria-label="{{localize 'PCP.Config.Remove'}}"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div class="pcp-bar-line">
+              <label class="pcp-mini pcp-grow"><span>{{localize "PCP.Config.BarValuePath"}}</span><input class="pcp-bar-value" type="text" list="pcp-path-list" value="{{valuePath}}" placeholder="system.attributes.hp.value"></label>
+              <label class="pcp-mini pcp-grow"><span>{{localize "PCP.Config.BarMaxPath"}}</span><input class="pcp-bar-max" type="text" list="pcp-path-list" value="{{maxPath}}" placeholder="system.attributes.hp.max"></label>
+            </div>
           </div>
         {{/each}}
       </div>
 
-      <div class="pcp-inline-group">
-        <div class="form-group">
-          <label>{{localize "PCP.Config.BarPosition"}}</label>
+      <div class="pcp-card-group">
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.BarPosition"}}</span>
           <select name="barPosition">
-            {{#each barPositions}}
-              <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-            {{/each}}
+            {{#each barPositions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
-        </div>
-        <div class="form-group">
-          <label>{{localize "PCP.Config.BarHeight"}}</label>
-          <input type="range" name="barHeight" min="2" max="24" step="1" value="{{config.data.barHeight}}" data-output="barHeight" data-suffix="px">
-          <output data-for="barHeight">{{config.data.barHeight}}px</output>
-        </div>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.BarHeight"}}</span>
+          <span class="pcp-range"><input type="range" name="barHeight" min="2" max="24" step="1" value="{{config.data.barHeight}}" data-output="barHeight" data-suffix="px"><output data-for="barHeight">{{config.data.barHeight}}px</output></span>
+        </label>
       </div>
 
-      <hr>
-
-      <div class="pcp-section-head">
-        <h3><i class="fa-solid fa-list"></i> {{localize "PCP.Config.Fields"}}</h3>
-        <div class="pcp-section-actions">
-          <button type="button" class="pcp-add-field">
-            <i class="fa-solid fa-plus"></i>
-            {{localize "PCP.Config.AddField"}}
-          </button>
+      <div class="pcp-heading-row">
+        <h4 class="pcp-heading">{{localize "PCP.Config.Fields"}}</h4>
+        <div class="pcp-heading-actions">
+          <button type="button" class="pcp-add-field"><i class="fa-solid fa-plus"></i> {{localize "PCP.Config.AddField"}}</button>
         </div>
       </div>
-
-      <p class="notes">{{localize "PCP.Config.FieldsHelp"}}</p>
-
-      <div class="pcp-bar-header pcp-field-header">
-        <span>{{localize "PCP.Config.FieldLabel"}}</span>
-        <span>{{localize "PCP.Config.FieldPath"}}</span>
-        <span>{{localize "PCP.Config.FieldSuffix"}}</span>
-        <span></span>
-      </div>
+      <p class="pcp-note pcp-note-top">{{localize "PCP.Config.FieldsHelp"}}</p>
 
       <div class="pcp-field-list">
         {{#each config.data.fields}}
           <div class="pcp-field-row">
-            <input class="pcp-field-label" type="text" value="{{label}}" placeholder="CA">
-            <input class="pcp-field-path" type="text" list="pcp-path-list" value="{{path}}" placeholder="system.attributes.ac.value">
-            <input class="pcp-field-suffix" type="text" value="{{suffix}}" placeholder="%">
-            <button type="button" class="pcp-field-remove" title="{{localize 'PCP.Config.Remove'}}"><i class="fa-solid fa-trash"></i></button>
+            <label class="pcp-mini"><span>{{localize "PCP.Config.FieldLabel"}}</span><input class="pcp-field-label" type="text" value="{{label}}" placeholder="CA"></label>
+            <label class="pcp-mini pcp-grow"><span>{{localize "PCP.Config.FieldPath"}}</span><input class="pcp-field-path" type="text" list="pcp-path-list" value="{{path}}" placeholder="system.attributes.ac.value"></label>
+            <label class="pcp-mini"><span>{{localize "PCP.Config.FieldSuffix"}}</span><input class="pcp-field-suffix" type="text" value="{{suffix}}" placeholder="%"></label>
+            <button type="button" class="pcp-field-remove pcp-icon-button" title="{{localize 'PCP.Config.Remove'}}" aria-label="{{localize 'PCP.Config.Remove'}}"><i class="fa-solid fa-trash"></i></button>
           </div>
         {{/each}}
       </div>
-
-      <p class="pcp-help">{{localize "PCP.Config.PathsHelp"}}</p>
+      <p class="pcp-note">{{localize "PCP.Config.PathsHelp"}}</p>
     </section>
 
-    <section class="pcp-panel" data-panel="players">
-      <h3><i class="fa-solid fa-users"></i> {{localize "PCP.Config.PlayerList"}}</h3>
+    {{!-- ───────────── Jugadores e interfaz ───────────── --}}
+    <section class="pcp-panel" role="tabpanel" data-panel="players">
+      <h4 class="pcp-heading">{{localize "PCP.Config.PlayerList"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.PlayersEnabled"}}<small>{{localize "PCP.Config.PlayersEnabledHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="players.enabled" {{#if config.players.enabled}}checked{{/if}}>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.HideCorePlayers"}}<small>{{localize "PCP.Config.HideCorePlayersHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="players.hideCore" {{#if config.players.hideCore}}checked{{/if}}>
+        </label>
+      </div>
 
-      <label class="pcp-check">
-        <input type="checkbox" name="players.enabled" {{#if config.players.enabled}}checked{{/if}}>
-        <span>{{localize "PCP.Config.PlayersEnabled"}}</span>
-      </label>
-      <p class="notes">{{localize "PCP.Config.PlayersEnabledHint"}}</p>
-
-      <label class="pcp-check">
-        <input type="checkbox" name="players.hideCore" {{#if config.players.hideCore}}checked{{/if}}>
-        <span>{{localize "PCP.Config.HideCorePlayers"}}</span>
-      </label>
-      <p class="notes">{{localize "PCP.Config.HideCorePlayersHint"}}</p>
-
-      <div class="pcp-grid">
-        <div class="form-group">
-          <label>{{localize "PCP.Config.Corner"}}</label>
+      <h4 class="pcp-heading">{{localize "PCP.Config.Placement"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Corner"}}</span>
           <select name="players.position">
-            {{#each playerPositions}}
-              <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-            {{/each}}
+            {{#each playerPositions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.Title"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Title"}}</span>
           <input type="text" name="players.title" value="{{config.players.title}}" placeholder="{{localize 'PCP.Players.Title'}}">
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.OffsetX"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.OffsetX"}}</span>
           <input type="number" name="players.offsetX" value="{{config.players.offsetX}}" min="0" max="2000" step="1">
-        </div>
-
-        <div class="form-group">
-          <label>{{localize "PCP.Config.OffsetY"}}</label>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.OffsetY"}}</span>
           <input type="number" name="players.offsetY" value="{{config.players.offsetY}}" min="0" max="2000" step="1">
-        </div>
-      </div>
-
-      <div class="pcp-inline-group">
-        <label class="pcp-check">
-          <input type="checkbox" name="players.showGM" {{#if config.players.showGM}}checked{{/if}}>
-          <span>{{localize "PCP.Config.ShowGM"}}</span>
-        </label>
-        <label class="pcp-check">
-          <input type="checkbox" name="players.showCharacter" {{#if config.players.showCharacter}}checked{{/if}}>
-          <span>{{localize "PCP.Config.ShowCharacter"}}</span>
-        </label>
-        <label class="pcp-check">
-          <input type="checkbox" name="players.showStatus" {{#if config.players.showStatus}}checked{{/if}}>
-          <span>{{localize "PCP.Config.ShowStatus"}}</span>
-        </label>
-        <label class="pcp-check">
-          <input type="checkbox" name="players.compact" {{#if config.players.compact}}checked{{/if}}>
-          <span>{{localize "PCP.Config.Compact"}}</span>
         </label>
       </div>
+      <p class="pcp-note">{{localize "PCP.Config.AvoidHint"}}</p>
 
-      <p class="pcp-help">{{localize "PCP.Config.PlayersHelp"}}</p>
+      <h4 class="pcp-heading">{{localize "PCP.Config.Content"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.ShowGM"}}</span>
+          <input type="checkbox" class="pcp-switch" name="players.showGM" {{#if config.players.showGM}}checked{{/if}}>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.ShowCharacter"}}</span>
+          <input type="checkbox" class="pcp-switch" name="players.showCharacter" {{#if config.players.showCharacter}}checked{{/if}}>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.ShowStatus"}}</span>
+          <input type="checkbox" class="pcp-switch" name="players.showStatus" {{#if config.players.showStatus}}checked{{/if}}>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.Compact"}}</span>
+          <input type="checkbox" class="pcp-switch" name="players.compact" {{#if config.players.compact}}checked{{/if}}>
+        </label>
+      </div>
+      <p class="pcp-note">{{localize "PCP.Config.PlayersHelp"}}</p>
     </section>
 
-    <section class="pcp-panel" data-panel="characters">
+    {{!-- ───────────── Personajes ───────────── --}}
+    <section class="pcp-panel" role="tabpanel" data-panel="characters">
       <div class="pcp-search-wrap">
         <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
         <input class="pcp-actor-search" type="search" placeholder="{{localize 'PCP.Config.Search'}}" aria-label="{{localize 'PCP.Config.Search'}}" autocomplete="off">
       </div>
+      <p class="pcp-note pcp-note-top">{{localize "PCP.Config.CharactersHelp"}}</p>
 
-      <p class="pcp-help">{{localize "PCP.Config.CharactersHelp"}}</p>
-
-      <section class="pcp-actor-list">
+      <div class="pcp-actor-list">
         {{#each actors}}
           <div class="pcp-actor-row {{#unless enabled}}pcp-disabled{{/unless}}" data-actor-id="{{id}}" data-actor-name="{{name}}" data-player-label="{{ownerLabel}}">
-            <div class="pcp-actor-check">
-              <input class="pcp-actor-enabled" type="checkbox" {{#if enabled}}checked{{/if}} title="{{localize 'PCP.Config.ShowActor'}}">
-            </div>
-
-            <div class="pcp-config-preview" style="--pcp-preview-border: {{borderColor}}">
-              <img src="{{img}}" alt="{{name}}" style="object-fit: {{previewFit}}; object-position: {{x}}% {{y}}%; transform-origin: {{x}}% {{y}}%; transform: scale({{zoom}});">
-            </div>
-
-            <div class="pcp-actor-main">
-              <div class="pcp-actor-name">{{name}}</div>
-              <label class="pcp-actor-line">
-                <span>{{localize "PCP.Config.PlayerLabel"}}</span>
-                <input class="pcp-actor-player-label" type="text" value="{{playerLabel}}" placeholder="{{ownerLabel}}">
-              </label>
-              <label class="pcp-actor-line pcp-actor-order-wrap">
-                <span>{{localize "PCP.Config.Order"}}</span>
-                <input class="pcp-actor-order" type="number" value="{{sortOrder}}" min="-9999" max="9999" step="1">
-              </label>
-            </div>
-
-            <div class="pcp-actor-overrides">
-              <label class="pcp-actor-override">
-                <span>{{localize "PCP.Config.Size"}}</span>
-                <input class="pcp-actor-size" type="number" value="{{size}}" placeholder="{{globalSize}}" min="32" max="320" step="1">
-              </label>
-
-              <label class="pcp-actor-override">
-                <span>{{localize "PCP.Config.ImageFit"}}</span>
-                <select class="pcp-actor-fit">
-                  <option value="" {{#unless fit}}selected{{/unless}}>{{localize "PCP.Config.UseGlobal"}} ({{globalFitLabel}})</option>
-                  <option value="cover" {{#if fitCover}}selected{{/if}}>{{localize "PCP.Fit.Cover"}}</option>
-                  <option value="contain" {{#if fitContain}}selected{{/if}}>{{localize "PCP.Fit.Contain"}}</option>
-                </select>
-              </label>
-
-              <label class="pcp-actor-override">
-                <span>{{localize "PCP.Config.Frame"}}</span>
-                <select class="pcp-actor-frame">
-                  <option value="" {{#unless frame}}selected{{/unless}}>{{localize "PCP.Config.UseGlobal"}} ({{globalFrameLabel}})</option>
-                  <option value="full" {{#if frameFull}}selected{{/if}}>{{localize "PCP.Frame.Full"}}</option>
-                  <option value="minimal" {{#if frameMinimal}}selected{{/if}}>{{localize "PCP.Frame.Minimal"}}</option>
-                  <option value="none" {{#if frameNone}}selected{{/if}}>{{localize "PCP.Frame.None"}}</option>
-                </select>
-              </label>
-
-              <label class="pcp-actor-override">
-                <span>{{localize "PCP.Config.NamePosition"}}</span>
-                <select class="pcp-actor-name-position">
-                  <option value="" {{#unless namePosition}}selected{{/unless}}>{{localize "PCP.Config.UseGlobal"}} ({{globalNameLabel}})</option>
-                  <option value="overlay" {{#if nameOverlay}}selected{{/if}}>{{localize "PCP.NamePosition.Overlay"}}</option>
-                  <option value="below" {{#if nameBelow}}selected{{/if}}>{{localize "PCP.NamePosition.Below"}}</option>
-                  <option value="hidden" {{#if nameHidden}}selected{{/if}}>{{localize "PCP.NamePosition.Hidden"}}</option>
-                </select>
-              </label>
-
-              <div class="pcp-actor-border">
-                <label class="pcp-check">
-                  <input class="pcp-actor-border-use" type="checkbox" {{#if useBorder}}checked{{/if}}>
-                  <span>{{localize "PCP.Config.CustomBorder"}}</span>
-                </label>
-                <input class="pcp-actor-border-color" type="color" value="{{borderColor}}">
+            <div class="pcp-actor-head">
+              <input class="pcp-actor-enabled pcp-switch" type="checkbox" {{#if enabled}}checked{{/if}} title="{{localize 'PCP.Config.ShowActor'}}" aria-label="{{localize 'PCP.Config.ShowActor'}}: {{name}}">
+              <div class="pcp-config-preview" style="--pcp-preview-border: {{borderColor}}">
+                <img src="{{img}}" alt="" style="object-fit: {{previewFit}}; object-position: {{x}}% {{y}}%; transform-origin: {{x}}% {{y}}%; transform: scale({{zoom}});">
               </div>
-
-              <button type="button" class="pcp-open-framing">
-                <i class="fa-solid fa-crop-simple"></i>
-                {{localize "PCP.Config.AdjustFraming"}}
-              </button>
+              <div class="pcp-actor-who">
+                <div class="pcp-actor-name">{{name}}</div>
+                <div class="pcp-actor-owner">{{#if ownerLabel}}{{ownerLabel}}{{else}}<em>{{localize "PCP.Config.NoOwner"}}</em>{{/if}}</div>
+              </div>
+              <button type="button" class="pcp-open-framing"><i class="fa-solid fa-crop-simple"></i> {{localize "PCP.Config.AdjustFraming"}}</button>
             </div>
+
+            <details class="pcp-more">
+              <summary>{{localize "PCP.Config.MoreOptions"}}</summary>
+              <div class="pcp-more-grid">
+                <label class="pcp-mini"><span>{{localize "PCP.Config.PlayerLabel"}}</span><input class="pcp-actor-player-label" type="text" value="{{playerLabel}}" placeholder="{{ownerLabel}}"></label>
+                <label class="pcp-mini"><span>{{localize "PCP.Config.Order"}}</span><input class="pcp-actor-order" type="number" value="{{sortOrder}}" min="-9999" max="9999" step="1"></label>
+                <label class="pcp-mini"><span>{{localize "PCP.Config.Size"}}</span><input class="pcp-actor-size" type="number" value="{{size}}" placeholder="{{globalSize}}" min="32" max="320" step="1"></label>
+                <label class="pcp-mini"><span>{{localize "PCP.Config.ImageFit"}}</span>
+                  <select class="pcp-actor-fit">
+                    <option value="" {{#unless fit}}selected{{/unless}}>{{localize "PCP.Config.UseGlobal"}} ({{globalFitLabel}})</option>
+                    <option value="cover" {{#if fitCover}}selected{{/if}}>{{localize "PCP.Fit.Cover"}}</option>
+                    <option value="contain" {{#if fitContain}}selected{{/if}}>{{localize "PCP.Fit.Contain"}}</option>
+                  </select>
+                </label>
+                <label class="pcp-mini"><span>{{localize "PCP.Config.Frame"}}</span>
+                  <select class="pcp-actor-frame">
+                    <option value="" {{#unless frame}}selected{{/unless}}>{{localize "PCP.Config.UseGlobal"}} ({{globalFrameLabel}})</option>
+                    <option value="full" {{#if frameFull}}selected{{/if}}>{{localize "PCP.Frame.Full"}}</option>
+                    <option value="minimal" {{#if frameMinimal}}selected{{/if}}>{{localize "PCP.Frame.Minimal"}}</option>
+                    <option value="none" {{#if frameNone}}selected{{/if}}>{{localize "PCP.Frame.None"}}</option>
+                  </select>
+                </label>
+                <label class="pcp-mini"><span>{{localize "PCP.Config.NamePosition"}}</span>
+                  <select class="pcp-actor-name-position">
+                    <option value="" {{#unless namePosition}}selected{{/unless}}>{{localize "PCP.Config.UseGlobal"}} ({{globalNameLabel}})</option>
+                    <option value="overlay" {{#if nameOverlay}}selected{{/if}}>{{localize "PCP.NamePosition.Overlay"}}</option>
+                    <option value="below" {{#if nameBelow}}selected{{/if}}>{{localize "PCP.NamePosition.Below"}}</option>
+                    <option value="hidden" {{#if nameHidden}}selected{{/if}}>{{localize "PCP.NamePosition.Hidden"}}</option>
+                  </select>
+                </label>
+                <div class="pcp-mini pcp-mini-inline">
+                  <span>{{localize "PCP.Config.CustomBorder"}}</span>
+                  <span class="pcp-inline"><input class="pcp-actor-border-use pcp-switch" type="checkbox" {{#if useBorder}}checked{{/if}} aria-label="{{localize 'PCP.Config.CustomBorder'}}"><input class="pcp-actor-border-color" type="color" value="{{borderColor}}"></span>
+                </div>
+              </div>
+            </details>
           </div>
         {{/each}}
         <p class="pcp-no-results" hidden>{{localize "PCP.Config.NoResults"}}</p>
-      </section>
+      </div>
     </section>
   </div>
 
   <footer class="pcp-config-footer">
-    <span class="pcp-footer-hint"><i class="fa-solid fa-computer-mouse"></i> {{localize "PCP.Config.FooterHint"}}</span>
+    <span class="pcp-footer-hint"><i class="fa-solid fa-computer-mouse" aria-hidden="true"></i> {{localize "PCP.Config.FooterHint"}}</span>
     <div class="pcp-footer-buttons">
       <button type="button" class="pcp-close-config">{{localize "PCP.Common.Close"}}</button>
-      <button type="submit" class="pcp-save-config">
-        <i class="fa-solid fa-floppy-disk"></i>
-        {{localize "PCP.Common.Save"}}
-      </button>
+      <button type="submit" class="pcp-save-config"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> {{localize "PCP.Common.Save"}}</button>
     </div>
   </footer>
 
   <datalist id="pcp-path-list">
-    {{#each paths}}
-      <option value="{{this}}"></option>
-    {{/each}}
+    {{#each paths}}<option value="{{this}}"></option>{{/each}}
   </datalist>
 
   <template data-template="bar">
     <div class="pcp-bar-row">
-      <input class="pcp-bar-label" type="text" placeholder="HP">
-      <input class="pcp-bar-value" type="text" list="pcp-path-list" placeholder="system.attributes.hp.value">
-      <input class="pcp-bar-max" type="text" list="pcp-path-list" placeholder="system.attributes.hp.max">
-      <input class="pcp-bar-maximum" type="number" value="100" min="1" max="1000000" step="1">
-      <input class="pcp-bar-color" type="text" value="#4ade80" placeholder="#4ade80 / auto">
-      <label class="pcp-check"><input class="pcp-bar-show-text" type="checkbox" checked><span>{{localize "PCP.Config.ShowValue"}}</span></label>
-      <label class="pcp-check"><input class="pcp-bar-show-max" type="checkbox" checked><span>{{localize "PCP.Config.ShowMax"}}</span></label>
-      <button type="button" class="pcp-bar-remove" title="{{localize 'PCP.Config.Remove'}}"><i class="fa-solid fa-trash"></i></button>
+      <div class="pcp-bar-line">
+        <label class="pcp-mini pcp-grow"><span>{{localize "PCP.Config.BarLabel"}}</span><input class="pcp-bar-label" type="text" placeholder="HP"></label>
+        <label class="pcp-mini"><span>{{localize "PCP.Config.BarColor"}}</span><input class="pcp-bar-color" type="color" value="#4ade80"></label>
+        <label class="pcp-mini pcp-mini-check"><span>{{localize "PCP.Config.BarAuto"}}</span><input class="pcp-bar-auto pcp-switch" type="checkbox"></label>
+        <label class="pcp-mini"><span>{{localize "PCP.Config.BarFixedMax"}}</span><input class="pcp-bar-maximum" type="number" value="100" min="1" max="1000000" step="1"></label>
+        <label class="pcp-mini pcp-mini-check"><span>{{localize "PCP.Config.ShowValue"}}</span><input class="pcp-bar-show-text pcp-switch" type="checkbox" checked></label>
+        <label class="pcp-mini pcp-mini-check"><span>{{localize "PCP.Config.ShowMax"}}</span><input class="pcp-bar-show-max pcp-switch" type="checkbox" checked></label>
+        <button type="button" class="pcp-bar-remove pcp-icon-button" title="{{localize 'PCP.Config.Remove'}}" aria-label="{{localize 'PCP.Config.Remove'}}"><i class="fa-solid fa-trash"></i></button>
+      </div>
+      <div class="pcp-bar-line">
+        <label class="pcp-mini pcp-grow"><span>{{localize "PCP.Config.BarValuePath"}}</span><input class="pcp-bar-value" type="text" list="pcp-path-list" placeholder="system.attributes.hp.value"></label>
+        <label class="pcp-mini pcp-grow"><span>{{localize "PCP.Config.BarMaxPath"}}</span><input class="pcp-bar-max" type="text" list="pcp-path-list" placeholder="system.attributes.hp.max"></label>
+      </div>
     </div>
   </template>
 
   <template data-template="field">
     <div class="pcp-field-row">
-      <input class="pcp-field-label" type="text" placeholder="CA">
-      <input class="pcp-field-path" type="text" list="pcp-path-list" placeholder="system.attributes.ac.value">
-      <input class="pcp-field-suffix" type="text" placeholder="%">
-      <button type="button" class="pcp-field-remove" title="{{localize 'PCP.Config.Remove'}}"><i class="fa-solid fa-trash"></i></button>
+      <label class="pcp-mini"><span>{{localize "PCP.Config.FieldLabel"}}</span><input class="pcp-field-label" type="text" placeholder="CA"></label>
+      <label class="pcp-mini pcp-grow"><span>{{localize "PCP.Config.FieldPath"}}</span><input class="pcp-field-path" type="text" list="pcp-path-list" placeholder="system.attributes.ac.value"></label>
+      <label class="pcp-mini"><span>{{localize "PCP.Config.FieldSuffix"}}</span><input class="pcp-field-suffix" type="text" placeholder="%"></label>
+      <button type="button" class="pcp-field-remove pcp-icon-button" title="{{localize 'PCP.Config.Remove'}}" aria-label="{{localize 'PCP.Config.Remove'}}"><i class="fa-solid fa-trash"></i></button>
     </div>
   </template>
 </div>

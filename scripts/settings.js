@@ -179,7 +179,13 @@ export function normalizeClientConfig(raw) {
     hidden: Boolean(merged.hidden),
     scale: clamp(merged.scale, 0.5, 2, 1),
     hideNames: Boolean(merged.hideNames),
-    hideBars: Boolean(merged.hideBars)
+    hideBars: Boolean(merged.hideBars),
+    a11y: {
+      text: clamp(merged.a11y?.text, 85, 160, 100),
+      contrast: Boolean(merged.a11y?.contrast),
+      legible: Boolean(merged.a11y?.legible),
+      motion: Boolean(merged.a11y?.motion)
+    }
   };
 }
 

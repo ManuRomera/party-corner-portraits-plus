@@ -149,7 +149,8 @@ export function createDefaultClientConfig() {
     hidden: false,
     scale: 1,
     hideNames: false,
-    hideBars: false
+    hideBars: false,
+    a11y: { text: 100, contrast: false, legible: false, motion: false }
   };
 }
 

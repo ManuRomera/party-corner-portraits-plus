@@ -32,6 +32,8 @@ import {
 } from "./utils.js";
 import { refreshAll } from "./events.js";
 import { openFramingApp } from "./framing-app.js";
+import { WithMemory } from "./memory.js";
+import { addA11yButton } from "./a11y.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -41,6 +43,21 @@ let currentConfigApp = null;
 function capitalize(value) {
   const text = String(value ?? "");
   return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+/** Convierte cualquier color CSS válido a #rrggbb (para el selector de color). */
+function cssToHex(value, fallback = "#4ade80") {
+  const text = String(value ?? "").trim();
+  if (/^#[0-9a-f]{6}$/i.test(text)) return text.toLowerCase();
+  try {
+    const context = document.createElement("canvas").getContext("2d");
+    context.fillStyle = "#000000";
+    context.fillStyle = text;
+    const result = context.fillStyle;
+    return /^#[0-9a-f]{6}$/i.test(result) ? result : fallback;
+  } catch {
+    return fallback;
+  }
 }
 
 function buildOptions(values, current, keyFor) {
@@ -113,7 +130,8 @@ function collectFormData(form) {
 
   config.data.bars = [...form.querySelectorAll(".pcp-bar-row")]
     .map((row, index) => {
-      const color = row.querySelector(".pcp-bar-color")?.value?.trim() || "#4ade80";
+      const auto = Boolean(row.querySelector(".pcp-bar-auto")?.checked);
+      const color = auto ? "auto" : row.querySelector(".pcp-bar-color")?.value?.trim() || "#4ade80";
       return {
         id: row.dataset.barId || `bar-${index + 1}`,
         label: row.querySelector(".pcp-bar-label")?.value?.trim() ?? "",
@@ -201,15 +219,14 @@ async function saveConfiguration(_event, form) {
   ui.notifications.info(localize("PCP.Notifications.ConfigSaved"));
 }
 
-export class PartyPortraitsConfig extends HandlebarsApplicationMixin(ApplicationV2) {
+export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(ApplicationV2)) {
+  static MEMORY_ID = "config";
+
   static DEFAULT_OPTIONS = {
     id: CONFIG_APP_ID,
     tag: "form",
-    classes: ["pcp-plus-config"],
-    position: {
-      width: 960,
-      height: Math.max(480, Math.min(900, window.innerHeight - 60))
-    },
+    classes: ["pcp-plus-window", "pcp-plus-config", "themed", "theme-dark"],
+    position: { width: 900, height: 760 },
     window: {
       title: "PCP.Config.WindowTitle",
       icon: "fa-solid fa-users-viewfinder",
@@ -230,8 +247,15 @@ export class PartyPortraitsConfig extends HandlebarsApplicationMixin(Application
   };
 
   constructor(options = {}) {
-    super(options);
-    this.activeTab = "general";
+    // Nunca más grande que la pantalla; la memoria de ventanas recuerda lo que el usuario cambie.
+    const position = {
+      width: Math.min(900, window.innerWidth - 40),
+      height: Math.min(780, window.innerHeight - 60),
+      ...options.position
+    };
+    super({ ...options, position });
+    const tabs = ["general", "appearance", "data", "players", "characters"];
+    this.activeTab = tabs.includes(this.memoryTab) ? this.memoryTab : "general";
     currentConfigApp = this;
   }
 
@@ -291,14 +315,19 @@ export class PartyPortraitsConfig extends HandlebarsApplicationMixin(Application
       ...context,
       config,
       actors,
+      barRows: config.data.bars.map(bar => ({
+        ...bar,
+        auto: bar.color === "auto",
+        hex: cssToHex(bar.color === "auto" ? "#4ade80" : bar.color)
+      })),
       paths: collectAvailablePaths(),
       systemPreset,
       systemPresetName: game.system?.title ?? game.system?.id ?? "",
-      positions: buildOptions(POSITIONS, config.bar.position, positionLabelKey),
+      positions: buildOptions(POSITIONS, config.bar.position, value => localize(positionLabelKey(value))),
       orientations: buildOptions(ORIENTATIONS, config.bar.orientation, value =>
         localize(`PCP.Orientation.${capitalize(value)}`)
       ),
-      playerPositions: buildOptions(POSITIONS, config.players.position, positionLabelKey),
+      playerPositions: buildOptions(POSITIONS, config.players.position, value => localize(positionLabelKey(value))),
       frames: buildOptions(FRAME_MODES, config.appearance.frame, value =>
         localize(`PCP.Frame.${capitalize(value)}`)
       ),
@@ -328,8 +357,11 @@ export class PartyPortraitsConfig extends HandlebarsApplicationMixin(Application
 
     const root = this.element;
 
+    addA11yButton(this);
+
     const activateTab = tab => {
       this.activeTab = tab;
+      this.rememberTab(tab);
       for (const button of root.querySelectorAll(".pcp-tab")) {
         button.classList.toggle("active", button.dataset.tab === tab);
       }
@@ -365,7 +397,10 @@ export class PartyPortraitsConfig extends HandlebarsApplicationMixin(Application
         row.querySelector(".pcp-bar-value").value = values.valuePath ?? "";
         row.querySelector(".pcp-bar-max").value = values.maxPath ?? "";
         row.querySelector(".pcp-bar-maximum").value = values.max ?? 100;
-        row.querySelector(".pcp-bar-color").value = values.color ?? "#4ade80";
+        const auto = values.color === "auto";
+        row.querySelector(".pcp-bar-auto").checked = auto;
+        row.querySelector(".pcp-bar-color").value = cssToHex(auto ? "#4ade80" : values.color);
+        row.querySelector(".pcp-bar-color").disabled = auto;
         row.querySelector(".pcp-bar-show-text").checked = values.showText !== false;
         row.querySelector(".pcp-bar-show-max").checked = values.showMax !== false;
       }
@@ -407,6 +442,12 @@ export class PartyPortraitsConfig extends HandlebarsApplicationMixin(Application
     root.querySelector(".pcp-add-field")?.addEventListener("click", event => {
       event.preventDefault();
       appendFieldRow();
+    });
+
+    barList?.addEventListener("change", event => {
+      if (!event.target.matches(".pcp-bar-auto")) return;
+      const color = event.target.closest(".pcp-bar-row")?.querySelector(".pcp-bar-color");
+      if (color) color.disabled = event.target.checked;
     });
 
     barList?.addEventListener("click", event => {

@@ -6,6 +6,7 @@
 import { getConfig } from "./settings.js";
 import { colorToCss, localize } from "./utils.js";
 import { dispatchMenuEvent } from "./events.js";
+import { avoidCoreUi } from "./layout.js";
 
 function canSeeCharacter(actor) {
   if (!actor) return false;
@@ -121,4 +122,5 @@ export function renderPlayerList() {
   panel.appendChild(list);
 
   document.body.appendChild(panel);
+  avoidCoreUi(panel, config.players.position);
 }
