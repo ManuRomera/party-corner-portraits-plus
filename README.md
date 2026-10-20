@@ -95,7 +95,7 @@ Panel en vivo (botón derecho → «Estudio de retratos…») con las opciones d
 
 ### Vista ampliada
 
-Deja el cursor sobre un retrato de la barra y se ve en grande el **token**, el **retrato** o un **archivo propio** por personaje (imagen, GIF o vídeo en bucle), con espera, tamaño y posición configurables. El máster puede enseñárselo a todos (botón derecho → «Mostrar a todos»). Admite recortes con transparencia: usa WebP/PNG o vídeo **webm con canal alfa** (el mp4 y el GIF no soportan bien la transparencia) con la opción «Sin cuadro».
+Deja el cursor sobre un retrato de la barra y se ve en grande el **token**, el **retrato** o un **archivo propio** por personaje (imagen, GIF o vídeo en bucle), con espera y tamaño configurables. Sale siempre en un punto fijo que eliges arrastrándola (botón derecho → «Mover la imagen ampliada») y, por defecto, sin marco ni fondo. El máster puede enseñárselo a todos (botón derecho → «Mostrar a todos»). Admite recortes con transparencia: usa WebP/PNG o vídeo **webm con canal alfa** (el mp4 y el GIF no soportan bien la transparencia) con la opción «Sin cuadro».
 
 ### Accesibilidad
 

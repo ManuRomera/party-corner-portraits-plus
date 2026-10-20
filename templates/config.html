@@ -274,14 +274,14 @@
           <span class="pcp-range"><input type="range" name="hover.size" min="160" max="900" step="20" value="{{config.hover.size}}" data-output="hoverSize" data-suffix=" px"><output data-for="hoverSize">{{config.hover.size}} px</output></span>
         </label>
         <label class="pcp-row">
-          <span class="pcp-row-text">{{localize "PCP.Hover.Placement"}}</span>
+          <span class="pcp-row-text">{{localize "PCP.Hover.Placement"}}<small>{{localize "PCP.Hover.PlacementHint"}}</small></span>
           <select name="hover.placement">
             {{#each hoverPlacements}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
         </label>
         <label class="pcp-row pcp-row-check">
-          <span class="pcp-row-text">{{localize "PCP.Hover.Frameless"}}<small>{{localize "PCP.Hover.FramelessHint"}}</small></span>
-          <input type="checkbox" class="pcp-switch" name="hover.frameless" {{#if config.hover.frameless}}checked{{/if}}>
+          <span class="pcp-row-text">{{localize "PCP.Hover.Box"}}<small>{{localize "PCP.Hover.BoxHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="hover.box" {{#if config.hover.box}}checked{{/if}}>
         </label>
         <label class="pcp-row pcp-row-check">
           <span class="pcp-row-text">{{localize "PCP.Hover.Caption"}}</span>

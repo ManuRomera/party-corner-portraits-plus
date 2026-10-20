@@ -1604,26 +1604,22 @@ body.pcp-a11y-calm.pcp-auto-players #players {
   z-index: 200;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
-  max-width: 92vw;
-  padding: 8px;
-  border: 1px solid var(--pcp-line);
-  border-radius: var(--pcp-radius-lg);
-  background: var(--pcp-surface);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65);
-  color: var(--pcp-ink);
+  max-width: 96vw;
+  padding: 0;
+  color: #fff;
   font-family: var(--pcp-font);
   pointer-events: none;
   animation: pcp-hover-in 140ms ease-out;
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
 }
 
+/* Por defecto, sin marco ni fondo: solo la figura (con sombra por si es un recorte transparente). */
 .pcp-hover .pcp-hover-media {
   display: block;
   max-width: 100%;
-  border-radius: calc(var(--pcp-radius-lg) - 4px);
-  background: #0c0d10;
+  background: none;
+  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.75));
   object-fit: contain;
 }
 
@@ -1635,34 +1631,54 @@ body.pcp-a11y-calm.pcp-auto-players #players {
   padding: 0 4px 2px;
   font-size: calc(14px * var(--pcp-text-scale));
   text-align: center;
-}
-
-.pcp-hover .pcp-hover-caption span {
-  color: var(--pcp-ink-2);
-  font-size: 0.86em;
-}
-
-.pcp-hover.pcp-hover-shared { box-shadow: 0 0 0 2px var(--pcp-accent), 0 18px 50px rgba(0, 0, 0, 0.7); }
-
-/* Recortes con fondo transparente (PNG, WebP o webm con alfa): sin cuadro, solo la silueta con sombra. */
-.pcp-hover.pcp-hover-frameless {
-  padding: 0;
-  border: 0;
-  background: none;
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
-
-.pcp-hover.pcp-hover-frameless .pcp-hover-media {
-  border-radius: 0;
-  background: none;
-  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.75));
-}
-
-.pcp-hover.pcp-hover-frameless .pcp-hover-caption {
-  color: #fff;
   text-shadow: 0 1px 3px #000, 0 0 10px #000;
+}
+
+.pcp-hover .pcp-hover-caption span { font-size: 0.86em; opacity: 0.85; }
+
+/* Opcional: marco y fondo. */
+.pcp-hover.pcp-hover-box {
+  padding: 8px;
+  border: 1px solid var(--pcp-line);
+  border-radius: var(--pcp-radius-lg);
+  background: var(--pcp-surface);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.pcp-hover.pcp-hover-box .pcp-hover-media {
+  border-radius: calc(var(--pcp-radius-lg) - 4px);
+  background: #0c0d10;
+  filter: none;
+}
+
+.pcp-hover.pcp-hover-shared .pcp-hover-media { filter: drop-shadow(0 0 3px var(--pcp-accent)) drop-shadow(0 12px 26px rgba(0, 0, 0, 0.75)); }
+
+/* Modo «mover la imagen ampliada» */
+.pcp-hover.pcp-hover-moving {
+  outline: 2px dashed var(--pcp-accent);
+  outline-offset: 8px;
+  pointer-events: auto;
+  cursor: move;
+  animation: none;
+  user-select: none;
+}
+
+.pcp-hover .pcp-hover-hint {
+  position: absolute;
+  top: -42px;
+  left: 50%;
+  padding: 5px 12px;
+  border: 1px solid var(--pcp-line);
+  border-radius: 999px;
+  background: var(--pcp-surface);
+  color: var(--pcp-ink);
+  font-size: calc(12px * var(--pcp-text-scale));
+  white-space: nowrap;
+  text-shadow: none;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 @keyframes pcp-hover-in {

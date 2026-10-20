@@ -20,7 +20,7 @@ export const BACKGROUND_MODES = ["dark", "transparent", "none"];
 export const VISIBILITY_MODES = ["show", "hide", "hover"];
 export const IMAGE_SOURCES = ["portrait", "token", "custom"];
 export const HOVER_SOURCES = ["token", "portrait", "same"];
-export const HOVER_PLACEMENTS = ["beside", "center", "top-left", "top-right", "bottom-left", "bottom-right"];
+export const HOVER_PLACEMENTS = ["free", "center", "top-left", "top-right", "bottom-left", "bottom-right"];
 export const HOVER_PERMISSIONS = ["none", "LIMITED", "OBSERVER", "OWNER"];
 export const HOTBAR_OVERLAPS = ["shift", "front"];
 export const BAR_POSITIONS = ["overlay", "below"];
@@ -149,10 +149,11 @@ export function createDefaultConfig() {
       delay: 350,
       source: "token",
       size: 420,
-      placement: "beside",
+      placement: "free",
+      pos: { x: 0.5, y: 0.4 },
       permission: "none",
       caption: true,
-      frameless: false,
+      box: false,
       sharedSeconds: 6
     },
     players: {

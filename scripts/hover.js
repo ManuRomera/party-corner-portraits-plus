@@ -6,8 +6,9 @@
  */
 
 import { MODULE_ID } from "./constants.js";
-import { getClientConfig, getConfig } from "./settings.js";
-import { getActorConfig, getActorPlayerLabel } from "./utils.js";
+import { getClientConfig, getConfig, mutateConfig } from "./settings.js";
+import { refreshAll } from "./events.js";
+import { getActorConfig, getActorPlayerLabel, localize } from "./utils.js";
 import { createPortraitElement, hoverSource, naturalSize } from "./media.js";
 
 const ID = "pcp-hover";
@@ -33,19 +34,17 @@ export function hideHover({ force = false } = {}) {
   sharedUntil = 0;
 }
 
-function place(card, placement, size) {
-  if (!element) return;
+let dragging = false;
+
+/** Coloca el panel: en el punto fijo elegido por el máster (o en una esquina/centro), siempre dentro de la pantalla. */
+function place(placement, pos) {
+  if (!element || dragging) return;
   const box = element.getBoundingClientRect();
   const { innerWidth: vw, innerHeight: vh } = window;
   let x;
   let y;
 
-  if (placement === "beside" && card?.isConnected) {
-    const rect = card.getBoundingClientRect();
-    const right = rect.left + rect.width / 2 < vw / 2;
-    x = right ? rect.right + 14 : rect.left - 14 - box.width;
-    y = rect.top + rect.height / 2 - box.height / 2;
-  } else if (placement === "top-left") {
+  if (placement === "top-left") {
     [x, y] = [MARGIN + 80, MARGIN];
   } else if (placement === "top-right") {
     [x, y] = [vw - box.width - MARGIN - 60, MARGIN];
@@ -53,6 +52,9 @@ function place(card, placement, size) {
     [x, y] = [MARGIN + 80, vh - box.height - MARGIN];
   } else if (placement === "bottom-right") {
     [x, y] = [vw - box.width - MARGIN - 60, vh - box.height - MARGIN];
+  } else if (placement === "free") {
+    // El punto elegido es el centro de la imagen (en fracción de pantalla): vale para cualquier tamaño.
+    [x, y] = [pos.x * vw - box.width / 2, pos.y * vh - box.height / 2];
   } else {
     [x, y] = [(vw - box.width) / 2, (vh - box.height) / 2];
   }
@@ -74,7 +76,7 @@ function fit(media, size, reposition) {
   reposition();
 }
 
-export function showHover(actorId, { card = null, shared = false } = {}) {
+export function showHover(actorId, { card = null, shared = false, moving = false } = {}) {
   const actor = game.actors?.get(actorId);
   if (!actor) return;
   const config = getConfig();
@@ -84,11 +86,11 @@ export function showHover(actorId, { card = null, shared = false } = {}) {
   hideHover({ force: true });
 
   const src = hoverSource(actor, actorConfig, config);
-  const placement = shared ? "center" : config.hover.placement;
+  const placement = shared ? "center" : moving ? "free" : config.hover.placement;
 
   element = document.createElement("div");
   element.id = ID;
-  element.className = `pcp-hover${shared ? " pcp-hover-shared" : ""}${config.hover.frameless ? " pcp-hover-frameless" : ""}`;
+  element.className = `pcp-hover${shared ? " pcp-hover-shared" : ""}${config.hover.box ? " pcp-hover-box" : ""}`;
   element.style.visibility = "hidden";
   element.setAttribute("role", "img");
   element.setAttribute("aria-label", actor.name);
@@ -114,8 +116,8 @@ export function showHover(actorId, { card = null, shared = false } = {}) {
 
   document.body.appendChild(element);
   // El panel puede cambiar de tamaño al cargar el medio o el texto: se recoloca siempre dentro de la pantalla.
-  new ResizeObserver(() => place(card, placement, config.hover.size)).observe(element);
-  const reposition = () => place(card, placement, config.hover.size);
+  new ResizeObserver(() => place(placement, config.hover.pos)).observe(element);
+  const reposition = () => place(placement, config.hover.pos);
   const refit = () => fit(media, config.hover.size, reposition);
   media.addEventListener("load", refit, { once: true });
   media.addEventListener("loadedmetadata", refit, { once: true });
@@ -146,6 +148,72 @@ export function attachHover(card, actor) {
   card.addEventListener("contextmenu", () => hideHover());
   card.addEventListener("focus", () => schedule(actor, card));
   card.addEventListener("blur", () => hideHover());
+}
+
+/**
+ * Modo «mover la imagen ampliada»: se muestra la del primer personaje de la barra y se arrastra hasta
+ * el punto que convenga; al soltar se fija ahí para todos los personajes. Esc cancela.
+ */
+export function startHoverMove() {
+  if (!game.user.isGM) return;
+  const config = getConfig();
+  const actorId = config.order.find(id => game.actors?.get(id));
+  if (!actorId) {
+    ui.notifications.warn(localize("PCP.Hover.NoCharacters"));
+    return;
+  }
+  showHover(actorId, { moving: true });
+  if (!element) return;
+  sharedUntil = Infinity; // no se cierra mientras se coloca
+  element.classList.add("pcp-hover-moving");
+  const hint = document.createElement("div");
+  hint.className = "pcp-hover-hint";
+  hint.innerHTML = `<i class="fa-solid fa-up-down-left-right"></i> ${localize("PCP.Hover.MoveHint")}`;
+  element.appendChild(hint);
+
+  const finish = () => {
+    dragging = false;
+    document.removeEventListener("keydown", onKey, true);
+    sharedUntil = 0;
+    hideHover({ force: true });
+  };
+  const onKey = event => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      finish();
+    }
+  };
+  document.addEventListener("keydown", onKey, true);
+
+  element.addEventListener("pointerdown", event => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    dragging = true;
+    const rect = element.getBoundingClientRect();
+    const dx = event.clientX - rect.left;
+    const dy = event.clientY - rect.top;
+    const move = e => {
+      element.style.left = `${Math.min(Math.max(0, e.clientX - dx), window.innerWidth - rect.width)}px`;
+      element.style.top = `${Math.min(Math.max(0, e.clientY - dy), window.innerHeight - rect.height)}px`;
+    };
+    const up = async () => {
+      window.removeEventListener("pointermove", move);
+      const box = element.getBoundingClientRect();
+      const pos = {
+        x: (box.left + box.width / 2) / window.innerWidth,
+        y: (box.top + box.height / 2) / window.innerHeight
+      };
+      finish();
+      await mutateConfig(cfg => {
+        cfg.hover.placement = "free";
+        cfg.hover.pos = pos;
+      });
+      refreshAll();
+      ui.notifications.info(localize("PCP.Hover.MoveSaved"));
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up, { once: true });
+  });
 }
 
 /** El máster enseña la imagen ampliada de un personaje a todos los conectados. */

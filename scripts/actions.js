@@ -38,7 +38,7 @@ import { setMoveMode, isMoveMode } from "./hud.js";
 import { openFramingApp } from "./framing-app.js";
 import { openConfigApp } from "./config-app.js";
 import { A11yPanel } from "./a11y.js";
-import { showToEveryone } from "./hover.js";
+import { showToEveryone, startHoverMove } from "./hover.js";
 import { openStudio } from "./studio.js";
 
 const { DialogV2 } = foundry.applications.api;
@@ -71,11 +71,67 @@ async function updateActorConfig(actorId, patch) {
   refreshAll();
 }
 
+/** Un solo tamaño para todos: se fija el global y se quitan los tamaños propios de cada personaje. */
 async function setGlobalSize(size) {
   await mutateConfig(config => {
     config.bar.size = clampSize(size, config.bar.size);
+    for (const id of Object.keys(config.actors)) config.actors[id].size = null;
   });
   refreshAll();
+}
+
+async function setHoverSize(size) {
+  await mutateConfig(config => {
+    config.hover.size = Math.round(Math.min(1200, Math.max(120, size)));
+  });
+  refreshAll();
+}
+
+async function promptHoverSize() {
+  const current = getConfig().hover.size;
+  const value = await DialogV2.prompt({
+    window: { title: localize("PCP.Hover.SizeTitle") },
+    content: `
+      <div class="pcp-dialog-content">
+        <label class="pcp-dialog-label">${localize("PCP.Hover.SizeLabel")}</label>
+        <input type="number" name="size" value="${current}" min="120" max="1200" step="10">
+      </div>
+    `,
+    ok: { label: localize("PCP.Common.Apply"), icon: "fa-solid fa-check", callback: (event, button) => button.form.elements.size.value }
+  }).catch(() => null);
+  if (value === null || value === undefined) return;
+  await setHoverSize(numericValue(value) ?? current);
+}
+
+const HOVER_SIZE_PRESETS = [240, 320, 420, 560, 720, 900];
+
+function hoverSizeItems() {
+  const current = getConfig().hover.size;
+  return [
+    ...HOVER_SIZE_PRESETS.map(size => ({
+      label: `${size}px`,
+      icon: "fa-solid fa-up-right-and-down-left-from-center",
+      checked: current === size,
+      action: () => setHoverSize(size)
+    })),
+    { separator: true },
+    { label: localize("PCP.Menu.Size.Custom"), icon: "fa-solid fa-pen-ruler", action: () => promptHoverSize() }
+  ];
+}
+
+function hoverLayoutItems() {
+  return [
+    {
+      label: localize("PCP.Menu.Hover.Size"),
+      icon: "fa-solid fa-magnifying-glass-plus",
+      children: hoverSizeItems()
+    },
+    {
+      label: localize("PCP.Menu.Hover.Move"),
+      icon: "fa-solid fa-up-down-left-right",
+      action: () => startHoverMove()
+    }
+  ];
 }
 
 async function promptSize(actorId = null) {
@@ -522,8 +578,9 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
       {
         label: localize("PCP.Menu.Actor.Size"),
         icon: "fa-solid fa-up-right-and-down-left-from-center",
-        children: sizeMenuItems(actorId)
+        children: sizeMenuItems()
       },
+      ...hoverLayoutItems(),
       {
         label: localize("PCP.Menu.Actor.Source"),
         icon: "fa-solid fa-image-portrait",
@@ -784,6 +841,7 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
         icon: "fa-solid fa-up-right-and-down-left-from-center",
         children: sizeMenuItems()
       },
+      ...hoverLayoutItems(),
       {
         label: localize("PCP.Menu.Hud.Appearance"),
         icon: "fa-solid fa-palette",

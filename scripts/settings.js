@@ -201,10 +201,15 @@ export function normalizeConfig(raw) {
   merged.hover.delay = clamp(merged.hover.delay, 0, 3000, 350);
   merged.hover.source = HOVER_SOURCES.includes(merged.hover.source) ? merged.hover.source : "token";
   merged.hover.size = clamp(merged.hover.size, 120, 1200, 420);
-  merged.hover.placement = HOVER_PLACEMENTS.includes(merged.hover.placement) ? merged.hover.placement : "beside";
+  // «Junto al retrato» (1.4) cambió de sitio con cada personaje: ahora la posición es fija.
+  merged.hover.placement = HOVER_PLACEMENTS.includes(merged.hover.placement) ? merged.hover.placement : "free";
+  merged.hover.pos = {
+    x: clamp(merged.hover.pos?.x, 0, 1, 0.5),
+    y: clamp(merged.hover.pos?.y, 0, 1, 0.4)
+  };
   merged.hover.permission = HOVER_PERMISSIONS.includes(merged.hover.permission) ? merged.hover.permission : "none";
   merged.hover.caption = merged.hover.caption !== false;
-  merged.hover.frameless = Boolean(merged.hover.frameless);
+  merged.hover.box = merged.hover.box === true;
   merged.hover.sharedSeconds = clamp(merged.hover.sharedSeconds, 1, 60, 6);
 
   merged.players = merged.players || {};

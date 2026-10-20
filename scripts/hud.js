@@ -420,6 +420,7 @@ export function setMoveMode(enabled) {
     if (event.key === "Escape") {
       event.preventDefault();
       setMoveMode(false);
+      refreshAll(); // vuelve a la posición guardada
     }
   };
   document.addEventListener("keydown", escapeListener, true);

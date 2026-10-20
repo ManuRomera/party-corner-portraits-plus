@@ -168,7 +168,8 @@ function collectFormData(form) {
     placement: HOVER_PLACEMENTS.includes(value("hover.placement")) ? value("hover.placement") : old.hover.placement,
     permission: HOVER_PERMISSIONS.includes(value("hover.permission")) ? value("hover.permission") : old.hover.permission,
     caption: checked("hover.caption"),
-    frameless: checked("hover.frameless"),
+    box: checked("hover.box"),
+    pos: old.hover.pos,
     sharedSeconds: clamp(value("hover.sharedSeconds"), 1, 60, old.hover.sharedSeconds)
   };
 

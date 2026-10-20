@@ -1,5 +1,13 @@
 # Cambios
 
+## 1.6.0
+
+- **La imagen ampliada sale siempre en el mismo sitio** para todos los personajes: un punto fijo que eliges tú. Se acabó «junto al retrato» (cambiaba con cada personaje).
+- **Por defecto, sin marco ni fondo**: solo la figura (con sombra, pensado para recortes transparentes). El cuadro con fondo es opcional: Vista ampliada → «Marco y fondo».
+- **Tamaño simple desde el botón derecho**: «Tamaño de la imagen ampliada» (240 a 900 px o personalizado) y «Tamaño de los retratos (todos)». Un tamaño vale para todos los personajes; al elegir el de los retratos se quitan los tamaños propios de cada uno (los individuales se siguen pudiendo poner en el Estudio).
+- **Modo mover la imagen ampliada** (botón derecho → «Mover la imagen ampliada»): sale una de ejemplo, la arrastras hasta donde convenga y al soltar queda fijada. Esc cancela.
+- **Modo mover la barra de retratos** con aviso claro: arrastra, suelta para fijarla, Esc cancela y vuelve a su sitio.
+
 ## 1.5.0
 
 **Estudio de retratos** (botón derecho sobre la barra o sobre un retrato → «Estudio de retratos…»), con las opciones de MR Token Stage que tienen sentido en una barra de retratos. Los controles actúan **en vivo** al arrastrar y se guardan al soltar:
