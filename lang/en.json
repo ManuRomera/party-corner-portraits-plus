@@ -221,5 +221,9 @@
   "PCP.Visibility.Hover": "Show when the cursor is near",
   "PCP.Config.Media": "Animated portrait or video",
   "PCP.Config.MediaPlaceholder": "Empty = the character's image. Accepts webm, mp4, GIF, animated WebP",
-  "PCP.Config.MediaPick": "Choose file"
+  "PCP.Config.MediaPick": "Choose file",
+  "PCP.Config.HotbarOverlap": "If the macro bar covers the portraits",
+  "PCP.Config.HotbarOverlapHint": "Move it aside, or show it in front, semi-transparent.",
+  "PCP.Overlap.Shift": "Move it aside",
+  "PCP.Overlap.Front": "In front, semi-transparent"
 }

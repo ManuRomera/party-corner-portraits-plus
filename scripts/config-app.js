@@ -14,6 +14,7 @@ import {
   BACKGROUND_MODES,
   BAR_POSITIONS,
   VISIBILITY_MODES,
+  HOTBAR_OVERLAPS,
   SYSTEM_BAR_PRESETS
 } from "./constants.js";
 import { getConfig, saveConfig } from "./settings.js";
@@ -169,6 +170,9 @@ function collectFormData(form) {
   config.players.title = value("players.title", "").trim();
 
   config.ui.hotbar = VISIBILITY_MODES.includes(value("hotbar")) ? value("hotbar") : old.ui.hotbar;
+  config.ui.hotbarOverlap = HOTBAR_OVERLAPS.includes(value("hotbarOverlap"))
+    ? value("hotbarOverlap")
+    : old.ui.hotbarOverlap;
   config.ui.players = VISIBILITY_MODES.includes(value("playersVisibility"))
     ? value("playersVisibility")
     : old.ui.players;
@@ -350,6 +354,9 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       ),
       hotbarModes: buildOptions(VISIBILITY_MODES, config.ui.hotbar, value =>
         localize(`PCP.Visibility.${capitalize(value)}`)
+      ),
+      hotbarOverlaps: buildOptions(HOTBAR_OVERLAPS, config.ui.hotbarOverlap, value =>
+        localize(`PCP.Overlap.${capitalize(value)}`)
       ),
       playersModes: buildOptions(VISIBILITY_MODES, config.ui.players, value =>
         localize(`PCP.Visibility.${capitalize(value)}`)

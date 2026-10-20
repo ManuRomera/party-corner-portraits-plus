@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.2.1
+
+- **La barra de macros ya no estorba a los retratos.** Si al aparecer (o estando visible) se solapa con la barra de retratos, se aparta hacia el lado contrario o se pone delante y semitransparente, según elijas en Configuración → General («Si la barra de macros tapa los retratos») o en el menú del asa de la barra. Por defecto se aparta.
+
 ## 1.2.0
 
 - **Barra de macros y lista de jugadores de Foundry:** cada una puede estar *visible*, *oculta del todo* o *aparecer al acercar el cursor* (como el dock). Se elige en Configuración → General y en el menú del asa de la barra. Los mundos que ya tenían «ocultar» lo conservan.

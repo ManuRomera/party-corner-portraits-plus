@@ -7,7 +7,7 @@ import { MODULE_ID } from "./constants.js";
 import { registerSettings, ensureInitialized } from "./settings.js";
 import { renderHud } from "./hud.js";
 import { renderPlayerList } from "./players.js";
-import { applyUiConfig } from "./ui.js";
+import { applyUiConfig, placeHotbar } from "./ui.js";
 import { PartyPortraitsConfig, openConfigApp } from "./config-app.js";
 import { openActorMenu, openHudMenu, openUserMenu } from "./actions.js";
 import { onRefresh, refreshAll, refreshDebounced } from "./events.js";
@@ -58,6 +58,7 @@ Hooks.once("ready", async () => {
   onRefresh(applyA11y);
   onRefresh(renderPlayerList);
   onRefresh(renderHud);
+  onRefresh(placeHotbar);
 
   refreshAll();
   // La interfaz de Foundry termina de colocarse después de «ready».

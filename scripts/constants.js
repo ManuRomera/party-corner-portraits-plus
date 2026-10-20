@@ -18,6 +18,7 @@ export const IMAGE_FITS = ["cover", "contain"];
 export const NAME_POSITIONS = ["overlay", "below", "hidden"];
 export const BACKGROUND_MODES = ["dark", "transparent", "none"];
 export const VISIBILITY_MODES = ["show", "hide", "hover"];
+export const HOTBAR_OVERLAPS = ["shift", "front"];
 export const BAR_POSITIONS = ["overlay", "below"];
 
 export const DEFAULT_ACTOR = {
@@ -141,6 +142,7 @@ export function createDefaultConfig() {
     },
     ui: {
       hotbar: "show",
+      hotbarOverlap: "shift",
       players: "show"
     },
     order: [],

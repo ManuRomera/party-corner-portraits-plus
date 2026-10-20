@@ -1526,6 +1526,14 @@ body.pcp-a11y-contrast .pcp-plus-window .window-content input.pcp-switch:checked
    Interfaz de Foundry
    -------------------------------------------------------------------------- */
 
+body #hotbar { translate: var(--pcp-hotbar-x, 0px) 0; }
+
+/* La interfaz de Foundry vive en una capa con z-index 30: para que la barra de macros quede
+   delante, los retratos bajan por debajo de esa capa solo mientras se solapan. */
+body.pcp-hotbar-over #pcp-party-hud {
+  z-index: 25;
+}
+
 body.pcp-hide-hotbar #hotbar,
 body.pcp-hide-players #players {
   display: none !important;
@@ -1548,6 +1556,12 @@ body.pcp-auto-players.pcp-peek-players #players {
   opacity: 1;
   pointer-events: auto;
   transform: none;
+}
+
+/* Delante de los retratos: semitransparente, pero solo cuando se ve. */
+body.pcp-hotbar-over:not(.pcp-auto-hotbar) #hotbar,
+body.pcp-hotbar-over.pcp-auto-hotbar.pcp-peek-hotbar #hotbar {
+  opacity: 0.82;
 }
 
 body.pcp-a11y-calm.pcp-auto-hotbar #hotbar,

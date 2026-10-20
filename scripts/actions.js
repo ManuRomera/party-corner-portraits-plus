@@ -12,7 +12,8 @@ import {
   IMAGE_FITS,
   NAME_POSITIONS,
   BACKGROUND_MODES,
-  VISIBILITY_MODES
+  VISIBILITY_MODES,
+  HOTBAR_OVERLAPS
 } from "./constants.js";
 import {
   getConfig,
@@ -700,7 +701,16 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
       {
         label: localize("PCP.Config.Hotbar"),
         icon: "fa-solid fa-keyboard",
-        children: visibilityItems(config, "hotbar")
+        children: [
+          ...visibilityItems(config, "hotbar"),
+          { separator: true },
+          ...HOTBAR_OVERLAPS.map(mode => ({
+            label: localize(`PCP.Overlap.${capitalize(mode)}`),
+            icon: mode === "shift" ? "fa-solid fa-arrows-left-right" : "fa-solid fa-clone",
+            checked: config.ui.hotbarOverlap === mode,
+            action: () => setConfigValue("ui.hotbarOverlap", mode)
+          }))
+        ]
       },
       {
         label: localize("PCP.Menu.Hud.HidePlayers"),

@@ -18,6 +18,7 @@ import {
   BACKGROUND_MODES,
   BAR_POSITIONS,
   VISIBILITY_MODES,
+  HOTBAR_OVERLAPS,
   SIZE_MIN,
   SIZE_MAX
 } from "./constants.js";
@@ -167,7 +168,8 @@ export function normalizeConfig(raw) {
   const mode = (value, old) => (VISIBILITY_MODES.includes(value) ? value : old ? "hide" : "show");
   merged.ui = {
     hotbar: mode(raw?.ui?.hotbar, legacy.hideHotbar),
-    players: mode(raw?.ui?.players, legacy.hidePlayers)
+    players: mode(raw?.ui?.players, legacy.hidePlayers),
+    hotbarOverlap: HOTBAR_OVERLAPS.includes(raw?.ui?.hotbarOverlap) ? raw.ui.hotbarOverlap : "shift"
   };
 
   const actors = merged.actors && typeof merged.actors === "object" ? merged.actors : {};

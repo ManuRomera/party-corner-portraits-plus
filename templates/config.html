@@ -77,6 +77,12 @@
           </select>
         </label>
         <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.HotbarOverlap"}}<small>{{localize "PCP.Config.HotbarOverlapHint"}}</small></span>
+          <select name="hotbarOverlap">
+            {{#each hotbarOverlaps}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </label>
+        <label class="pcp-row">
           <span class="pcp-row-text">{{localize "PCP.Config.HidePlayers"}}<small>{{localize "PCP.Config.HidePlayersHint"}}</small></span>
           <select name="playersVisibility">
             {{#each playersModes}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
