@@ -1,163 +1,136 @@
-# Party Corner Portraits +
+<p align="center">
+  <img src="docs/img/banner.png" alt="Party Corner Portraits +" width="100%">
+</p>
 
-> **Todo el mérito de la idea y de la base es de [malatestaabrx](https://github.com/malatestaabrx)**, autor de [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits). Este módulo es una versión con mejoras sobre el suyo, publicada con su nombre y sin marca propia por respeto al autor original. Si te gusta, visita y apoya el módulo original.
+<p align="center">
+  <a href="https://github.com/ManuRomera/party-corner-portraits-plus/releases/latest"><img alt="Última versión" src="https://img.shields.io/github/v/release/ManuRomera/party-corner-portraits-plus?style=for-the-badge&color=ffd60a&label=versión"></a>
+  <img alt="Foundry VTT v13" src="https://img.shields.io/badge/Foundry%20VTT-v13-57d8c8?style=for-the-badge">
+  <a href="https://github.com/ManuRomera/party-corner-portraits-plus/releases"><img alt="Descargas" src="https://img.shields.io/github/downloads/ManuRomera/party-corner-portraits-plus/total?style=for-the-badge&color=ff7a1f"></a>
+  <img alt="Cualquier sistema" src="https://img.shields.io/badge/sistema-cualquiera-2b3245?style=for-the-badge">
+</p>
 
-Fork de [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits) para **Foundry VTT 13** que añade datos de ficha, barras configurables, posición libre, menús contextuales, encuadre de retratos y sustitución de la lista de jugadores.
+<h3 align="center">Los retratos de tu grupo, siempre a la vista.<br>Con datos de ficha, vista ampliada, halo, vídeo y mucho control.</h3>
 
-El módulo es independiente del original: su ID es `party-corner-portraits-plus`, por lo que puedes tener ambos instalados (no los actives a la vez para evitar barras duplicadas).
-
-- **Repositorio:** <https://github.com/ManuRomera/party-corner-portraits-plus>
-- **Manifest para Foundry:** <https://github.com/ManuRomera/party-corner-portraits-plus/releases/latest/download/module.json>
-
----
-
-## Funciones
-
-### Retratos del grupo
-
-- Selección de personajes desde la configuración (independiente de la asignación jugador → personaje).
-- Varios personajes por jugador.
-- Cuatro esquinas, disposición horizontal o vertical y desplazamientos en píxeles.
-- **Posición libre**: arrastra la barra a cualquier punto de la pantalla.
-- Tamaño global y **tamaño por personaje**.
-- Orden manual mediante números o con el menú contextual.
-- Clic en un retrato para abrir la ficha (si tienes permiso).
-
-### Datos visibles
-
-- Nombre del personaje.
-- **Nombre del jugador** (detectado por la propiedad del actor, con posibilidad de escribir uno propio).
-- Indicador de conexión del jugador.
-- **Campos extra** de la ficha como pequeñas etiquetas: CA, nivel, estrés, etc.
-- **Barras configurables** para cualquier campo numérico de la ficha:
-  - ruta del valor,
-  - ruta del máximo,
-  - máximo fijo de reserva,
-  - color libre o **automático** (verde → rojo según el porcentaje),
-  - texto de valor y máximo.
-- Presets automáticos para varios sistemas conocidos (D&D 5e, PF2e, CoC 7e, Alien, WoD5, Cyberpunk RED, SWADE, Fate).
-- Sugerencias de rutas extraídas de las fichas reales del mundo.
-
-Ejemplos de rutas:
-
-| Sistema | Valor | Máximo |
-| --- | --- | --- |
-| D&D 5e / PF2e | `system.attributes.hp.value` | `system.attributes.hp.max` |
-| Call of Cthulhu 7e | `system.attributes.hp.value` | `system.attributes.hp.max` |
-| Alien / WoD5 | `system.health.value` | `system.health.max` |
-| SWADE | `system.wounds.value` | `system.wounds.max` |
-
-El prefijo `system.` es opcional: `attributes.hp.value` también funciona.
-
-### Aspecto e imágenes
-
-- Colores, grosor de borde, radio, sombra, opacidad y escala al pasar el ratón.
-- **Marcos**: completo, mínimo o **sin marco**.
-- **Fondo**: oscuro, transparente o ninguno.
-- Ajuste de imagen **cover** (rellenar) o **contain** (ver completa).
-- Blanco y negro.
-- **Ventana de encuadre** con arrastre y rueda de zoom, por personaje.
-- Posibilidad de usar PNG sin fondo, sin marco y con fondo transparente para integrar el retrato en la escena.
-
-### Menús con el botón derecho
-
-- **Sobre un retrato (máster)**:
-  - abrir ficha,
-  - tamaño (global, presets o personalizado),
-  - encuadre (abrir editor, centrar, resetear zoom, cover/contain),
-  - aspecto (marco, posición del nombre, borde propio),
-  - orden (subir, bajar, al principio, al final),
-  - quitar de la barra,
-  - abrir la configuración.
-- **Sobre el asa de la barra (máster)**:
-  - mover la barra,
-  - posición (esquinas o libre) y orientación,
-  - tamaño global,
-  - aspecto global (marco, ajuste, fondo, nombre),
-  - nombres de personaje y de jugador,
-  - ocultar la barra de macros,
-  - sustituir/ocultar la lista de jugadores,
-  - configuración.
-- **Sobre un retrato (jugador)**:
-  - abrir su ficha,
-  - preferencias locales (ocultar la barra, escala, nombres y barras).
-- **Sobre un nombre de jugador**:
-  - *Máster*: abrir ficha, llevar a la escena, mostrar/ocultar en la barra, elegir personaje, configurar el usuario, susurrar, expulsar.
-  - *Jugador*: abrir su ficha, configurar su usuario, elegir personaje, pedir al máster que lo muestre, susurrar al máster y preferencias locales.
-
-### Retratos animados
-
-Puedes mostrar el **retrato** (imagen de la ficha), el **token** (figura del mapa) o un **archivo propio** por personaje: imagen, GIF en bucle o vídeo corto en bucle (webm, mp4). Se elige en *Personajes* o con el botón derecho sobre el retrato. El vídeo va sin sonido y en bucle.
-
-### Estudio de retratos
-
-Panel en vivo (botón derecho → «Estudio de retratos…») con las opciones de [MR Token Stage](https://github.com/ManuRomera/mr-token-stage) adaptadas a la barra: tamaño (deslizador, ±10 %, atajos, igualar), transparencia, giro y volteo, halo con pulso, cuenta atrás de turnos, presets, copiar/pegar, deshacer, original, y Focus/Spotlight. Funciona sobre uno o varios personajes y también desde macros (`game.partyCornerPortraitsPlus.glow(...)`, etc.).
-
-### Vista ampliada
-
-Deja el cursor sobre un retrato de la barra y se ve en grande el **token**, el **retrato** o un **archivo propio** por personaje (imagen, GIF o vídeo en bucle), con espera y tamaño configurables. Sale siempre en un punto fijo que eliges arrastrándola (botón derecho → «Mover la imagen ampliada») y, por defecto, sin marco ni fondo. El máster puede enseñárselo a todos (botón derecho → «Mostrar a todos»). Admite recortes con transparencia: usa WebP/PNG o vídeo **webm con canal alfa** (el mp4 y el GIF no soportan bien la transparencia) con la opción «Sin cuadro».
-
-### Accesibilidad
-
-- Icono de accesibilidad en la cabecera de todas las ventanas del módulo, junto al de cerrar (también en el menú de la barra): **tamaño del texto** (85–160 %), **alto contraste**, **fuente de alta legibilidad** y **reducir movimiento**. Son ajustes de cada navegador: no cambian lo que ven los demás.
-- Los retratos se pueden enfocar con el teclado (Tab); Intro abre la ficha y la tecla de menú o Mayús+F10 abre el menú contextual.
-- Las ventanas recuerdan su posición, su tamaño y la pestaña activa.
-
-### Interfaz
-
-- **Barra de macros y lista de jugadores de Foundry**: visibles, ocultas del todo o que aparecen al acercar el cursor, para todos los clientes.
-- **Lista de jugadores sustitutiva**: muestra estado de conexión, personaje, color y corona del máster, con su propio menú contextual. Se aparta sola de los controles de escena y de la barra lateral de Foundry, así que nunca los tapa.
-- **Preferencias por jugador**: ocultar la barra solo para uno mismo, escala local, ocultar nombres o barras. No modifican la configuración del mundo.
+> **Todo el mérito de la idea y de la base es de [malatestaabrx](https://github.com/malatestaabrx)**, autor de [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits). Este módulo es una versión con mejoras sobre el suyo, publicada con su nombre y **sin marca propia por respeto al autor original**. Si te gusta, pásate por su módulo y apóyalo.
 
 ---
 
-## Instalación
+## ⚡ Instalación en 10 segundos
 
-### Desde Foundry (recomendada)
+En Foundry: **Módulos complementarios → Instalar módulo → URL del manifiesto** y pega:
 
-1. Abre **Configuración → Módulos complementarios → Instalar módulo**.
-2. Pega el manifest:
-   `https://github.com/ManuRomera/party-corner-portraits-plus/releases/latest/download/module.json`
-3. Pulsa **Instalar**.
-4. Activa **Party Corner Portraits +** en *Configurar módulos*.
-5. Abre **Configuración del juego → Configurar ajustes → Ajustes de módulos** y pulsa **Configurar los retratos del grupo**.
+```
+https://github.com/ManuRomera/party-corner-portraits-plus/releases/latest/download/module.json
+```
 
-### Instalación manual
+Actívalo en tu mundo y abre **Configuración → Ajustes del módulo → Configurar los retratos del grupo**. Las actualizaciones llegan con el botón *Actualizar* de Foundry.
 
-1. Descarga el ZIP desde [Releases](https://github.com/ManuRomera/party-corner-portraits-plus/releases).
-2. Copia la carpeta `party-corner-portraits-plus` en:
-   `<Foundry User Data>/Data/modules/`
-3. Reinicia Foundry y activa el módulo.
+> El módulo es independiente del original (id distinto): puedes tener los dos instalados, pero no los actives a la vez.
 
-El primer arranque selecciona automáticamente los actores de tipo `character` que tengan algún jugador como propietario. Si no hay ninguno, añade los personajes a mano en la pestaña **Personajes**.
+<p align="center">
+  <img src="docs/img/hero.png" alt="Barra de retratos con halo, cuenta atrás y vista ampliada sobre la escena" width="100%">
+</p>
 
----
+## ✨ Qué hace
 
-## Uso rápido
+### 🧑‍🤝‍🧑 Barra de retratos
+- Elige qué personajes salen, en cualquier orden, con **varios personajes por jugador**.
+- **Cuatro esquinas o posición libre**: botón derecho → *Mover la barra de retratos*, la arrastras donde quieras y se queda fijada.
+- Tamaño global y por personaje, marcos (completo, mínimo o ninguno), fondo oscuro o transparente, bordes, sombra y opacidad.
+- **Nombre del personaje y del jugador**, con indicador de conexión.
+- **Barras y campos configurables** de la ficha (PG, CA, nivel, estrés…): ruta del valor y del máximo, color o **automático** (verde → rojo). Presets para D&D 5e, PF2e, Call of Cthulhu 7e, Alien, WoD5, Cyberpunk RED, SWADE y Fate, y sugerencias de rutas sacadas de tus fichas reales.
+- **Retrato, token o archivo propio** para cada personaje: imagen, **GIF en bucle o vídeo corto** (webm, mp4). Los recortes con transparencia (WebP/PNG o webm con alfa) se integran en la escena sin marco.
+- **Encuadre por personaje** (zona + zoom) con arrastre y rueda.
 
-1. **General**: esquina, disposición, tamaño, separación y desplazamientos.
-2. **Aspecto**: marco, fondo, ajuste de imagen y colores.
-3. **Datos y barras**: activa nombres, añade campos y barras con sus rutas.
-4. **Jugadores e interfaz**: sustituye la lista de jugadores y oculta la barra de macros.
-5. **Personajes**: activa quién aparece, ajusta el orden, el nombre del jugador y las excepciones por personaje.
+### 🔍 Vista ampliada
+Deja el cursor sobre un retrato y se ve **en grande** el token, el retrato o el archivo que hayas elegido para ese personaje (inspirado en *Image Hover*, pero disparado por los retratos del grupo).
+- Sale **siempre en el mismo punto**, el que tú elijas: botón derecho → *Mover la imagen ampliada*.
+- **Sin marco ni fondo por defecto** (marco opcional). Tamaño, espera, nombre debajo y permiso mínimo configurables.
+- **Tamaño desde el botón derecho**, igual para todos los personajes.
+- El máster puede **enseñarla a todos** los conectados (botón derecho → *Mostrar a todos*).
 
-Con el botón derecho sobre un retrato o sobre el asa de la barra tienes acceso rápido a casi todo.
+### 🎬 Estudio de retratos
+Un panel en vivo, con las opciones de [MR Token Stage](https://github.com/ManuRomera/mr-token-stage) adaptadas a los retratos. Arrastra y se ve al instante; se guarda al soltar. Tiene dos pestañas: **retrato de la barra** e **imagen ampliada**, con ajustes independientes por personaje.
 
----
+| | |
+|---|---|
+| **Tamaño** | Deslizador, ±10 %, atajos ×0,5 … ×2, «igualar a todos» |
+| **Aspecto** | Transparencia, giro, volteo horizontal y vertical |
+| **Halo** | Sobre la silueta: color, fuerza, opacidad, suavidad y **pulso** |
+| **Cuenta atrás** | Número sobre el retrato que baja solo con el combate (por ronda o en el turno del personaje) |
+| **Presets** | Fantasma, Jefe y los tuyos |
+| **Copiar / Pegar · Deshacer · Original** | Copia un aspecto a otros retratos, 30 pasos de deshacer y vuelta al aspecto de serie |
+| **Focus y Spotlight** | Atenúan el resto de retratos con un anillo opcional |
 
-## Compatibilidad
+<p align="center">
+  <img src="docs/img/studio.png" alt="Estudio de retratos editando la imagen ampliada" width="100%">
+</p>
 
-- Foundry VTT **13** (probado en 13.351). Declarado también para 14, pendiente de probar.
-- Sin dependencias externas.
+### 🧭 Menú del botón derecho, por grupos
+Todo a mano y ordenado: **Retrato de la barra**, **Imagen ampliada** y **Barra de retratos**.
+
+<p align="center">
+  <img src="docs/img/menu.png" alt="Menú contextual agrupado" width="100%">
+</p>
+
+### ⚙️ Configuración clara
+Una columna, jerarquía limpia y todo en español e inglés. Hay un botón para **volver a la configuración original** por si algo se rompe.
+
+<p align="center">
+  <img src="docs/img/config.png" alt="Ventana de configuración" width="100%">
+</p>
+
+### 🖥️ Interfaz de Foundry a tu medida
+- **Barra de macros** y **lista de jugadores** de Foundry: visibles, ocultas del todo o que **aparecen al acercar el cursor**. Si la barra de macros tapa los retratos, se aparta o se pone delante, semitransparente.
+- La lista de jugadores original **no se mueve**; una lista propia es opcional.
+- La barra y los paneles se apartan solos de los controles de escena y de la barra lateral.
+
+### ♿ Accesibilidad
+Icono en la cabecera de las ventanas: **tamaño del texto**, **alto contraste**, **fuente legible** y **reducir movimiento**. Retratos accesibles con teclado (Tab, Intro, tecla de menú). Las ventanas recuerdan posición, tamaño y pestaña.
+
+## 🧪 Macros
+
+```js
+const P = game.partyCornerPortraitsPlus;
+await P.glow({ color: "#ff7a1f", power: 60, pulse: true }, [actor.id]);   // halo
+await P.opacity(0.5, [actor.id]);                                           // transparencia
+await P.countdown({ turns: 3, mode: "round" }, [actor.id]);                 // cuenta atrás
+await P.preset("boss", [actor.id]);                                         // preset
+P.studio();                                                                 // abre el estudio
+P.reset();                                                                  // configuración original
+```
+
+## 🔁 Qué añade respecto al original
+
+| Original | Esta versión |
+|---|---|
+| Retratos en una esquina | Posición libre, arrastrable y fija |
+| Solo imagen del actor | Retrato, token o archivo propio; GIF y vídeo |
+| — | Datos y barras de la ficha, nombre del jugador y conexión |
+| — | Vista ampliada al pasar el cursor, para todos o solo para ti |
+| — | Estudio de aspecto: tamaño, halo, giro, cuenta atrás, presets |
+| — | Menús del botón derecho agrupados |
+| — | Ocultar o auto-ocultar la barra de macros y la lista de jugadores |
+| — | Accesibilidad, memoria de ventanas y restablecer |
+
+## 📦 Compatibilidad
+
+- Foundry VTT **13** (probado en 13.351). Declarado también para 14, **pendiente de probar**.
+- Cualquier sistema de juego. Sin dependencias.
 - Usa `ApplicationV2`, `HandlebarsApplicationMixin` y `DialogV2`.
-- Los cambios de configuración se sincronizan con todos los clientes mediante el ajuste de mundo de Foundry.
+
+## 🙏 Créditos
+
+- **Idea y módulo original: [malatestaabrx](https://github.com/malatestaabrx)** — [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits). Sin su trabajo, nada de esto existiría.
+- Mejoras y funciones añadidas: [ManuRomera](https://github.com/ManuRomera).
+- La vista ampliada se inspira en [Image Hover](https://github.com/Eriku33/Foundry-VTT-Image-Hover) (Eriku) y el estudio en [MR Token Stage](https://github.com/ManuRomera/mr-token-stage).
+
+Registro de cambios en [CHANGELOG.md](CHANGELOG.md). ¿Algo falla? [Abre un issue](https://github.com/ManuRomera/party-corner-portraits-plus/issues).
 
 ---
 
-## Créditos
+## 🇬🇧 In English
 
-- Módulo original: [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits) por **malatestaabrx**.
-- Mejoras y funciones añadidas: **ManuRomera**, sobre la base de malatestaabrx.
-- Este fork conserva la idea y parte de la estructura original, y añade las funciones descritas. Desde la 1.1.0 la interfaz se ha rehecho con otro diseño (cristal oscuro, una columna, accesibilidad).
+**Party Corner Portraits +** is an improved version of [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits) by **malatestaabrx** (all credit for the idea and the base goes to them; published without our own branding out of respect). It adds sheet data and bars, free drag-and-drop positioning, portrait / token / own-file images (GIF and looping video), an **enlarged image on hover** shown at a fixed spot of your choice, a live **portrait studio** (size, opacity, halo, rotation, flip, turn countdown, presets, focus), grouped context menus, hide / auto-hide for Foundry's macro bar and player list, accessibility options and a one-click reset.
 
-Registro de cambios en [CHANGELOG.md](CHANGELOG.md).
+Install with the manifest URL above. Foundry VTT v13, any system.

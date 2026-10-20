@@ -1,8 +1,8 @@
 {
   "PCP.Tab.General": "General",
   "PCP.Tab.Appearance": "Appearance",
-  "PCP.Tab.Data": "Data & bars",
-  "PCP.Tab.Players": "Players & UI",
+  "PCP.Tab.Data": "Data",
+  "PCP.Tab.Players": "Players",
   "PCP.Tab.Characters": "Characters",
   "PCP.Common.Apply": "Apply",
   "PCP.Common.Cancel": "Cancel",
@@ -235,7 +235,7 @@
   "PCP.Menu.Actor.Source": "What the bar shows",
   "PCP.Menu.Actor.PickMedia": "Choose own file…",
   "PCP.Menu.Actor.UseGlobalSource": "Use the global ({value})",
-  "PCP.Tab.Hover": "Enlarged view",
+  "PCP.Tab.Hover": "Enlarged",
   "PCP.Hover.Title": "When the cursor rests on a portrait",
   "PCP.Hover.Enabled": "Show the enlarged image",
   "PCP.Hover.EnabledHint": "Rest the cursor on a portrait in the bar and it shows large, like Image Hover.",
@@ -377,5 +377,6 @@
   "PCP.Menu.Group.Portrait": "Bar portrait",
   "PCP.Menu.Group.Hover": "Enlarged image",
   "PCP.Menu.Group.Bar": "Portrait bar",
-  "PCP.Menu.Group.Foundry": "Foundry interface"
+  "PCP.Menu.Group.Foundry": "Foundry interface",
+  "PCP.Studio.SizeHoverLabel": "Longest side of the image"
 }

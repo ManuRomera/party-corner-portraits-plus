@@ -68,8 +68,16 @@ Hooks.once("ready", async () => {
   onRefresh(studio.refreshStudio);
 
   refreshAll();
-  // La interfaz de Foundry termina de colocarse después de «ready».
+  // La interfaz de Foundry termina de colocarse después de «ready», y la lista de jugadores original
+  // cambia de ancho cuando llegan los datos de latencia: se vuelve a colocar todo cuando cambian.
   window.setTimeout(refreshAll, 600);
+  if (window.ResizeObserver) {
+    const watcher = new ResizeObserver(() => refreshDebounced(80));
+    for (const id of ["players", "scene-controls", "sidebar", "hotbar"]) {
+      const element = document.getElementById(id);
+      if (element) watcher.observe(element);
+    }
+  }
 
   game.partyCornerPortraitsPlus = {
     openConfig: openConfigApp,

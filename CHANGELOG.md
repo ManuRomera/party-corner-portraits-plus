@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.8.1
+
+- Nueva página del repositorio (README con capturas) y créditos al autor original.
+- La barra y los paneles se vuelven a colocar solos cuando cambian de tamaño los controles de escena, la lista de jugadores o la barra de macros de Foundry.
+- Pestañas de la configuración con nombres más cortos y pie del estudio más ordenado.
+
 ## 1.8.0
 
 - **Estudio de la imagen ampliada.** El Estudio tiene ahora dos pestañas: «Retrato de la barra» e «Imagen ampliada». En la segunda se ajusta, **por personaje**, lo que se ve al dejar el cursor sobre el retrato: tamaño, transparencia, halo (con pulso), giro y volteo, con vista previa en vivo de la imagen grande. Es independiente del retrato pequeño. Se abre con botón derecho → «Estudio de la imagen ampliada…».

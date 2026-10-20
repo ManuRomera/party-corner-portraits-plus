@@ -1915,3 +1915,4 @@ body.pcp-a11y-calm #pcp-party-hud .pcp-card.pcp-glow-pulse { animation: none; }
 .pcp-menu-title + .pcp-menu-heading { margin-top: 0; border-top: 0; }
 
 .pcp-hover.pcp-hover-preview { z-index: 60; }
+.pcp-studio .pcp-footer-hint { flex: 0 0 auto; white-space: nowrap; }

@@ -25,7 +25,7 @@
       <h4 class="pcp-heading">{{#if isHover}}{{localize "PCP.Studio.SizeHover"}}{{else}}{{localize "PCP.Studio.Size"}}{{/if}}</h4>
       <div class="pcp-card-group">
         <div class="pcp-row">
-          <span class="pcp-row-text">{{localize "PCP.Studio.SizePx"}}<small>{{localize "PCP.Studio.SizeHint"}} ({{globalSize}} px)</small></span>
+          <span class="pcp-row-text">{{#if isHover}}{{localize "PCP.Studio.SizeHoverLabel"}}{{else}}{{localize "PCP.Studio.SizePx"}}{{/if}}<small>{{localize "PCP.Studio.SizeHint"}} ({{globalSize}} px)</small></span>
           <span class="pcp-range"><input type="range" data-live="size" data-unit=" px" min="{{sizeMin}}" max="{{sizeMax}}" step="{{sizeStep}}" value="{{size}}" aria-label="{{localize 'PCP.Studio.SizePx'}}"><output>{{size}} px</output></span>
         </div>
         <div class="pcp-row pcp-row-buttons">

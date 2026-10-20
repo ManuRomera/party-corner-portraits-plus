@@ -1,8 +1,8 @@
 {
   "PCP.Tab.General": "General",
   "PCP.Tab.Appearance": "Aspecto",
-  "PCP.Tab.Data": "Datos y barras",
-  "PCP.Tab.Players": "Jugadores e interfaz",
+  "PCP.Tab.Data": "Datos",
+  "PCP.Tab.Players": "Jugadores",
   "PCP.Tab.Characters": "Personajes",
   "PCP.Common.Apply": "Aplicar",
   "PCP.Common.Cancel": "Cancelar",
@@ -235,7 +235,7 @@
   "PCP.Menu.Actor.Source": "Qué se muestra en la barra",
   "PCP.Menu.Actor.PickMedia": "Elegir archivo propio…",
   "PCP.Menu.Actor.UseGlobalSource": "Usar el global ({value})",
-  "PCP.Tab.Hover": "Vista ampliada",
+  "PCP.Tab.Hover": "Ampliada",
   "PCP.Hover.Title": "Al dejar el cursor sobre un retrato",
   "PCP.Hover.Enabled": "Mostrar la imagen ampliada",
   "PCP.Hover.EnabledHint": "Deja el cursor sobre un retrato de la barra y se ve en grande, como en Image Hover.",
@@ -377,5 +377,6 @@
   "PCP.Menu.Group.Portrait": "Retrato de la barra",
   "PCP.Menu.Group.Hover": "Imagen ampliada",
   "PCP.Menu.Group.Bar": "Barra de retratos",
-  "PCP.Menu.Group.Foundry": "Interfaz de Foundry"
+  "PCP.Menu.Group.Foundry": "Interfaz de Foundry",
+  "PCP.Studio.SizeHoverLabel": "Lado mayor de la imagen"
 }
