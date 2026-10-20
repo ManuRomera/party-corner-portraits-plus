@@ -1849,3 +1849,9 @@ body.pcp-a11y-calm #pcp-party-hud .pcp-card.pcp-glow-pulse { animation: none; }
 }
 .pcp-studio .pcp-footer-hint { color: var(--pcp-ink-2); font-size: 0.8em; }
 .pcp-studio .pcp-footer-buttons { display: flex; gap: 6px; }
+
+.pcp-reset-app .pcp-form { padding: 16px 18px 18px; }
+.pcp-reset-app .pcp-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+.pcp-plus-window .window-content button.pcp-danger { border-color: var(--pcp-danger); color: var(--pcp-danger); }
+.pcp-dialog-content .pcp-dialog-check { display: flex; align-items: center; gap: 8px; }
+.pcp-dialog-content .pcp-dialog-check input { width: auto; }

@@ -353,5 +353,16 @@
   "PCP.Hover.SizeLabel": "Longest side in pixels (120–1200). Applies to every character.",
   "PCP.Menu.Hover.Size": "Enlarged image size",
   "PCP.Menu.Hover.Move": "Move the enlarged image",
-  "PCP.Hover.PlacementHint": "Move it with right-click → «Move the enlarged image»."
+  "PCP.Hover.PlacementHint": "Move it with right-click → «Move the enlarged image».",
+  "PCP.Reset.Title": "Reset the module",
+  "PCP.Reset.MenuName": "Back to the original configuration",
+  "PCP.Reset.MenuLabel": "Reset the module…",
+  "PCP.Reset.MenuHint": "Returns the module to its default configuration in case something breaks. Asks for confirmation.",
+  "PCP.Reset.Short": "Reset…",
+  "PCP.Reset.Explain": "Deletes the module's configuration in this world (party, positions, sizes, bars, look, enlarged view…) and leaves it as freshly installed. It does not touch your characters or anything in Foundry.",
+  "PCP.Reset.Confirm": "The current module configuration will be lost and replaced by the default one. Continue?",
+  "PCP.Reset.Personal": "Also reset my preferences in this browser (accessibility, presets, windows)",
+  "PCP.Reset.Button": "Reset everything",
+  "PCP.Reset.Done": "Party Corner Portraits +: original configuration restored.",
+  "PCP.Menu.Hud.MoveBar": "Move the portrait bar"
 }

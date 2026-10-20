@@ -15,6 +15,7 @@ import { closeMenus } from "./menu.js";
 import { applyA11y } from "./a11y.js";
 import { registerHoverSocket } from "./hover.js";
 import { registerCountdown } from "./countdown.js";
+import { ResetApp, confirmReset } from "./reset.js";
 import * as studio from "./studio.js";
 import { getConfig } from "./settings.js";
 
@@ -45,7 +46,7 @@ function settingKey(setting) {
 }
 
 Hooks.once("init", () => {
-  registerSettings(PartyPortraitsConfig);
+  registerSettings(PartyPortraitsConfig, ResetApp);
   wireMenuEvents();
 });
 
@@ -75,6 +76,7 @@ Hooks.once("ready", async () => {
     refresh: refreshAll,
     closeMenus,
     studio: studio.openStudio,
+    reset: confirmReset,
     // API para macros: actúan sobre los ids indicados (por defecto, la selección del estudio)
     size: studio.setSize,
     scale: studio.scaleBy,

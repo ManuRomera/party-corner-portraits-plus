@@ -349,7 +349,7 @@ export async function ensureInitialized() {
   await game.settings.set(MODULE_ID, SETTING_CONFIG, config);
 }
 
-export function registerSettings(ConfigApplication) {
+export function registerSettings(ConfigApplication, ResetApplication) {
   game.settings.register(MODULE_ID, SETTING_CONFIG, {
     name: "PCP.Settings.Config.Name",
     hint: "PCP.Settings.Config.Hint",
@@ -376,6 +376,15 @@ export function registerSettings(ConfigApplication) {
     hint: game.i18n.localize("PCP.Settings.Menu.Hint"),
     icon: "fa-solid fa-users-viewfinder",
     type: ConfigApplication,
+    restricted: true
+  });
+
+  game.settings.registerMenu(MODULE_ID, "reset", {
+    name: game.i18n.localize("PCP.Reset.MenuName"),
+    label: game.i18n.localize("PCP.Reset.MenuLabel"),
+    hint: game.i18n.localize("PCP.Reset.MenuHint"),
+    icon: "fa-solid fa-rotate-left",
+    type: ResetApplication,
     restricted: true
   });
 }

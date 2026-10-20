@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.6.1
+
+- **Mover la barra de retratos como la imagen ampliada:** botón derecho sobre cualquier retrato → «Mover la barra de retratos», la arrastras desde cualquier punto y al soltar se queda fijada (Esc cancela). Durante el movimiento no sale la imagen ampliada.
+- **Volver a la configuración original:** en Configuración → Ajustes del módulo («Restablecer el módulo…») y en el pie de la ventana de configuración («Restablecer…»). Pide confirmación, deja el módulo como recién instalado y, si quieres, restablece también tus preferencias de este navegador. No toca personajes ni nada de Foundry. También por macro: `game.partyCornerPortraitsPlus.reset()`.
+
 ## 1.6.0
 
 - **La imagen ampliada sale siempre en el mismo sitio** para todos los personajes: un punto fijo que eliges tú. Se acabó «junto al retrato» (cambiaba con cada personaje).

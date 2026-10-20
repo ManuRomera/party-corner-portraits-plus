@@ -40,6 +40,7 @@ import { openFramingApp } from "./framing-app.js";
 import { WithMemory } from "./memory.js";
 import { createPortraitElement, isVideo, portraitSource } from "./media.js";
 import { addA11yButton } from "./a11y.js";
+import { confirmReset } from "./reset.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -444,6 +445,11 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       });
     }
     activateTab(this.activeTab);
+
+    root.querySelector(".pcp-reset-config")?.addEventListener("click", async event => {
+      event.preventDefault();
+      if (await confirmReset()) this.close();
+    });
 
     root.querySelector(".pcp-close-config")?.addEventListener("click", event => {
       event.preventDefault();

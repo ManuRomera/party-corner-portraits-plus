@@ -136,6 +136,7 @@ function schedule(actor, card) {
   window.clearTimeout(timer);
   const config = getConfig();
   if (!config.hover.enabled || getClientConfig().hoverOff) return;
+  if (document.getElementById("pcp-party-hud")?.classList.contains("pcp-move-mode")) return;
   if (!canSee(actor, config.hover.permission)) return;
   timer = window.setTimeout(() => showHover(actor.id, { card }), config.hover.delay);
 }

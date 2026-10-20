@@ -353,5 +353,16 @@
   "PCP.Hover.SizeLabel": "Lado mayor en píxeles (120–1200). Vale para todos los personajes.",
   "PCP.Menu.Hover.Size": "Tamaño de la imagen ampliada",
   "PCP.Menu.Hover.Move": "Mover la imagen ampliada",
-  "PCP.Hover.PlacementHint": "Se mueve con el botón derecho → «Mover la imagen ampliada»."
+  "PCP.Hover.PlacementHint": "Se mueve con el botón derecho → «Mover la imagen ampliada».",
+  "PCP.Reset.Title": "Restablecer el módulo",
+  "PCP.Reset.MenuName": "Volver a la configuración original",
+  "PCP.Reset.MenuLabel": "Restablecer el módulo…",
+  "PCP.Reset.MenuHint": "Devuelve el módulo a su configuración de serie por si algo se rompe. Pide confirmación.",
+  "PCP.Reset.Short": "Restablecer…",
+  "PCP.Reset.Explain": "Borra la configuración del módulo en este mundo (grupo, posiciones, tamaños, barras, aspecto, vista ampliada…) y la deja como recién instalado. No toca tus personajes ni nada de Foundry.",
+  "PCP.Reset.Confirm": "Se perderá la configuración actual del módulo y volverá a la de serie. ¿Continuar?",
+  "PCP.Reset.Personal": "Restablecer también mis preferencias de este navegador (accesibilidad, presets, ventanas)",
+  "PCP.Reset.Button": "Restablecer todo",
+  "PCP.Reset.Done": "Party Corner Portraits +: configuración original restaurada.",
+  "PCP.Menu.Hud.MoveBar": "Mover la barra de retratos"
 }

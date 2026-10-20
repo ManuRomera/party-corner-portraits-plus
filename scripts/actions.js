@@ -580,6 +580,11 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         icon: "fa-solid fa-up-right-and-down-left-from-center",
         children: sizeMenuItems()
       },
+      {
+        label: localize("PCP.Menu.Hud.MoveBar"),
+        icon: "fa-solid fa-up-down-left-right",
+        action: () => setMoveMode(true)
+      },
       ...hoverLayoutItems(),
       {
         label: localize("PCP.Menu.Actor.Source"),
