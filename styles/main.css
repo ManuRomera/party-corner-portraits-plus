@@ -1681,10 +1681,35 @@ body.pcp-a11y-calm.pcp-auto-players #players {
   pointer-events: none;
 }
 
+/* Solo opacidad: una animación con escala deja la capa rasterizada a menor resolución. */
 @keyframes pcp-hover-in {
-  from { opacity: 0; transform: scale(0.97); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
+
+.pcp-hover .pcp-hover-stage { display: block; transform-origin: center; }
+.pcp-hover .pcp-hover-stage.pcp-gray { filter: grayscale(1); }
+
+.pcp-hover .pcp-hover-media { image-rendering: auto; }
+
+.pcp-hover .pcp-hover-media.pcp-glow {
+  filter: drop-shadow(0 0 var(--pcp-glow-near) var(--pcp-glow-color))
+    drop-shadow(0 0 var(--pcp-glow-far) var(--pcp-glow-color))
+    drop-shadow(0 12px 26px rgba(0, 0, 0, 0.75));
+}
+
+.pcp-hover .pcp-hover-media.pcp-glow-pulse { animation: pcp-hover-glow-pulse 2.4s ease-in-out infinite; }
+
+@keyframes pcp-hover-glow-pulse {
+  50% {
+    filter: drop-shadow(0 0 calc(var(--pcp-glow-near) * 0.35) var(--pcp-glow-color))
+      drop-shadow(0 0 calc(var(--pcp-glow-far) * 0.35) var(--pcp-glow-color))
+      drop-shadow(0 12px 26px rgba(0, 0, 0, 0.75));
+  }
+}
+
+body.pcp-a11y-calm .pcp-hover .pcp-hover-media.pcp-glow-pulse { animation: none; }
+@media (prefers-reduced-motion: reduce) { .pcp-hover .pcp-hover-media.pcp-glow-pulse { animation: none; } }
 
 body.pcp-a11y-calm .pcp-hover { animation: none; }
 

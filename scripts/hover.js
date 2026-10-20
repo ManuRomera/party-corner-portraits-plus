@@ -10,6 +10,7 @@ import { getClientConfig, getConfig, mutateConfig } from "./settings.js";
 import { refreshAll } from "./events.js";
 import { getActorConfig, getActorPlayerLabel, localize } from "./utils.js";
 import { createPortraitElement, hoverSource, naturalSize } from "./media.js";
+import { applyHoverLook } from "./look.js";
 
 const ID = "pcp-hover";
 const MARGIN = 8;
@@ -59,19 +60,22 @@ function place(placement, pos) {
     [x, y] = [(vw - box.width) / 2, (vh - box.height) / 2];
   }
 
-  element.style.left = `${Math.min(Math.max(MARGIN, x), Math.max(MARGIN, vw - box.width - MARGIN))}px`;
-  element.style.top = `${Math.min(Math.max(MARGIN, y), Math.max(MARGIN, vh - box.height - MARGIN))}px`;
+  // Posiciones enteras: con medios píxeles el navegador reescala la imagen y se ve borrosa.
+  element.style.left = `${Math.round(Math.min(Math.max(MARGIN, x), Math.max(MARGIN, vw - box.width - MARGIN)))}px`;
+  element.style.top = `${Math.round(Math.min(Math.max(MARGIN, y), Math.max(MARGIN, vh - box.height - MARGIN)))}px`;
   element.style.visibility = "visible";
 }
 
 /** Ajusta el lado mayor al tamaño elegido (sin pasarse de la pantalla) y coloca el panel. */
-function fit(media, size, reposition) {
+function fit(media, size, upscale, reposition) {
   const natural = naturalSize(media);
   if (natural) {
     const limit = Math.min(size, window.innerWidth * 0.9, window.innerHeight * 0.85);
-    const scale = Math.min(limit / Math.max(natural.w, natural.h), 4);
+    // Sin «ampliar», nunca se dibuja por encima de su tamaño real: es lo que mantiene la nitidez.
+    const scale = Math.min(limit / Math.max(natural.w, natural.h), upscale ? 4 : 1);
     media.style.width = `${Math.round(natural.w * scale)}px`;
     media.style.height = `${Math.round(natural.h * scale)}px`;
+    media.style.maxWidth = "none";
   }
   reposition();
 }
@@ -97,7 +101,12 @@ export function showHover(actorId, { card = null, shared = false, moving = false
 
   const media = createPortraitElement(src, { alt: actor.name, still: client.a11y.motion });
   media.classList.add("pcp-hover-media");
-  element.appendChild(media);
+  media.decoding = "sync";
+  const stage = document.createElement("div");
+  stage.className = "pcp-hover-stage";
+  stage.appendChild(media);
+  element.appendChild(stage);
+  if (config.hover.applyLook) applyHoverLook(stage, media, actorConfig, config);
 
   if (config.hover.caption) {
     const caption = document.createElement("div");
@@ -118,7 +127,7 @@ export function showHover(actorId, { card = null, shared = false, moving = false
   // El panel puede cambiar de tamaño al cargar el medio o el texto: se recoloca siempre dentro de la pantalla.
   new ResizeObserver(() => place(placement, config.hover.pos)).observe(element);
   const reposition = () => place(placement, config.hover.pos);
-  const refit = () => fit(media, config.hover.size, reposition);
+  const refit = () => fit(media, config.hover.size, config.hover.upscale, reposition);
   media.addEventListener("load", refit, { once: true });
   media.addEventListener("loadedmetadata", refit, { once: true });
   // Imágenes ya en caché: no siempre disparan «load».

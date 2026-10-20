@@ -1,5 +1,14 @@
 # Cambios
 
+## 1.7.0
+
+- **El aspecto también en la imagen ampliada:** transparencia, halo (con pulso), giro, volteo y blanco y negro del retrato se aplican ahora a la imagen grande. Se puede desactivar en Vista ampliada → «Aplicar el aspecto a la imagen ampliada».
+- **Más nitidez en la imagen ampliada:**
+  - Ya no se agranda por encima de su tamaño real (agrandar una imagen la emborrona). Si quieres forzar el tamaño aunque pierda calidad: Vista ampliada → «Ampliar por encima del tamaño original».
+  - Se coloca siempre en píxeles enteros (con medios píxeles el navegador reescala la imagen).
+  - La animación de aparición ya no usa escala, que dejaba la capa rasterizada a menor resolución.
+  - Se pide la decodificación síncrona de la imagen.
+
 ## 1.6.1
 
 - **Mover la barra de retratos como la imagen ampliada:** botón derecho sobre cualquier retrato → «Mover la barra de retratos», la arrastras desde cualquier punto y al soltar se queda fijada (Esc cancela). Durante el movimiento no sale la imagen ampliada.

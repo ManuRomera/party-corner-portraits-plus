@@ -364,5 +364,9 @@
   "PCP.Reset.Personal": "Also reset my preferences in this browser (accessibility, presets, windows)",
   "PCP.Reset.Button": "Reset everything",
   "PCP.Reset.Done": "Party Corner Portraits +: original configuration restored.",
-  "PCP.Menu.Hud.MoveBar": "Move the portrait bar"
+  "PCP.Menu.Hud.MoveBar": "Move the portrait bar",
+  "PCP.Hover.ApplyLook": "Apply the look to the enlarged image",
+  "PCP.Hover.ApplyLookHint": "The same transparency, halo, rotation, flip and black and white the portrait has in the bar (set in the Portrait studio).",
+  "PCP.Hover.Upscale": "Enlarge beyond the original size",
+  "PCP.Hover.UpscaleHint": "Off, the image is never drawn larger than its file and stays sharp. On, it reaches the chosen size even if it softens."
 }

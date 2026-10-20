@@ -210,6 +210,8 @@ export function normalizeConfig(raw) {
   merged.hover.permission = HOVER_PERMISSIONS.includes(merged.hover.permission) ? merged.hover.permission : "none";
   merged.hover.caption = merged.hover.caption !== false;
   merged.hover.box = merged.hover.box === true;
+  merged.hover.applyLook = merged.hover.applyLook !== false;
+  merged.hover.upscale = merged.hover.upscale === true;
   merged.hover.sharedSeconds = clamp(merged.hover.sharedSeconds, 1, 60, 6);
 
   merged.players = merged.players || {};

@@ -280,6 +280,14 @@
           </select>
         </label>
         <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Hover.ApplyLook"}}<small>{{localize "PCP.Hover.ApplyLookHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="hover.applyLook" {{#if config.hover.applyLook}}checked{{/if}}>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Upscale"}}<small>{{localize "PCP.Hover.UpscaleHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="hover.upscale" {{#if config.hover.upscale}}checked{{/if}}>
+        </label>
+        <label class="pcp-row pcp-row-check">
           <span class="pcp-row-text">{{localize "PCP.Hover.Box"}}<small>{{localize "PCP.Hover.BoxHint"}}</small></span>
           <input type="checkbox" class="pcp-switch" name="hover.box" {{#if config.hover.box}}checked{{/if}}>
         </label>

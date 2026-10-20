@@ -364,5 +364,9 @@
   "PCP.Reset.Personal": "Restablecer también mis preferencias de este navegador (accesibilidad, presets, ventanas)",
   "PCP.Reset.Button": "Restablecer todo",
   "PCP.Reset.Done": "Party Corner Portraits +: configuración original restaurada.",
-  "PCP.Menu.Hud.MoveBar": "Mover la barra de retratos"
+  "PCP.Menu.Hud.MoveBar": "Mover la barra de retratos",
+  "PCP.Hover.ApplyLook": "Aplicar el aspecto a la imagen ampliada",
+  "PCP.Hover.ApplyLookHint": "La misma transparencia, halo, giro, volteo y blanco y negro que tiene el retrato en la barra (se ajusta en el Estudio de retratos).",
+  "PCP.Hover.Upscale": "Ampliar por encima del tamaño original",
+  "PCP.Hover.UpscaleHint": "Apagado, la imagen nunca se dibuja mayor que su archivo y se ve nítida. Encendido, llega al tamaño indicado aunque pierda nitidez."
 }

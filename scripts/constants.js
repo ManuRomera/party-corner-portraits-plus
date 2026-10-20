@@ -154,6 +154,8 @@ export function createDefaultConfig() {
       permission: "none",
       caption: true,
       box: false,
+      applyLook: true,
+      upscale: false,
       sharedSeconds: 6
     },
     players: {

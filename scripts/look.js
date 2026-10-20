@@ -84,3 +84,22 @@ export function setFocus(ids, spot = false) {
   focusState.spot = spot;
   applyFocus();
 }
+
+/** El mismo aspecto (transparencia, halo, giro, volteo, blanco y negro) sobre la imagen ampliada. */
+export function applyHoverLook(stage, media, actorConfig, config) {
+  stage.style.opacity = actorConfig.opacity === null || actorConfig.opacity === undefined ? "" : String(actorConfig.opacity);
+  const flip = `scale(${actorConfig.flipX ? -1 : 1}, ${actorConfig.flipY ? -1 : 1})`;
+  const rotate = actorConfig.rotation ? `rotate(${actorConfig.rotation}deg) ` : "";
+  stage.style.transform = rotate + flip === "scale(1, 1)" ? "" : rotate + flip;
+  stage.classList.toggle("pcp-gray", Boolean(config.appearance.grayscale));
+
+  const glow = actorConfig.glow;
+  media.classList.toggle("pcp-glow", Boolean(glow));
+  media.classList.toggle("pcp-glow-pulse", Boolean(glow?.pulse));
+  if (glow) {
+    const { color, near, far } = glowStyle(glow);
+    media.style.setProperty("--pcp-glow-color", color);
+    media.style.setProperty("--pcp-glow-near", near);
+    media.style.setProperty("--pcp-glow-far", far);
+  }
+}
