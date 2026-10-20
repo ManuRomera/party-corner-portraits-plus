@@ -1,4 +1,9 @@
 <div class="pcp-studio">
+  <nav class="pcp-segments pcp-studio-target" role="tablist" aria-label="{{localize 'PCP.Studio.Target'}}">
+    <button type="button" role="tab" class="pcp-tab {{#if targetPortrait}}active{{/if}}" data-act="target" data-target="portrait" aria-selected="{{targetPortrait}}"><i class="fa-solid fa-image-portrait" aria-hidden="true"></i><span>{{localize "PCP.Studio.TargetPortrait"}}</span></button>
+    <button type="button" role="tab" class="pcp-tab {{#if isHover}}active{{/if}}" data-act="target" data-target="hover" aria-selected="{{isHover}}"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i><span>{{localize "PCP.Studio.TargetHover"}}</span></button>
+  </nav>
+  <p class="pcp-note pcp-target-note">{{#if isHover}}{{localize "PCP.Studio.TargetHoverHint"}}{{else}}{{localize "PCP.Studio.TargetPortraitHint"}}{{/if}}</p>
   <div class="pcp-studio-body">
     <h4 class="pcp-heading">{{localize "PCP.Studio.Characters"}}</h4>
     <div class="pcp-chips" role="group" aria-label="{{localize 'PCP.Studio.Characters'}}">
@@ -17,11 +22,11 @@
     {{#unless hasSelection}}<p class="pcp-note">{{localize "PCP.Studio.NoSelection"}}</p>{{/unless}}
 
     <fieldset class="pcp-studio-controls" {{#unless hasSelection}}disabled{{/unless}}>
-      <h4 class="pcp-heading">{{localize "PCP.Studio.Size"}}</h4>
+      <h4 class="pcp-heading">{{#if isHover}}{{localize "PCP.Studio.SizeHover"}}{{else}}{{localize "PCP.Studio.Size"}}{{/if}}</h4>
       <div class="pcp-card-group">
         <div class="pcp-row">
           <span class="pcp-row-text">{{localize "PCP.Studio.SizePx"}}<small>{{localize "PCP.Studio.SizeHint"}} ({{globalSize}} px)</small></span>
-          <span class="pcp-range"><input type="range" data-live="size" data-unit=" px" min="{{sizeMin}}" max="{{sizeMax}}" step="1" value="{{size}}" aria-label="{{localize 'PCP.Studio.SizePx'}}"><output>{{size}} px</output></span>
+          <span class="pcp-range"><input type="range" data-live="size" data-unit=" px" min="{{sizeMin}}" max="{{sizeMax}}" step="{{sizeStep}}" value="{{size}}" aria-label="{{localize 'PCP.Studio.SizePx'}}"><output>{{size}} px</output></span>
         </div>
         <div class="pcp-row pcp-row-buttons">
           <button type="button" data-act="size-down" title="{{localize 'PCP.Studio.SizeDownHint'}}"><i class="fa-solid fa-minus"></i> 10 %</button>
@@ -52,8 +57,10 @@
           <button type="button" data-act="flip-x" class="{{#if flipX}}pcp-on{{/if}}" aria-pressed="{{flipX}}"><i class="fa-solid fa-left-right"></i> {{localize "PCP.Studio.FlipX"}}</button>
           <button type="button" data-act="flip-y" class="{{#if flipY}}pcp-on{{/if}}" aria-pressed="{{flipY}}"><i class="fa-solid fa-up-down"></i> {{localize "PCP.Studio.FlipY"}}</button>
           <button type="button" data-act="rotation-reset"><i class="fa-solid fa-rotate-left"></i> {{localize "PCP.Studio.RotationReset"}}</button>
+          {{#unless isHover}}
           <button type="button" data-act="framing-reset" title="{{localize 'PCP.Studio.FramingHint'}}"><i class="fa-solid fa-crop-simple"></i> {{localize "PCP.Studio.Framing"}}</button>
           <button type="button" data-act="framing-open"><i class="fa-solid fa-up-down-left-right"></i> {{localize "PCP.Studio.FramingOpen"}}</button>
+          {{/unless}}
         </div>
       </div>
 
@@ -84,6 +91,7 @@
         </div>
       </div>
 
+      {{#unless isHover}}
       <h4 class="pcp-heading">{{localize "PCP.Studio.Countdown"}}</h4>
       <div class="pcp-card-group">
         <div class="pcp-row">
@@ -109,6 +117,8 @@
         </div>
       </div>
 
+      {{/unless}}
+
       <h4 class="pcp-heading">{{localize "PCP.Studio.Presets"}}</h4>
       <div class="pcp-card-group">
         <div class="pcp-row pcp-row-buttons">
@@ -122,6 +132,7 @@
         </div>
       </div>
 
+      {{#unless isHover}}
       <h4 class="pcp-heading">{{localize "PCP.Studio.Scene"}}</h4>
       <div class="pcp-card-group">
         <div class="pcp-row pcp-row-buttons">
@@ -130,6 +141,7 @@
           <button type="button" data-act="focus-clear" {{#unless focusOn}}disabled{{/unless}}><i class="fa-solid fa-eraser"></i> {{localize "PCP.Studio.FocusClear"}}</button>
         </div>
       </div>
+      {{/unless}}
     </fieldset>
   </div>
 

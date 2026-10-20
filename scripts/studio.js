@@ -19,6 +19,7 @@ import { WithMemory } from "./memory.js";
 import { addA11yButton } from "./a11y.js";
 import { applyLook, focusState, setFocus } from "./look.js";
 import { isVideo, portraitSource } from "./media.js";
+import { hideHover, refreshHoverPreview, showHover } from "./hover.js";
 import { openFramingApp } from "./framing-app.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
@@ -27,6 +28,24 @@ const UNDO_LIMIT = 30;
 const undoStack = [];
 let clipboard = null;
 let studio = null;
+let target = "portrait"; // «portrait» (barra) o «hover» (imagen ampliada)
+let previewing = false;
+
+const HOVER_KEYS = {
+  size: "hoverSize",
+  opacity: "hoverOpacity",
+  glow: "hoverGlow",
+  flipX: "hoverFlipX",
+  flipY: "hoverFlipY",
+  rotation: "hoverRotation"
+};
+
+/** Nombre real del dato según lo que se esté editando. */
+const K = name => (target === "hover" ? HOVER_KEYS[name] : name);
+const mapKeys = patch => Object.fromEntries(Object.entries(patch).map(([key, value]) => [K(key), value]));
+const baseSize = config => (target === "hover" ? config.hover.size : config.bar.size);
+const clampSizeFor = (value, fallback) =>
+  target === "hover" ? Math.round(Math.min(1200, Math.max(120, Number(value) || fallback))) : clampSize(value, fallback);
 
 const BUILTIN = [
   {
@@ -72,15 +91,19 @@ async function commit(ids, change, { record = true } = {}) {
   refreshAll();
 }
 
-/** Vista previa inmediata sobre las tarjetas de la barra, sin guardar. */
-function preview(ids, patchFor) {
+/** Vista previa inmediata, sin guardar: sobre las tarjetas de la barra o sobre la imagen ampliada. */
+function preview(ids, patch) {
   const config = getConfig();
+  if (target === "hover") {
+    if (ids[0]) refreshHoverPreview(ids[0], mapKeys(patch));
+    return;
+  }
   for (const id of ids) {
     const card = document.querySelector(`#pcp-party-hud .pcp-card[data-actor-id="${id}"]`);
     if (!card) continue;
-    const merged = { ...getActorConfig(config, id), ...patchFor(getActorConfig(config, id)) };
+    const merged = { ...getActorConfig(config, id), ...patch };
     applyLook(card, merged, config.appearance.opacity);
-    if (merged.size !== undefined) {
+    if (patch.size !== undefined) {
       const size = clampSize((merged.size ?? config.bar.size) * getClientConfig().scale, config.bar.size);
       card.style.setProperty("--pcp-card-size", `${size}px`);
     }
@@ -88,23 +111,23 @@ function preview(ids, patchFor) {
 }
 
 const lookOf = actorConfig => ({
-  size: actorConfig.size,
-  opacity: actorConfig.opacity,
-  glow: actorConfig.glow,
-  flipX: actorConfig.flipX,
-  flipY: actorConfig.flipY,
-  rotation: actorConfig.rotation
+  size: actorConfig[K("size")],
+  opacity: actorConfig[K("opacity")],
+  glow: actorConfig[K("glow")],
+  flipX: actorConfig[K("flipX")],
+  flipY: actorConfig[K("flipY")],
+  rotation: actorConfig[K("rotation")]
 });
 
 /* ------------------------------------------------------------- operaciones */
 
 export async function setSize(px, ids = selection()) {
-  await commit(ids, { size: clampSize(px, getConfig().bar.size) });
+  await commit(ids, { [K("size")]: clampSizeFor(px, baseSize(getConfig())) });
 }
 
 export async function scaleBy(factor, ids = selection()) {
   await commit(ids, (current, config) => ({
-    size: clampSize((current.size ?? config.bar.size) * factor, config.bar.size)
+    [K("size")]: clampSizeFor((current[K("size")] ?? baseSize(config)) * factor, baseSize(config))
   }));
 }
 
@@ -113,23 +136,23 @@ export async function equalize(px, ids = barIds()) {
 }
 
 export async function setOpacity(value, ids = selection()) {
-  await commit(ids, { opacity: value >= 1 ? null : Math.max(0.1, value) });
+  await commit(ids, { [K("opacity")]: value >= 1 ? null : Math.max(0.1, value) });
 }
 
 export async function setGlow(glow, ids = selection()) {
   await commit(ids, current => ({
-    glow: sanitizeLook({ glow: glow ? { ...DEFAULT_GLOW, ...current.glow, ...glow } : null }).glow
+    [K("glow")]: sanitizeLook({ glow: glow ? { ...DEFAULT_GLOW, ...current[K("glow")], ...glow } : null }).glow
   }));
 }
 
 export async function toggleFlip(axis, ids = selection()) {
-  const key = axis === "y" ? "flipY" : "flipX";
+  const key = K(axis === "y" ? "flipY" : "flipX");
   const first = getActorConfig(getConfig(), ids[0] ?? "");
   await commit(ids, { [key]: !first[key] });
 }
 
 export async function setRotation(deg, ids = selection()) {
-  await commit(ids, { rotation: Math.max(-180, Math.min(180, Number(deg) || 0)) });
+  await commit(ids, { [K("rotation")]: Math.max(-180, Math.min(180, Number(deg) || 0)) });
 }
 
 export async function resetFraming(ids = selection()) {
@@ -139,9 +162,15 @@ export async function resetFraming(ids = selection()) {
 export async function applyLookTo(look, ids = selection(), factor = null) {
   await commit(ids, (current, config) => {
     const clean = sanitizeLook({ ...lookOf(current), ...look });
-    const patch = { opacity: clean.opacity, glow: clean.glow, flipX: clean.flipX, flipY: clean.flipY, rotation: clean.rotation };
-    if (look.size !== undefined) patch.size = look.size;
-    if (factor) patch.size = clampSize((current.size ?? config.bar.size) * factor, config.bar.size);
+    const patch = mapKeys({
+      opacity: clean.opacity,
+      glow: clean.glow,
+      flipX: clean.flipX,
+      flipY: clean.flipY,
+      rotation: clean.rotation
+    });
+    if (look.size !== undefined) patch[K("size")] = look.size;
+    if (factor) patch[K("size")] = clampSizeFor((current[K("size")] ?? baseSize(config)) * factor, baseSize(config));
     return patch;
   });
 }
@@ -150,11 +179,12 @@ export async function applyPreset(id, ids = selection()) {
   const builtin = BUILTIN.find(p => p.id === id);
   if (builtin) return applyLookTo({ opacity: null, ...builtin.look }, ids, builtin.factor);
   const custom = getClientConfig().presets.find(p => p.id === id);
-  if (custom) return applyLookTo({ ...custom.look, size: custom.size }, ids);
+  if (custom) return applyLookTo({ ...custom.look, size: target === "hover" ? undefined : custom.size }, ids);
 }
 
 export async function restoreOriginal(ids = selection()) {
-  await commit(ids, { size: null, opacity: null, glow: null, flipX: false, flipY: false, rotation: 0, countdown: null });
+  const reset = mapKeys({ size: null, opacity: null, glow: null, flipX: false, flipY: false, rotation: 0 });
+  await commit(ids, target === "hover" ? reset : { ...reset, countdown: null });
 }
 
 export async function undo() {
@@ -197,7 +227,7 @@ async function savePreset(ids) {
   await mutateClientConfig(client => {
     client.presets = [
       ...client.presets,
-      { id: foundry.utils.randomID(), name: trimmed, size: current.size, look: sanitizeLook(current) }
+      { id: foundry.utils.randomID(), name: trimmed, size: target === "hover" ? null : current.size, look: sanitizeLook(lookOf(current)) }
     ];
   });
   studio?.render();
@@ -233,7 +263,8 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
     const config = getConfig();
     const ids = selection();
     const first = ids.length ? getActorConfig(config, ids[0]) : getActorConfig(config, "");
-    const glow = first.glow ?? { ...DEFAULT_GLOW, power: 0 };
+    const hoverMode = target === "hover";
+    const glow = first[K("glow")] ?? { ...DEFAULT_GLOW, power: 0 };
     const client = getClientConfig();
 
     const chips = barIds().map(id => {
@@ -247,16 +278,19 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
       chips,
       hasSelection: ids.length > 0,
       count: ids.length,
-      size: Math.round(first.size ?? config.bar.size),
-      sizeMin: SIZE_MIN,
-      sizeMax: SIZE_MAX,
-      globalSize: config.bar.size,
-      opacity: Math.round((first.opacity ?? 1) * 100),
+      isHover: hoverMode,
+      targetPortrait: !hoverMode,
+      size: Math.round(first[K("size")] ?? baseSize(config)),
+      sizeMin: hoverMode ? 120 : SIZE_MIN,
+      sizeMax: hoverMode ? 1200 : SIZE_MAX,
+      sizeStep: hoverMode ? 10 : 1,
+      globalSize: baseSize(config),
+      opacity: Math.round((first[K("opacity")] ?? 1) * 100),
       glow,
       glowColor: glow.color,
-      flipX: first.flipX,
-      flipY: first.flipY,
-      rotation: first.rotation,
+      flipX: first[K("flipX")],
+      flipY: first[K("flipY")],
+      rotation: first[K("rotation")],
       countdown: first.countdown ?? { turns: 3, size: 1, mode: "round" },
       hasCountdown: Boolean(first.countdown),
       modeRound: (first.countdown?.mode ?? "round") === "round",
@@ -266,6 +300,7 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
       hasClipboard: Boolean(clipboard),
       canUndo: undoStack.length > 0,
       focusOn: focusState.ids.size > 0,
+      firstName: ids.length ? game.actors.get(ids[0])?.name : "",
       spotOn: focusState.spot && focusState.ids.size > 0
     };
   }
@@ -273,6 +308,7 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
   _onRender(context, options) {
     super._onRender(context, options);
     addA11yButton(this);
+    this.#syncHoverPreview();
     const root = this.element;
     if (root.dataset.bound) return;
     root.dataset.bound = "1";
@@ -300,10 +336,12 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
       const value = Number(input.value);
       const out = input.parentElement.querySelector("output");
       if (out) out.value = `${value}${input.dataset.unit ?? ""}`;
-      if (input.dataset.live === "size") preview(ids, () => ({ size: clampSize(value) }));
-      else if (input.dataset.live === "opacity") preview(ids, () => ({ opacity: value >= 100 ? null : value / 100 }));
-      else if (input.dataset.live === "rotation") preview(ids, () => ({ rotation: value }));
-      else if (input.dataset.live.startsWith("glow")) preview(ids, current => ({ glow: this.#glowFrom(root, current) }));
+      if (input.dataset.live === "size") preview(ids, { size: clampSizeFor(value, baseSize(getConfig())) });
+      else if (input.dataset.live === "opacity") preview(ids, { opacity: value >= 100 ? null : value / 100 });
+      else if (input.dataset.live === "rotation") preview(ids, { rotation: value });
+      else if (input.dataset.live.startsWith("glow") || input.dataset.live === "pulse") {
+        preview(ids, { glow: this.#glowFrom(root, getActorConfig(getConfig(), ids[0] ?? "")) });
+      }
     });
 
     root.addEventListener("change", async event => {
@@ -322,13 +360,25 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
     });
   }
 
+  /** En modo «imagen ampliada» se deja a la vista la del primer personaje elegido mientras se ajusta. */
+  #syncHoverPreview() {
+    const first = selection()[0];
+    if (target === "hover" && first) {
+      previewing = true;
+      showHover(first, { persist: true });
+    } else if (previewing) {
+      previewing = false;
+      hideHover({ force: true });
+    }
+  }
+
   #glowFrom(root, current) {
     const value = name => root.querySelector(`[data-live="${name}"]`);
     const power = Number(value("glowPower").value);
     if (power <= 0) return null;
     return {
       ...DEFAULT_GLOW,
-      ...current.glow,
+      ...current[K("glow")],
       color: value("glowColor").value,
       power,
       alpha: Number(value("glowAlpha").value),
@@ -345,14 +395,17 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
     const read = name => Number(root.querySelector(`[data-live="${name}"]`)?.value);
 
     switch (act) {
+      case "target":
+        target = button.dataset.target;
+        return this.render();
       case "all": this.selected = new Set(barIds()); return this.render();
       case "none": this.selected = new Set(); return this.render();
       case "invert": this.selected = new Set(barIds().filter(id => !this.selected.has(id))); return this.render();
       case "size-down": return scaleBy(0.9, ids);
       case "size-up": return scaleBy(1.1, ids);
-      case "size-factor": return commit(ids, { size: clampSize(config.bar.size * Number(button.dataset.factor), config.bar.size) });
-      case "size-global": return commit(ids, { size: null });
-      case "equalize": return equalize(read("size") || config.bar.size);
+      case "size-factor": return commit(ids, { [K("size")]: clampSizeFor(baseSize(config) * Number(button.dataset.factor), baseSize(config)) });
+      case "size-global": return commit(ids, { [K("size")]: null });
+      case "equalize": return equalize(read("size") || baseSize(config));
       case "opacity-reset": return setOpacity(1, ids);
       case "glow-off": return setGlow(null, ids);
       case "flip-x": return toggleFlip("x", ids);
@@ -391,16 +444,21 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
   }
 
   async close(options) {
+    if (previewing) {
+      previewing = false;
+      hideHover({ force: true });
+    }
     if (studio === this) studio = null;
     return super.close(options);
   }
 }
 
-export function openStudio(actorIds = null) {
+export function openStudio(actorIds = null, mode = "portrait") {
   if (!game.user.isGM) {
     ui.notifications.warn(localize("PCP.Studio.GMOnly"));
     return null;
   }
+  target = mode === "hover" ? "hover" : "portrait";
   const existing = foundry.applications.instances.get(StudioApp.DEFAULT_OPTIONS.id);
   const app = existing?.rendered ? existing : new StudioApp();
   studio = app;

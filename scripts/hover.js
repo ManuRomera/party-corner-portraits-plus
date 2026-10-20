@@ -16,6 +16,7 @@ const ID = "pcp-hover";
 const MARGIN = 8;
 const LEVELS = { LIMITED: 1, OBSERVER: 2, OWNER: 3 };
 
+let live = null; // {actorId, media, stage, reposition, placement} de la imagen mostrada
 let timer = null;
 let hideTimer = null;
 let element = null;
@@ -32,6 +33,7 @@ export function hideHover({ force = false } = {}) {
   window.clearTimeout(hideTimer);
   element?.remove();
   element = null;
+  live = null;
   sharedUntil = 0;
 }
 
@@ -67,12 +69,12 @@ function place(placement, pos) {
 }
 
 /** Ajusta el lado mayor al tamaño elegido (sin pasarse de la pantalla) y coloca el panel. */
-function fit(media, size, upscale, reposition) {
+function fit(media, size, sharp, reposition) {
   const natural = naturalSize(media);
   if (natural) {
     const limit = Math.min(size, window.innerWidth * 0.9, window.innerHeight * 0.85);
     // Sin «ampliar», nunca se dibuja por encima de su tamaño real: es lo que mantiene la nitidez.
-    const scale = Math.min(limit / Math.max(natural.w, natural.h), upscale ? 4 : 1);
+    const scale = Math.min(limit / Math.max(natural.w, natural.h), sharp ? 1 : 6);
     media.style.width = `${Math.round(natural.w * scale)}px`;
     media.style.height = `${Math.round(natural.h * scale)}px`;
     media.style.maxWidth = "none";
@@ -80,12 +82,12 @@ function fit(media, size, upscale, reposition) {
   reposition();
 }
 
-export function showHover(actorId, { card = null, shared = false, moving = false } = {}) {
+export function showHover(actorId, { card = null, shared = false, moving = false, persist = false, override = null } = {}) {
   const actor = game.actors?.get(actorId);
   if (!actor) return;
   const config = getConfig();
   const client = getClientConfig();
-  const actorConfig = getActorConfig(config, actorId);
+  const actorConfig = { ...getActorConfig(config, actorId), ...override };
 
   hideHover({ force: true });
 
@@ -106,7 +108,7 @@ export function showHover(actorId, { card = null, shared = false, moving = false
   stage.className = "pcp-hover-stage";
   stage.appendChild(media);
   element.appendChild(stage);
-  if (config.hover.applyLook) applyHoverLook(stage, media, actorConfig, config);
+  applyHoverLook(stage, media, actorConfig, config);
 
   if (config.hover.caption) {
     const caption = document.createElement("div");
@@ -127,12 +129,16 @@ export function showHover(actorId, { card = null, shared = false, moving = false
   // El panel puede cambiar de tamaño al cargar el medio o el texto: se recoloca siempre dentro de la pantalla.
   new ResizeObserver(() => place(placement, config.hover.pos)).observe(element);
   const reposition = () => place(placement, config.hover.pos);
-  const refit = () => fit(media, config.hover.size, config.hover.upscale, reposition);
+  live = { actorId, media, stage, reposition };
+  const refit = () => fit(media, actorConfig.hoverSize ?? config.hover.size, config.hover.sharp, reposition);
   media.addEventListener("load", refit, { once: true });
   media.addEventListener("loadedmetadata", refit, { once: true });
   // Imágenes ya en caché: no siempre disparan «load».
   if (media.complete || media.readyState >= 1) refit();
   else reposition();
+
+  if (persist) element.classList.add("pcp-hover-preview"); // detrás de las ventanas, para no tapar los controles
+  if (persist) sharedUntil = Infinity; // vista previa del estudio: se queda hasta cerrarla
 
   if (shared) {
     const ms = config.hover.sharedSeconds * 1000;
@@ -241,3 +247,13 @@ export function registerHoverSocket() {
 }
 
 window.addEventListener("resize", () => hideHover());
+
+/** Cambia al vuelo el aspecto o el tamaño de la imagen ya mostrada (vista previa del estudio). */
+export function refreshHoverPreview(actorId, override) {
+  if (!element || !live || live.actorId !== actorId) return false;
+  const config = getConfig();
+  const actorConfig = { ...getActorConfig(config, actorId), ...override };
+  applyHoverLook(live.stage, live.media, actorConfig, config);
+  fit(live.media, actorConfig.hoverSize ?? config.hover.size, config.hover.sharp, live.reposition);
+  return true;
+}

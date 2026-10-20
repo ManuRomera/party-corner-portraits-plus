@@ -23,6 +23,15 @@ function buildMenu(items, title, isSubmenu = false) {
   for (const item of items) {
     if (!item) continue;
 
+    if (item.heading) {
+      const heading = document.createElement("div");
+      heading.className = "pcp-menu-heading";
+      heading.setAttribute("role", "presentation");
+      heading.textContent = item.heading;
+      menu.appendChild(heading);
+      continue;
+    }
+
     if (item.separator) {
       const separator = document.createElement("div");
       separator.className = "pcp-menu-separator";

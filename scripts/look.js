@@ -85,15 +85,16 @@ export function setFocus(ids, spot = false) {
   applyFocus();
 }
 
-/** El mismo aspecto (transparencia, halo, giro, volteo, blanco y negro) sobre la imagen ampliada. */
+/** Aspecto propio de la imagen ampliada (hoverOpacity, hoverGlow…), independiente del retrato de la barra. */
 export function applyHoverLook(stage, media, actorConfig, config) {
-  stage.style.opacity = actorConfig.opacity === null || actorConfig.opacity === undefined ? "" : String(actorConfig.opacity);
-  const flip = `scale(${actorConfig.flipX ? -1 : 1}, ${actorConfig.flipY ? -1 : 1})`;
-  const rotate = actorConfig.rotation ? `rotate(${actorConfig.rotation}deg) ` : "";
+  const opacity = actorConfig.hoverOpacity;
+  stage.style.opacity = opacity === null || opacity === undefined ? "" : String(opacity);
+  const flip = `scale(${actorConfig.hoverFlipX ? -1 : 1}, ${actorConfig.hoverFlipY ? -1 : 1})`;
+  const rotate = actorConfig.hoverRotation ? `rotate(${actorConfig.hoverRotation}deg) ` : "";
   stage.style.transform = rotate + flip === "scale(1, 1)" ? "" : rotate + flip;
   stage.classList.toggle("pcp-gray", Boolean(config.appearance.grayscale));
 
-  const glow = actorConfig.glow;
+  const glow = actorConfig.hoverGlow;
   media.classList.toggle("pcp-glow", Boolean(glow));
   media.classList.toggle("pcp-glow-pulse", Boolean(glow?.pulse));
   if (glow) {

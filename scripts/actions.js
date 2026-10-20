@@ -83,6 +83,7 @@ async function setGlobalSize(size) {
 async function setHoverSize(size) {
   await mutateConfig(config => {
     config.hover.size = Math.round(Math.min(1200, Math.max(120, size)));
+    for (const id of Object.keys(config.actors)) config.actors[id].hoverSize = null;
   });
   refreshAll();
 }
@@ -574,37 +575,18 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         icon: "fa-solid fa-address-card",
         action: () => openActorSheet(actorId)
       },
-      { separator: true },
-      {
-        label: localize("PCP.Menu.Actor.Size"),
-        icon: "fa-solid fa-up-right-and-down-left-from-center",
-        children: sizeMenuItems()
-      },
-      {
-        label: localize("PCP.Menu.Hud.MoveBar"),
-        icon: "fa-solid fa-up-down-left-right",
-        action: () => setMoveMode(true)
-      },
-      ...hoverLayoutItems(),
+
+      // ── Retrato de la barra ──
+      { heading: localize("PCP.Menu.Group.Portrait") },
       {
         label: localize("PCP.Menu.Actor.Source"),
         icon: "fa-solid fa-image-portrait",
         children: sourceMenuItems(actorId)
       },
       {
-        label: localize("PCP.Menu.Actor.Studio"),
-        icon: "fa-solid fa-wand-magic-sparkles",
-        action: () => openStudio([actorId])
-      },
-      {
-        label: localize("PCP.Menu.Actor.Hover"),
-        icon: "fa-solid fa-magnifying-glass-plus",
-        children: hoverMenuItems(actorId)
-      },
-      {
-        label: localize("PCP.Menu.Actor.ShowAll"),
-        icon: "fa-solid fa-bullhorn",
-        action: () => showToEveryone(actorId)
+        label: localize("PCP.Menu.Actor.Size"),
+        icon: "fa-solid fa-up-right-and-down-left-from-center",
+        children: sizeMenuItems()
       },
       {
         label: localize("PCP.Menu.Actor.Framing"),
@@ -656,11 +638,51 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         icon: "fa-solid fa-sort",
         children: orderMenuItems(actorId)
       },
-      { separator: true },
       {
         label: localize("PCP.Menu.Actor.Remove"),
         icon: "fa-solid fa-eye-slash",
         action: () => removeActor(actorId)
+      },
+
+      // ── Imagen ampliada ──
+      { heading: localize("PCP.Menu.Group.Hover") },
+      {
+        label: localize("PCP.Menu.Actor.Hover"),
+        icon: "fa-solid fa-magnifying-glass-plus",
+        children: hoverMenuItems(actorId)
+      },
+      {
+        label: localize("PCP.Menu.Hover.Size"),
+        icon: "fa-solid fa-up-right-and-down-left-from-center",
+        children: hoverSizeItems()
+      },
+      {
+        label: localize("PCP.Menu.Actor.StudioHover"),
+        icon: "fa-solid fa-wand-magic-sparkles",
+        action: () => openStudio([actorId], "hover")
+      },
+      {
+        label: localize("PCP.Menu.Hover.Move"),
+        icon: "fa-solid fa-up-down-left-right",
+        action: () => startHoverMove()
+      },
+      {
+        label: localize("PCP.Menu.Actor.ShowAll"),
+        icon: "fa-solid fa-bullhorn",
+        action: () => showToEveryone(actorId)
+      },
+
+      // ── Barra y módulo ──
+      { heading: localize("PCP.Menu.Group.Bar") },
+      {
+        label: localize("PCP.Menu.Hud.MoveBar"),
+        icon: "fa-solid fa-up-down-left-right",
+        action: () => setMoveMode(true)
+      },
+      {
+        label: localize("PCP.Menu.Hud.Studio"),
+        icon: "fa-solid fa-wand-magic-sparkles",
+        action: () => openStudio()
       },
       {
         label: localize("PCP.Menu.Configure"),
@@ -806,6 +828,7 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
 
   openMenu(
     [
+      { heading: localize("PCP.Menu.Group.Bar") },
       {
         label: localize("PCP.Menu.Hud.Studio"),
         icon: "fa-solid fa-wand-magic-sparkles",
@@ -817,7 +840,6 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
         checked: isMoveMode(),
         action: () => setMoveMode(!isMoveMode())
       },
-      { separator: true },
       {
         label: localize("PCP.Menu.Hud.Position"),
         icon: "fa-solid fa-location-dot",
@@ -846,7 +868,6 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
         icon: "fa-solid fa-up-right-and-down-left-from-center",
         children: sizeMenuItems()
       },
-      ...hoverLayoutItems(),
       {
         label: localize("PCP.Menu.Hud.Appearance"),
         icon: "fa-solid fa-palette",
@@ -883,7 +904,6 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
           }
         ]
       },
-      { separator: true },
       {
         label: localize("PCP.Menu.Hud.CharacterNames"),
         icon: "fa-solid fa-signature",
@@ -896,6 +916,14 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
         checked: config.data.showPlayerName,
         action: () => toggleConfigValue("data.showPlayerName")
       },
+      { heading: localize("PCP.Menu.Group.Hover") },
+      ...hoverLayoutItems(),
+      {
+        label: localize("PCP.Menu.Actor.StudioHover"),
+        icon: "fa-solid fa-wand-magic-sparkles",
+        action: () => openStudio(null, "hover")
+      },
+      { heading: localize("PCP.Menu.Group.Foundry") },
       {
         label: localize("PCP.Config.Hotbar"),
         icon: "fa-solid fa-keyboard",

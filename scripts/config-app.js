@@ -170,8 +170,7 @@ function collectFormData(form) {
     permission: HOVER_PERMISSIONS.includes(value("hover.permission")) ? value("hover.permission") : old.hover.permission,
     caption: checked("hover.caption"),
     box: checked("hover.box"),
-    applyLook: checked("hover.applyLook"),
-    upscale: checked("hover.upscale"),
+    sharp: checked("hover.sharp"),
     pos: old.hover.pos,
     sharedSeconds: clamp(value("hover.sharedSeconds"), 1, 60, old.hover.sharedSeconds)
   };

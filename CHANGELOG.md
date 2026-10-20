@@ -1,5 +1,13 @@
 # Cambios
 
+## 1.8.0
+
+- **Estudio de la imagen ampliada.** El Estudio tiene ahora dos pestañas: «Retrato de la barra» e «Imagen ampliada». En la segunda se ajusta, **por personaje**, lo que se ve al dejar el cursor sobre el retrato: tamaño, transparencia, halo (con pulso), giro y volteo, con vista previa en vivo de la imagen grande. Es independiente del retrato pequeño. Se abre con botón derecho → «Estudio de la imagen ampliada…».
+- **El vídeo y las imágenes pequeñas vuelven a ampliarse** hasta el tamaño elegido (en 1.7.0 quedaban limitados a su tamaño real). El límite de nitidez pasa a ser opcional: Vista ampliada → «No agrandar por encima del original».
+- **Menú del botón derecho ordenado por grupos:** «Retrato de la barra» (qué se muestra, tamaño, encuadre, aspecto, orden, quitar), «Imagen ampliada» (qué se muestra, tamaño, estudio, mover, mostrar a todos) y «Barra de retratos» (mover, estudio, configuración). El menú de la barra sigue el mismo criterio.
+- El tamaño de la imagen ampliada elegido en el menú vale para todos y quita los tamaños propios.
+- Quitado del menú el «Estudio de este retrato» del retrato pequeño; sigue en el menú de la barra.
+
 ## 1.7.0
 
 - **El aspecto también en la imagen ampliada:** transparencia, halo (con pulso), giro, volteo y blanco y negro del retrato se aplican ahora a la imagen grande. Se puede desactivar en Vista ampliada → «Aplicar el aspecto a la imagen ampliada».

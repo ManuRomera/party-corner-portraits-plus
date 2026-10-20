@@ -48,6 +48,12 @@ export const DEFAULT_ACTOR = {
   flipY: false,
   rotation: 0,
   countdown: null,
+  hoverSize: null,
+  hoverOpacity: null,
+  hoverGlow: null,
+  hoverFlipX: false,
+  hoverFlipY: false,
+  hoverRotation: 0,
   bars: {}
 };
 
@@ -154,8 +160,7 @@ export function createDefaultConfig() {
       permission: "none",
       caption: true,
       box: false,
-      applyLook: true,
-      upscale: false,
+      sharp: false,
       sharedSeconds: 6
     },
     players: {

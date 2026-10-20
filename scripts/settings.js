@@ -142,6 +142,23 @@ function sanitizeActor(actorId, actor, index) {
     playerLabel: String(value.playerLabel ?? ""),
     media: String(value.media ?? "").trim(),
     ...sanitizeLook(value),
+    ...(() => {
+      const h = sanitizeLook({
+        opacity: value.hoverOpacity,
+        glow: value.hoverGlow,
+        flipX: value.hoverFlipX,
+        flipY: value.hoverFlipY,
+        rotation: value.hoverRotation
+      });
+      return {
+        hoverSize: value.hoverSize === null || value.hoverSize === undefined ? null : clamp(value.hoverSize, 120, 1200, null),
+        hoverOpacity: h.opacity,
+        hoverGlow: h.glow,
+        hoverFlipX: h.flipX,
+        hoverFlipY: h.flipY,
+        hoverRotation: h.rotation
+      };
+    })(),
     hoverSource: [...HOVER_SOURCES, "custom"].includes(value.hoverSource) ? value.hoverSource : null,
     hoverMedia: String(value.hoverMedia ?? "").trim(),
     // Versión 1.2.0: un archivo propio sin origen elegido era «archivo propio».
@@ -210,8 +227,7 @@ export function normalizeConfig(raw) {
   merged.hover.permission = HOVER_PERMISSIONS.includes(merged.hover.permission) ? merged.hover.permission : "none";
   merged.hover.caption = merged.hover.caption !== false;
   merged.hover.box = merged.hover.box === true;
-  merged.hover.applyLook = merged.hover.applyLook !== false;
-  merged.hover.upscale = merged.hover.upscale === true;
+  merged.hover.sharp = merged.hover.sharp === true;
   merged.hover.sharedSeconds = clamp(merged.hover.sharedSeconds, 1, 60, 6);
 
   merged.players = merged.players || {};
