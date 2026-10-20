@@ -14,6 +14,7 @@ import {
 } from "./utils.js";
 import { refreshAll } from "./events.js";
 import { WithMemory } from "./memory.js";
+import { isVideo, naturalSize, portraitSource } from "./media.js";
 import { addA11yButton } from "./a11y.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -100,7 +101,8 @@ export class FramingApp extends WithMemory(HandlebarsApplicationMixin(Applicatio
       ...context,
       actorId: this.actorId,
       actorName: actor?.name ?? "",
-      actorImg: actor?.img || "icons/svg/mystery-man.svg",
+      actorImg: portraitSource(actor, actorConfig),
+      isVideo: isVideo(portraitSource(actor, actorConfig)),
       x: actorConfig.x,
       y: actorConfig.y,
       zoom: actorConfig.zoom,
@@ -115,7 +117,7 @@ export class FramingApp extends WithMemory(HandlebarsApplicationMixin(Applicatio
     addA11yButton(this);
 
     const stage = this.element.querySelector(".pcp-framing-stage");
-    const img = stage?.querySelector("img");
+    const img = stage?.querySelector("img, video");
     const xInput = this.element.querySelector('input[name="x"]');
     const yInput = this.element.querySelector('input[name="y"]');
     const zoomInput = this.element.querySelector('input[name="zoom"]');
@@ -151,7 +153,7 @@ export class FramingApp extends WithMemory(HandlebarsApplicationMixin(Applicatio
       const box = stage.getBoundingClientRect();
       const side = box.width;
       const fit = stage.dataset.fit === "contain" ? Math.min : Math.max;
-      const natural = { w: img.naturalWidth || side, h: img.naturalHeight || side };
+      const natural = naturalSize(img) ?? { w: side, h: side };
       const base = fit(side / natural.w, side / natural.h);
       const zoom = clamp(zoomInput.value, 1, 4, 1);
       return { side, width: natural.w * base * zoom, height: natural.h * base * zoom };

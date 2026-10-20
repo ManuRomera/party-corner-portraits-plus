@@ -70,13 +70,17 @@
 
       <h4 class="pcp-heading">{{localize "PCP.Config.Interface"}}</h4>
       <div class="pcp-card-group">
-        <label class="pcp-row pcp-row-check">
-          <span class="pcp-row-text">{{localize "PCP.Config.HideHotbar"}}<small>{{localize "PCP.Config.HideHotbarHint"}}</small></span>
-          <input type="checkbox" class="pcp-switch" name="hideHotbar" {{#if config.ui.hideHotbar}}checked{{/if}}>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Hotbar"}}<small>{{localize "PCP.Config.HotbarHint"}}</small></span>
+          <select name="hotbar">
+            {{#each hotbarModes}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
         </label>
-        <label class="pcp-row pcp-row-check">
+        <label class="pcp-row">
           <span class="pcp-row-text">{{localize "PCP.Config.HidePlayers"}}<small>{{localize "PCP.Config.HidePlayersHint"}}</small></span>
-          <input type="checkbox" class="pcp-switch" name="hidePlayers" {{#if config.ui.hidePlayers}}checked{{/if}}>
+          <select name="playersVisibility">
+            {{#each playersModes}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
         </label>
       </div>
     </section>
@@ -305,7 +309,7 @@
             <div class="pcp-actor-head">
               <input class="pcp-actor-enabled pcp-switch" type="checkbox" {{#if enabled}}checked{{/if}} title="{{localize 'PCP.Config.ShowActor'}}" aria-label="{{localize 'PCP.Config.ShowActor'}}: {{name}}">
               <div class="pcp-config-preview" style="--pcp-preview-border: {{borderColor}}">
-                <img src="{{img}}" alt="" style="object-fit: {{previewFit}}; object-position: {{x}}% {{y}}%; transform-origin: {{x}}% {{y}}%; transform: scale({{zoom}});">
+                {{#if isVideo}}<video src="{{img}}" muted loop autoplay playsinline style="object-fit: {{previewFit}}; object-position: {{x}}% {{y}}%; transform-origin: {{x}}% {{y}}%; transform: scale({{zoom}});"></video>{{else}}<img src="{{img}}" alt="" style="object-fit: {{previewFit}}; object-position: {{x}}% {{y}}%; transform-origin: {{x}}% {{y}}%; transform: scale({{zoom}});">{{/if}}
               </div>
               <div class="pcp-actor-who">
                 <div class="pcp-actor-name">{{name}}</div>
@@ -317,6 +321,13 @@
             <details class="pcp-more">
               <summary>{{localize "PCP.Config.MoreOptions"}}</summary>
               <div class="pcp-more-grid">
+                <div class="pcp-mini pcp-media-field pcp-span">
+                  <span>{{localize "PCP.Config.Media"}}</span>
+                  <span class="pcp-inline">
+                    <input class="pcp-actor-media" type="text" value="{{media}}" placeholder="{{localize 'PCP.Config.MediaPlaceholder'}}">
+                    <button type="button" class="pcp-pick-media pcp-icon-button" title="{{localize 'PCP.Config.MediaPick'}}" aria-label="{{localize 'PCP.Config.MediaPick'}}"><i class="fa-solid fa-folder-open"></i></button>
+                  </span>
+                </div>
                 <label class="pcp-mini"><span>{{localize "PCP.Config.PlayerLabel"}}</span><input class="pcp-actor-player-label" type="text" value="{{playerLabel}}" placeholder="{{ownerLabel}}"></label>
                 <label class="pcp-mini"><span>{{localize "PCP.Config.Order"}}</span><input class="pcp-actor-order" type="number" value="{{sortOrder}}" min="-9999" max="9999" step="1"></label>
                 <label class="pcp-mini"><span>{{localize "PCP.Config.Size"}}</span><input class="pcp-actor-size" type="number" value="{{size}}" placeholder="{{globalSize}}" min="32" max="320" step="1"></label>

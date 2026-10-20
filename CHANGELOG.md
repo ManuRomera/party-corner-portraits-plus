@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.2.0
+
+- **Barra de macros y lista de jugadores de Foundry:** cada una puede estar *visible*, *oculta del todo* o *aparecer al acercar el cursor* (como el dock). Se elige en Configuración → General y en el menú del asa de la barra. Los mundos que ya tenían «ocultar» lo conservan.
+- **Retratos animados:** admiten vídeo (webm, mp4, m4v, ogv), GIF y WebP/APNG animados. Cada personaje puede tener su propia animación (Personajes → Más opciones → Animación o vídeo del retrato, con selector de archivos), distinta de la imagen de la ficha. Funcionan también en el encuadre. Con «Reducir movimiento» el vídeo se queda en su primer fotograma (los GIF no se pueden detener).
+
 ## 1.1.1
 
 - La lista de jugadores de Foundry ya **no se mueve**: la lista sustitutiva pasa a ser opcional y viene desactivada (también en mundos que ya tenían el módulo).

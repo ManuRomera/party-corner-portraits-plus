@@ -159,7 +159,7 @@ body.pcp-a11y-calm .pcp-plus-window * {
   background: #101116;
 }
 
-#pcp-party-hud .pcp-portrait img {
+#pcp-party-hud .pcp-portrait :is(img, video) {
   display: block;
   width: 100%;
   height: 100%;
@@ -168,7 +168,7 @@ body.pcp-a11y-calm .pcp-plus-window * {
   object-fit: cover;
 }
 
-#pcp-party-hud .pcp-card.pcp-grayscale .pcp-portrait img {
+#pcp-party-hud .pcp-card.pcp-grayscale .pcp-portrait :is(img, video) {
   filter: grayscale(1);
 }
 
@@ -1288,7 +1288,7 @@ body.pcp-a11y-contrast .pcp-plus-window .window-content input.pcp-switch:checked
   background: #101116;
 }
 
-.pcp-plus-window .pcp-config-preview img {
+.pcp-plus-window .pcp-config-preview :is(img, video) {
   display: block;
   width: 100%;
   height: 100%;
@@ -1354,6 +1354,11 @@ body.pcp-a11y-contrast .pcp-plus-window .window-content input.pcp-switch:checked
   gap: 10px 12px;
   padding-top: 10px;
 }
+
+.pcp-plus-window .pcp-span { grid-column: 1 / -1; }
+.pcp-plus-window .pcp-media-field .pcp-inline { display: flex; gap: 6px; }
+.pcp-plus-window .pcp-media-field .pcp-inline input { flex: 1 1 auto; }
+.pcp-plus-window .window-content .pcp-media-field .pcp-icon-button { color: var(--pcp-ink); }
 
 .pcp-plus-window .pcp-no-results {
   margin: 14px 0;
@@ -1441,7 +1446,7 @@ body.pcp-a11y-contrast .pcp-plus-window .window-content input.pcp-switch:checked
 
 .pcp-framing .pcp-framing-stage.pcp-frame-none { border-color: transparent; }
 
-.pcp-framing .pcp-framing-stage img {
+.pcp-framing .pcp-framing-stage :is(img, video) {
   position: absolute;
   inset: 0;
   display: block;
@@ -1521,8 +1526,34 @@ body.pcp-a11y-contrast .pcp-plus-window .window-content input.pcp-switch:checked
    Interfaz de Foundry
    -------------------------------------------------------------------------- */
 
-body.pcp-hide-hotbar #hotbar { display: none !important; }
-body.pcp-hide-core-players #players { display: none !important; }
+body.pcp-hide-hotbar #hotbar,
+body.pcp-hide-players #players {
+  display: none !important;
+}
+
+/* Aparece al acercar el cursor. Solo opacidad y un pequeño desplazamiento: el tamaño
+   no cambia, así que la zona sensible es siempre la misma. */
+body.pcp-auto-hotbar #hotbar,
+body.pcp-auto-players #players {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+body.pcp-auto-hotbar #hotbar { transform: translateY(14px); }
+body.pcp-auto-players #players { transform: translateX(-14px); }
+
+body.pcp-auto-hotbar.pcp-peek-hotbar #hotbar,
+body.pcp-auto-players.pcp-peek-players #players {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+body.pcp-a11y-calm.pcp-auto-hotbar #hotbar,
+body.pcp-a11y-calm.pcp-auto-players #players {
+  transition: none;
+}
 
 /* --------------------------------------------------------------------------
    Pantallas pequeñas

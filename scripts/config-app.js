@@ -13,6 +13,7 @@ import {
   NAME_POSITIONS,
   BACKGROUND_MODES,
   BAR_POSITIONS,
+  VISIBILITY_MODES,
   SYSTEM_BAR_PRESETS
 } from "./constants.js";
 import { getConfig, saveConfig } from "./settings.js";
@@ -33,6 +34,7 @@ import {
 import { refreshAll } from "./events.js";
 import { openFramingApp } from "./framing-app.js";
 import { WithMemory } from "./memory.js";
+import { isVideo, portraitSource } from "./media.js";
 import { addA11yButton } from "./a11y.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -166,8 +168,10 @@ function collectFormData(form) {
   config.players.compact = checked("players.compact");
   config.players.title = value("players.title", "").trim();
 
-  config.ui.hideHotbar = checked("hideHotbar");
-  config.ui.hidePlayers = checked("hidePlayers");
+  config.ui.hotbar = VISIBILITY_MODES.includes(value("hotbar")) ? value("hotbar") : old.ui.hotbar;
+  config.ui.players = VISIBILITY_MODES.includes(value("playersVisibility"))
+    ? value("playersVisibility")
+    : old.ui.players;
 
   const previousIndex = new Map((old.order || []).map((id, index) => [id, index]));
   const selected = [];
@@ -194,7 +198,8 @@ function collectFormData(form) {
       borderColor: useBorder
         ? normalizeColorOrNull(row.querySelector(".pcp-actor-border-color")?.value)
         : null,
-      playerLabel: row.querySelector(".pcp-actor-player-label")?.value?.trim() ?? ""
+      playerLabel: row.querySelector(".pcp-actor-player-label")?.value?.trim() ?? "",
+      media: row.querySelector(".pcp-actor-media")?.value?.trim() ?? ""
     };
 
     if (row.querySelector(".pcp-actor-enabled")?.checked) {
@@ -272,7 +277,9 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
         return {
           id: actor.id,
           name: actor.name,
-          img: actor.img || "icons/svg/mystery-man.svg",
+          img: portraitSource(actor, actorConfig),
+          isVideo: isVideo(portraitSource(actor, actorConfig)),
+          media: actorConfig.media,
           enabled: orderIndex.has(actor.id),
           order: orderIndex.get(actor.id) ?? 999999,
           sortOrder: actorConfig.sortOrder,
@@ -340,6 +347,12 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       ),
       backgrounds: buildOptions(BACKGROUND_MODES, config.appearance.background, value =>
         localize(`PCP.Background.${capitalize(value)}`)
+      ),
+      hotbarModes: buildOptions(VISIBILITY_MODES, config.ui.hotbar, value =>
+        localize(`PCP.Visibility.${capitalize(value)}`)
+      ),
+      playersModes: buildOptions(VISIBILITY_MODES, config.ui.players, value =>
+        localize(`PCP.Visibility.${capitalize(value)}`)
       ),
       barPositions: buildOptions(BAR_POSITIONS, config.data.barPosition, value =>
         localize(`PCP.BarPosition.${capitalize(value)}`)
@@ -530,6 +543,21 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       };
       checkbox.addEventListener("change", sync);
       sync();
+    }
+
+    for (const button of root.querySelectorAll(".pcp-pick-media")) {
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        const input = button.closest(".pcp-media-field")?.querySelector(".pcp-actor-media");
+        const Picker = foundry.applications.apps.FilePicker.implementation;
+        new Picker({
+          type: "imagevideo",
+          current: input?.value ?? "",
+          callback: path => {
+            if (input) input.value = path;
+          }
+        }).render(true);
+      });
     }
 
     for (const button of root.querySelectorAll(".pcp-open-framing")) {

@@ -17,6 +17,7 @@ export const FRAME_MODES = ["full", "minimal", "none"];
 export const IMAGE_FITS = ["cover", "contain"];
 export const NAME_POSITIONS = ["overlay", "below", "hidden"];
 export const BACKGROUND_MODES = ["dark", "transparent", "none"];
+export const VISIBILITY_MODES = ["show", "hide", "hover"];
 export const BAR_POSITIONS = ["overlay", "below"];
 
 export const DEFAULT_ACTOR = {
@@ -30,6 +31,7 @@ export const DEFAULT_ACTOR = {
   borderColor: null,
   namePosition: null,
   playerLabel: "",
+  media: "",
   bars: {}
 };
 
@@ -138,8 +140,8 @@ export function createDefaultConfig() {
       title: ""
     },
     ui: {
-      hideHotbar: false,
-      hidePlayers: false
+      hotbar: "show",
+      players: "show"
     },
     order: [],
     actors: {}

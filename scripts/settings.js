@@ -17,6 +17,7 @@ import {
   NAME_POSITIONS,
   BACKGROUND_MODES,
   BAR_POSITIONS,
+  VISIBILITY_MODES,
   SIZE_MIN,
   SIZE_MAX
 } from "./constants.js";
@@ -101,6 +102,7 @@ function sanitizeActor(actorId, actor, index) {
     borderColor: normalizeColorOrNull(value.borderColor),
     namePosition: NAME_POSITIONS.includes(value.namePosition) ? value.namePosition : null,
     playerLabel: String(value.playerLabel ?? ""),
+    media: String(value.media ?? "").trim(),
     bars
   };
 }
@@ -160,8 +162,13 @@ export function normalizeConfig(raw) {
   merged.players.title = String(merged.players.title ?? "");
 
   merged.ui = merged.ui || {};
-  merged.ui.hideHotbar = Boolean(merged.ui.hideHotbar);
-  merged.ui.hidePlayers = Boolean(merged.ui.hidePlayers);
+  // Versiones anteriores guardaban dos booleanos (hideHotbar / hidePlayers).
+  const legacy = raw?.ui ?? {};
+  const mode = (value, old) => (VISIBILITY_MODES.includes(value) ? value : old ? "hide" : "show");
+  merged.ui = {
+    hotbar: mode(raw?.ui?.hotbar, legacy.hideHotbar),
+    players: mode(raw?.ui?.players, legacy.hidePlayers)
+  };
 
   const actors = merged.actors && typeof merged.actors === "object" ? merged.actors : {};
   merged.actors = {};

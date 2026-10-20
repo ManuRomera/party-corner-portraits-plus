@@ -22,6 +22,7 @@ import {
 } from "./utils.js";
 import { dispatchMenuEvent, refreshAll } from "./events.js";
 import { avoidCoreUi } from "./layout.js";
+import { applyFraming, createPortraitElement, portraitSource } from "./media.js";
 
 let moveMode = false;
 let suppressClick = false;
@@ -201,21 +202,11 @@ function buildCard(actor, config, client) {
   const portrait = document.createElement("div");
   portrait.className = "pcp-portrait";
 
-  const img = document.createElement("img");
-  img.src = actor.img || "icons/svg/mystery-man.svg";
-  img.alt = actor.name;
-  img.draggable = false;
-  img.addEventListener(
-    "error",
-    () => {
-      if (!img.src.endsWith("icons/svg/mystery-man.svg")) img.src = "icons/svg/mystery-man.svg";
-    },
-    { once: true }
-  );
-  img.style.objectFit = fit;
-  img.style.objectPosition = `${actorConfig.x}% ${actorConfig.y}%`;
-  img.style.transformOrigin = `${actorConfig.x}% ${actorConfig.y}%`;
-  img.style.transform = `scale(${actorConfig.zoom})`;
+  const img = createPortraitElement(portraitSource(actor, actorConfig), {
+    alt: actor.name,
+    still: client.a11y.motion
+  });
+  applyFraming(img, fit, actorConfig.x, actorConfig.y, actorConfig.zoom);
   portrait.appendChild(img);
 
   const overlay = document.createElement("div");

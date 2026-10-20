@@ -85,6 +85,10 @@ El prefijo `system.` es opcional: `attributes.hp.value` también funciona.
   - *Máster*: abrir ficha, llevar a la escena, mostrar/ocultar en la barra, elegir personaje, configurar el usuario, susurrar, expulsar.
   - *Jugador*: abrir su ficha, configurar su usuario, elegir personaje, pedir al máster que lo muestre, susurrar al máster y preferencias locales.
 
+### Retratos animados
+
+Vídeo (webm, mp4), GIF y WebP animado. En *Personajes → Más opciones* puedes indicar una animación propia para cada personaje sin tocar la imagen de su ficha. El vídeo va sin sonido y en bucle.
+
 ### Accesibilidad
 
 - Icono de accesibilidad en la cabecera de todas las ventanas del módulo, junto al de cerrar (también en el menú de la barra): **tamaño del texto** (85–160 %), **alto contraste**, **fuente de alta legibilidad** y **reducir movimiento**. Son ajustes de cada navegador: no cambian lo que ven los demás.
@@ -93,7 +97,7 @@ El prefijo `system.` es opcional: `attributes.hp.value` también funciona.
 
 ### Interfaz
 
-- **Ocultar la barra de macros** para todos los clientes.
+- **Barra de macros y lista de jugadores de Foundry**: visibles, ocultas del todo o que aparecen al acercar el cursor, para todos los clientes.
 - **Lista de jugadores sustitutiva**: muestra estado de conexión, personaje, color y corona del máster, con su propio menú contextual. Se aparta sola de los controles de escena y de la barra lateral de Foundry, así que nunca los tapa.
 - **Preferencias por jugador**: ocultar la barra solo para uno mismo, escala local, ocultar nombres o barras. No modifican la configuración del mundo.
 

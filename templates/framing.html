@@ -2,7 +2,7 @@
   <p class="pcp-framing-name"><i class="fa-solid fa-user"></i> {{actorName}}</p>
 
   <div class="pcp-framing-stage pcp-frame-{{frame}} pcp-bg-{{background}}" data-fit="{{fit}}">
-    <img src="{{actorImg}}" alt="{{actorName}}" draggable="false" style="object-fit: {{fit}}; object-position: {{x}}% {{y}}%; transform-origin: {{x}}% {{y}}%; transform: scale({{zoom}});">
+    {{#if isVideo}}<video src="{{actorImg}}" muted loop autoplay playsinline style="object-fit: {{fit}}; object-position: {{x}}% {{y}}%; transform-origin: {{x}}% {{y}}%; transform: scale({{zoom}});"></video>{{else}}<img src="{{actorImg}}" alt="{{actorName}}" draggable="false" style="object-fit: {{fit}}; object-position: {{x}}% {{y}}%; transform-origin: {{x}}% {{y}}%; transform: scale({{zoom}});">{{/if}}
     <div class="pcp-framing-grid" aria-hidden="true"></div>
   </div>
 

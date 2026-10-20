@@ -11,7 +11,8 @@ import {
   FRAME_MODES,
   IMAGE_FITS,
   NAME_POSITIONS,
-  BACKGROUND_MODES
+  BACKGROUND_MODES,
+  VISIBILITY_MODES
 } from "./constants.js";
 import {
   getConfig,
@@ -575,6 +576,16 @@ function globalNamePositionItems(config) {
   }));
 }
 
+function visibilityItems(config, key) {
+  const icons = { show: "fa-solid fa-eye", hide: "fa-solid fa-eye-slash", hover: "fa-solid fa-arrow-pointer" };
+  return VISIBILITY_MODES.map(mode => ({
+    label: localize(`PCP.Visibility.${capitalize(mode)}`),
+    icon: icons[mode],
+    checked: config.ui[key] === mode,
+    action: () => setConfigValue(`ui.${key}`, mode)
+  }));
+}
+
 async function resetBar() {
   await mutateConfig(config => {
     config.bar.position = "bottom-left";
@@ -687,16 +698,14 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
         action: () => toggleConfigValue("data.showPlayerName")
       },
       {
-        label: localize("PCP.Menu.Hud.HideHotbar"),
+        label: localize("PCP.Config.Hotbar"),
         icon: "fa-solid fa-keyboard",
-        checked: config.ui.hideHotbar,
-        action: () => toggleConfigValue("ui.hideHotbar")
+        children: visibilityItems(config, "hotbar")
       },
       {
         label: localize("PCP.Menu.Hud.HidePlayers"),
         icon: "fa-solid fa-users-slash",
-        checked: config.ui.hidePlayers,
-        action: () => toggleConfigValue("ui.hidePlayers")
+        children: visibilityItems(config, "players")
       },
       {
         label: localize("PCP.Menu.Hud.PlayerList"),
