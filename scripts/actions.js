@@ -14,7 +14,8 @@ import {
   BACKGROUND_MODES,
   VISIBILITY_MODES,
   HOTBAR_OVERLAPS,
-  IMAGE_SOURCES
+  IMAGE_SOURCES,
+  HOVER_SOURCES
 } from "./constants.js";
 import {
   getConfig,
@@ -37,6 +38,7 @@ import { setMoveMode, isMoveMode } from "./hud.js";
 import { openFramingApp } from "./framing-app.js";
 import { openConfigApp } from "./config-app.js";
 import { A11yPanel } from "./a11y.js";
+import { showToEveryone } from "./hover.js";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -176,6 +178,51 @@ function sourceMenuItems(actorId) {
       label: localize("PCP.Menu.Actor.PickMedia"),
       icon: "fa-solid fa-folder-open",
       action: () => pickMedia(actorId)
+    }
+  ];
+}
+
+async function pickHoverMedia(actorId) {
+  const current = getActorConfig(getConfig(), actorId).hoverMedia;
+  const Picker = foundry.applications.apps.FilePicker.implementation;
+  new Picker({
+    type: "imagevideo",
+    current,
+    callback: path => updateActorConfig(actorId, { hoverMedia: path, hoverSource: "custom" })
+  }).render(true);
+}
+
+function hoverMenuItems(actorId) {
+  const config = getConfig();
+  const actorConfig = getActorConfig(config, actorId);
+  const icons = {
+    token: "fa-solid fa-circle-user",
+    portrait: "fa-solid fa-image-portrait",
+    same: "fa-solid fa-equals",
+    custom: "fa-solid fa-film"
+  };
+  return [
+    {
+      label: localize("PCP.Menu.UseGlobal", {
+        value: localize(`PCP.HoverSource.${capitalize(config.hover.source)}`)
+      }),
+      icon: "fa-solid fa-globe",
+      checked: !actorConfig.hoverSource,
+      action: () => updateActorConfig(actorId, { hoverSource: null })
+    },
+    { separator: true },
+    ...[...HOVER_SOURCES, "custom"].map(source => ({
+      label: localize(`PCP.HoverSource.${capitalize(source)}`),
+      icon: icons[source],
+      checked: actorConfig.hoverSource === source,
+      disabled: source === "custom" && !actorConfig.hoverMedia,
+      action: () => updateActorConfig(actorId, { hoverSource: source })
+    })),
+    { separator: true },
+    {
+      label: localize("PCP.Menu.Actor.HoverPick"),
+      icon: "fa-solid fa-folder-open",
+      action: () => pickHoverMedia(actorId)
     }
   ];
 }
@@ -418,6 +465,17 @@ function localPreferenceItems() {
         refreshAll();
       }
     },
+    {
+      label: localize("PCP.Menu.Local.ToggleHover"),
+      icon: "fa-solid fa-magnifying-glass-plus",
+      checked: !client.hoverOff,
+      action: async () => {
+        await mutateClientConfig(config => {
+          config.hoverOff = !config.hoverOff;
+        });
+        refreshAll();
+      }
+    },
     { separator: true },
     {
       label: localize("PCP.A11y.Title"),
@@ -469,6 +527,16 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         label: localize("PCP.Menu.Actor.Source"),
         icon: "fa-solid fa-image-portrait",
         children: sourceMenuItems(actorId)
+      },
+      {
+        label: localize("PCP.Menu.Actor.Hover"),
+        icon: "fa-solid fa-magnifying-glass-plus",
+        children: hoverMenuItems(actorId)
+      },
+      {
+        label: localize("PCP.Menu.Actor.ShowAll"),
+        icon: "fa-solid fa-bullhorn",
+        action: () => showToEveryone(actorId)
       },
       {
         label: localize("PCP.Menu.Actor.Framing"),

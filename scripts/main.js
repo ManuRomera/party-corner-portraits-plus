@@ -13,6 +13,7 @@ import { openActorMenu, openHudMenu, openUserMenu } from "./actions.js";
 import { onRefresh, refreshAll, refreshDebounced } from "./events.js";
 import { closeMenus } from "./menu.js";
 import { applyA11y } from "./a11y.js";
+import { registerHoverSocket } from "./hover.js";
 import { getConfig } from "./settings.js";
 
 function wireMenuEvents() {
@@ -53,6 +54,7 @@ Hooks.once("ready", async () => {
     console.error("Party Corner Portraits + | initialisation failed", error);
   }
 
+  registerHoverSocket();
   // Primero las clases de la interfaz: el resto mide dónde está el panel original.
   onRefresh(applyUiConfig);
   onRefresh(applyA11y);

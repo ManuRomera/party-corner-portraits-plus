@@ -22,6 +22,7 @@ import {
 } from "./utils.js";
 import { dispatchMenuEvent, refreshAll } from "./events.js";
 import { avoidCoreUi } from "./layout.js";
+import { attachHover, hideHover } from "./hover.js";
 import { applyFraming, createPortraitElement, portraitSource } from "./media.js";
 
 let moveMode = false;
@@ -249,6 +250,8 @@ function buildCard(actor, config, client) {
     if (actorCanOpenSheet(actor)) actor.sheet?.render(true);
   });
 
+  attachHover(card, actor);
+
   card.addEventListener("keydown", event => {
     if (moveMode) return;
     if (event.key === "Enter" || event.key === " ") {
@@ -418,6 +421,7 @@ export function renderHud() {
   if (!game?.ready) return;
 
   removeHud();
+  hideHover(); // la tarjeta sobre la que estaba el cursor deja de existir
 
   const client = getClientConfig();
   if (client.hidden) return;

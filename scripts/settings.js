@@ -20,6 +20,9 @@ import {
   VISIBILITY_MODES,
   HOTBAR_OVERLAPS,
   IMAGE_SOURCES,
+  HOVER_SOURCES,
+  HOVER_PLACEMENTS,
+  HOVER_PERMISSIONS,
   SIZE_MIN,
   SIZE_MAX
 } from "./constants.js";
@@ -105,6 +108,8 @@ function sanitizeActor(actorId, actor, index) {
     namePosition: NAME_POSITIONS.includes(value.namePosition) ? value.namePosition : null,
     playerLabel: String(value.playerLabel ?? ""),
     media: String(value.media ?? "").trim(),
+    hoverSource: [...HOVER_SOURCES, "custom"].includes(value.hoverSource) ? value.hoverSource : null,
+    hoverMedia: String(value.hoverMedia ?? "").trim(),
     // Versión 1.2.0: un archivo propio sin origen elegido era «archivo propio».
     source:
       value.source === undefined
@@ -157,6 +162,17 @@ export function normalizeConfig(raw) {
   merged.data.fields = (Array.isArray(merged.data.fields) ? merged.data.fields : []).map(sanitizeField);
   merged.data.bars = (Array.isArray(merged.data.bars) ? merged.data.bars : []).map(sanitizeBar);
 
+  merged.hover = merged.hover || {};
+  merged.hover.enabled = merged.hover.enabled !== false;
+  merged.hover.delay = clamp(merged.hover.delay, 0, 3000, 350);
+  merged.hover.source = HOVER_SOURCES.includes(merged.hover.source) ? merged.hover.source : "token";
+  merged.hover.size = clamp(merged.hover.size, 120, 1200, 420);
+  merged.hover.placement = HOVER_PLACEMENTS.includes(merged.hover.placement) ? merged.hover.placement : "beside";
+  merged.hover.permission = HOVER_PERMISSIONS.includes(merged.hover.permission) ? merged.hover.permission : "none";
+  merged.hover.caption = merged.hover.caption !== false;
+  merged.hover.frameless = Boolean(merged.hover.frameless);
+  merged.hover.sharedSeconds = clamp(merged.hover.sharedSeconds, 1, 60, 6);
+
   merged.players = merged.players || {};
   merged.players.enabled = merged.players.enabled === true;
   merged.players.hideCore = merged.players.hideCore !== false;
@@ -198,6 +214,7 @@ export function normalizeClientConfig(raw) {
     scale: clamp(merged.scale, 0.5, 2, 1),
     hideNames: Boolean(merged.hideNames),
     hideBars: Boolean(merged.hideBars),
+    hoverOff: Boolean(merged.hoverOff),
     a11y: {
       text: clamp(merged.a11y?.text, 85, 160, 100),
       contrast: Boolean(merged.a11y?.contrast),

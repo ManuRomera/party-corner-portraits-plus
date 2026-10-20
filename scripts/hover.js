@@ -1,0 +1,165 @@
+/**
+ * Party Corner Portraits +
+ * Vista ampliada: al dejar el cursor sobre un retrato de la barra se ve en grande el token,
+ * el retrato o un archivo propio (imagen, GIF o vídeo en bucle). El máster puede enseñárselo a todos.
+ * Inspirado en el módulo Image Hover, pero disparado por los retratos de este módulo.
+ */
+
+import { MODULE_ID } from "./constants.js";
+import { getClientConfig, getConfig } from "./settings.js";
+import { getActorConfig, getActorPlayerLabel } from "./utils.js";
+import { createPortraitElement, hoverSource, naturalSize } from "./media.js";
+
+const ID = "pcp-hover";
+const MARGIN = 8;
+const LEVELS = { LIMITED: 1, OBSERVER: 2, OWNER: 3 };
+
+let timer = null;
+let hideTimer = null;
+let element = null;
+let sharedUntil = 0;
+
+function canSee(actor, permission) {
+  if (game.user.isGM || permission === "none") return true;
+  return actor.testUserPermission(game.user, permission) || actor.ownership?.[game.user.id] >= LEVELS[permission];
+}
+
+export function hideHover({ force = false } = {}) {
+  window.clearTimeout(timer);
+  if (!force && Date.now() < sharedUntil) return;
+  window.clearTimeout(hideTimer);
+  element?.remove();
+  element = null;
+  sharedUntil = 0;
+}
+
+function place(card, placement, size) {
+  if (!element) return;
+  const box = element.getBoundingClientRect();
+  const { innerWidth: vw, innerHeight: vh } = window;
+  let x;
+  let y;
+
+  if (placement === "beside" && card?.isConnected) {
+    const rect = card.getBoundingClientRect();
+    const right = rect.left + rect.width / 2 < vw / 2;
+    x = right ? rect.right + 14 : rect.left - 14 - box.width;
+    y = rect.top + rect.height / 2 - box.height / 2;
+  } else if (placement === "top-left") {
+    [x, y] = [MARGIN + 80, MARGIN];
+  } else if (placement === "top-right") {
+    [x, y] = [vw - box.width - MARGIN - 60, MARGIN];
+  } else if (placement === "bottom-left") {
+    [x, y] = [MARGIN + 80, vh - box.height - MARGIN];
+  } else if (placement === "bottom-right") {
+    [x, y] = [vw - box.width - MARGIN - 60, vh - box.height - MARGIN];
+  } else {
+    [x, y] = [(vw - box.width) / 2, (vh - box.height) / 2];
+  }
+
+  element.style.left = `${Math.min(Math.max(MARGIN, x), Math.max(MARGIN, vw - box.width - MARGIN))}px`;
+  element.style.top = `${Math.min(Math.max(MARGIN, y), Math.max(MARGIN, vh - box.height - MARGIN))}px`;
+  element.style.visibility = "visible";
+}
+
+/** Ajusta el lado mayor al tamaño elegido (sin pasarse de la pantalla) y coloca el panel. */
+function fit(media, size, reposition) {
+  const natural = naturalSize(media);
+  if (natural) {
+    const limit = Math.min(size, window.innerWidth * 0.9, window.innerHeight * 0.85);
+    const scale = Math.min(limit / Math.max(natural.w, natural.h), 4);
+    media.style.width = `${Math.round(natural.w * scale)}px`;
+    media.style.height = `${Math.round(natural.h * scale)}px`;
+  }
+  reposition();
+}
+
+export function showHover(actorId, { card = null, shared = false } = {}) {
+  const actor = game.actors?.get(actorId);
+  if (!actor) return;
+  const config = getConfig();
+  const client = getClientConfig();
+  const actorConfig = getActorConfig(config, actorId);
+
+  hideHover({ force: true });
+
+  const src = hoverSource(actor, actorConfig, config);
+  const placement = shared ? "center" : config.hover.placement;
+
+  element = document.createElement("div");
+  element.id = ID;
+  element.className = `pcp-hover${shared ? " pcp-hover-shared" : ""}${config.hover.frameless ? " pcp-hover-frameless" : ""}`;
+  element.style.visibility = "hidden";
+  element.setAttribute("role", "img");
+  element.setAttribute("aria-label", actor.name);
+
+  const media = createPortraitElement(src, { alt: actor.name, still: client.a11y.motion });
+  media.classList.add("pcp-hover-media");
+  element.appendChild(media);
+
+  if (config.hover.caption) {
+    const caption = document.createElement("div");
+    caption.className = "pcp-hover-caption";
+    const name = document.createElement("strong");
+    name.textContent = actor.name;
+    caption.appendChild(name);
+    const player = getActorPlayerLabel(actor, actorConfig);
+    if (player && config.data.showPlayerName) {
+      const label = document.createElement("span");
+      label.textContent = player;
+      caption.appendChild(label);
+    }
+    element.appendChild(caption);
+  }
+
+  document.body.appendChild(element);
+  // El panel puede cambiar de tamaño al cargar el medio o el texto: se recoloca siempre dentro de la pantalla.
+  new ResizeObserver(() => place(card, placement, config.hover.size)).observe(element);
+  const reposition = () => place(card, placement, config.hover.size);
+  const refit = () => fit(media, config.hover.size, reposition);
+  media.addEventListener("load", refit, { once: true });
+  media.addEventListener("loadedmetadata", refit, { once: true });
+  // Imágenes ya en caché: no siempre disparan «load».
+  if (media.complete || media.readyState >= 1) refit();
+  else reposition();
+
+  if (shared) {
+    const ms = config.hover.sharedSeconds * 1000;
+    sharedUntil = Date.now() + ms;
+    hideTimer = window.setTimeout(() => hideHover({ force: true }), ms);
+  }
+}
+
+function schedule(actor, card) {
+  window.clearTimeout(timer);
+  const config = getConfig();
+  if (!config.hover.enabled || getClientConfig().hoverOff) return;
+  if (!canSee(actor, config.hover.permission)) return;
+  timer = window.setTimeout(() => showHover(actor.id, { card }), config.hover.delay);
+}
+
+/** Engancha la vista ampliada a una tarjeta de la barra. */
+export function attachHover(card, actor) {
+  card.addEventListener("pointerenter", () => schedule(actor, card));
+  card.addEventListener("pointerleave", () => hideHover());
+  card.addEventListener("pointerdown", () => hideHover());
+  card.addEventListener("contextmenu", () => hideHover());
+  card.addEventListener("focus", () => schedule(actor, card));
+  card.addEventListener("blur", () => hideHover());
+}
+
+/** El máster enseña la imagen ampliada de un personaje a todos los conectados. */
+export function showToEveryone(actorId) {
+  if (!game.user.isGM) return;
+  game.socket.emit(`module.${MODULE_ID}`, { type: "show", actorId });
+  showHover(actorId, { shared: true });
+}
+
+export function registerHoverSocket() {
+  game.socket.on(`module.${MODULE_ID}`, (data, userId) => {
+    if (data?.type !== "show" || !game.users.get(userId)?.isGM) return;
+    showHover(data.actorId, { shared: true });
+  });
+}
+
+window.addEventListener("resize", () => hideHover());

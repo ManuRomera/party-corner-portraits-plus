@@ -22,23 +22,33 @@ const usable = path => {
   return text && !text.includes("*") ? text : "";
 };
 
+/** Elige un archivo según el origen pedido, con alternativas si falta. */
+function pick(actor, mode, custom) {
+  const portrait = usable(actor?.img);
+  const token = usable(actor?.prototypeToken?.texture?.src);
+  const order = {
+    custom: [usable(custom), portrait, token],
+    token: [token, portrait],
+    portrait: [portrait, token]
+  }[mode] ?? [portrait, token];
+  return order.find(Boolean) || FALLBACK;
+}
+
 /**
- * Qué archivo se dibuja:
+ * Qué archivo se dibuja en la barra:
  *  - portrait: la imagen de la ficha (retrato);
  *  - token: la imagen del token del personaje (prototype token);
  *  - custom: el archivo elegido para este personaje en el módulo (imagen, GIF o vídeo en bucle).
- * Si el elegido no existe, se prueba con el resto antes de caer en la imagen por defecto.
  */
 export function portraitSource(actor, actorConfig, config) {
-  const portrait = usable(actor?.img);
-  const token = usable(actor?.prototypeToken?.texture?.src);
-  const custom = usable(actorConfig?.media);
-  const order = {
-    custom: [custom, portrait, token],
-    token: [token, portrait],
-    portrait: [portrait, token]
-  }[effectiveSource(config, actorConfig)];
-  return order.find(Boolean) || FALLBACK;
+  return pick(actor, effectiveSource(config, actorConfig), actorConfig?.media);
+}
+
+/** Qué archivo se ve ampliado al dejar el cursor sobre el retrato (token, retrato, lo mismo que la barra o uno propio). */
+export function hoverSource(actor, actorConfig, config) {
+  const mode = actorConfig?.hoverSource ?? config?.hover?.source ?? "token";
+  if (mode === "same") return portraitSource(actor, actorConfig, config);
+  return pick(actor, mode, actorConfig?.hoverMedia);
 }
 
 export function applyFraming(element, fit, x, y, zoom) {

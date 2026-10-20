@@ -9,6 +9,9 @@
     <button type="button" role="tab" class="pcp-tab" data-tab="data">
       <i class="fa-solid fa-chart-simple" aria-hidden="true"></i><span>{{localize "PCP.Tab.Data"}}</span>
     </button>
+    <button type="button" role="tab" class="pcp-tab" data-tab="hover">
+      <i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i><span>{{localize "PCP.Tab.Hover"}}</span>
+    </button>
     <button type="button" role="tab" class="pcp-tab" data-tab="players">
       <i class="fa-solid fa-users" aria-hidden="true"></i><span>{{localize "PCP.Tab.Players"}}</span>
     </button>
@@ -248,6 +251,60 @@
       <p class="pcp-note">{{localize "PCP.Config.PathsHelp"}}</p>
     </section>
 
+    {{!-- ───────────── Vista ampliada ───────────── --}}
+    <section class="pcp-panel" role="tabpanel" data-panel="hover">
+      <h4 class="pcp-heading">{{localize "PCP.Hover.Title"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Enabled"}}<small>{{localize "PCP.Hover.EnabledHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="hover.enabled" {{#if config.hover.enabled}}checked{{/if}}>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Source"}}<small>{{localize "PCP.Hover.SourceHint"}}</small></span>
+          <select name="hover.source">
+            {{#each hoverSources}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Delay"}}<small>{{localize "PCP.Hover.DelayHint"}}</small></span>
+          <span class="pcp-range"><input type="range" name="hover.delay" min="0" max="2000" step="50" value="{{config.hover.delay}}" data-output="hoverDelay" data-suffix=" ms"><output data-for="hoverDelay">{{config.hover.delay}} ms</output></span>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Size"}}<small>{{localize "PCP.Hover.SizeHint"}}</small></span>
+          <span class="pcp-range"><input type="range" name="hover.size" min="160" max="900" step="20" value="{{config.hover.size}}" data-output="hoverSize" data-suffix=" px"><output data-for="hoverSize">{{config.hover.size}} px</output></span>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Placement"}}</span>
+          <select name="hover.placement">
+            {{#each hoverPlacements}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Frameless"}}<small>{{localize "PCP.Hover.FramelessHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="hover.frameless" {{#if config.hover.frameless}}checked{{/if}}>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Caption"}}</span>
+          <input type="checkbox" class="pcp-switch" name="hover.caption" {{#if config.hover.caption}}checked{{/if}}>
+        </label>
+      </div>
+
+      <h4 class="pcp-heading">{{localize "PCP.Hover.WhoTitle"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Permission"}}<small>{{localize "PCP.Hover.PermissionHint"}}</small></span>
+          <select name="hover.permission">
+            {{#each hoverPermissions}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </label>
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Hover.Shared"}}<small>{{localize "PCP.Hover.SharedHint"}}</small></span>
+          <input type="number" name="hover.sharedSeconds" value="{{config.hover.sharedSeconds}}" min="1" max="60" step="1">
+        </label>
+      </div>
+      <p class="pcp-note">{{localize "PCP.Hover.Help"}}</p>
+    </section>
+
     {{!-- ───────────── Jugadores e interfaz ───────────── --}}
     <section class="pcp-panel" role="tabpanel" data-panel="players">
       <h4 class="pcp-heading">{{localize "PCP.Config.PlayerList"}}</h4>
@@ -352,6 +409,22 @@
             <details class="pcp-more">
               <summary>{{localize "PCP.Config.MoreOptions"}}</summary>
               <div class="pcp-more-grid">
+                <label class="pcp-mini"><span>{{localize "PCP.Hover.OfCharacter"}}</span>
+                  <select class="pcp-actor-hover-source">
+                    <option value="" {{#unless hoverSource}}selected{{/unless}}>{{localize "PCP.Config.UseGlobal"}} ({{globalHoverLabel}})</option>
+                    <option value="token" {{#if hoverToken}}selected{{/if}}>{{localize "PCP.HoverSource.Token"}}</option>
+                    <option value="portrait" {{#if hoverPortrait}}selected{{/if}}>{{localize "PCP.HoverSource.Portrait"}}</option>
+                    <option value="same" {{#if hoverSame}}selected{{/if}}>{{localize "PCP.HoverSource.Same"}}</option>
+                    <option value="custom" {{#if hoverCustom}}selected{{/if}}>{{localize "PCP.HoverSource.Custom"}}</option>
+                  </select>
+                </label>
+                <div class="pcp-mini pcp-hover-media-field pcp-span" {{#unless hoverCustom}}hidden{{/unless}}>
+                  <span>{{localize "PCP.Hover.File"}}</span>
+                  <span class="pcp-inline">
+                    <input class="pcp-actor-hover-media" type="text" value="{{hoverMedia}}" placeholder="{{localize 'PCP.Config.MediaPlaceholder'}}">
+                    <button type="button" class="pcp-pick-media pcp-icon-button" title="{{localize 'PCP.Config.MediaPick'}}" aria-label="{{localize 'PCP.Config.MediaPick'}}"><i class="fa-solid fa-folder-open"></i></button>
+                  </span>
+                </div>
 
                 <label class="pcp-mini"><span>{{localize "PCP.Config.PlayerLabel"}}</span><input class="pcp-actor-player-label" type="text" value="{{playerLabel}}" placeholder="{{ownerLabel}}"></label>
                 <label class="pcp-mini"><span>{{localize "PCP.Config.Order"}}</span><input class="pcp-actor-order" type="number" value="{{sortOrder}}" min="-9999" max="9999" step="1"></label>

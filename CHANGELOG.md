@@ -1,5 +1,13 @@
 # Cambios
 
+## 1.4.0
+
+- **Vista ampliada al dejar el cursor sobre un retrato** (inspirada en Image Hover, pero disparada por los retratos de este módulo). Nueva pestaña «Vista ampliada»: qué se muestra (token, retrato o lo mismo que la barra), espera, tamaño, dónde aparece (junto al retrato, centro o esquinas), nombre debajo y permiso mínimo sobre el personaje.
+- **Por personaje** se puede elegir qué se ve ampliado, incluido un **archivo propio** (imagen, GIF o vídeo en bucle) con selector de archivos, en Personajes → Más opciones o con el botón derecho → «Vista ampliada».
+- **Mostrar a todos:** el máster puede enseñar la imagen ampliada de un personaje a todos los conectados (botón derecho → «Mostrar a todos»; dura los segundos que se configuren).
+- **Recortes con transparencia** (PNG/WebP o vídeo webm con alfa): opción «Sin cuadro» para ver solo la figura con sombra. En la barra se usan con Marco «Sin marco», Fondo «Transparente» y Ajuste «Ver completa».
+- Cada jugador puede desactivarla para sí mismo desde el menú del retrato; también aparece al enfocar el retrato con el teclado.
+
 ## 1.3.0
 
 - **Retrato o token:** en Foundry son cosas distintas (la imagen de la ficha frente a la figura del mapa). Ahora eliges qué se muestra: un valor global (Configuración → Aspecto → «Imagen de los personajes») y, por personaje, retrato, token o archivo propio.

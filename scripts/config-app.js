@@ -15,6 +15,9 @@ import {
   BAR_POSITIONS,
   VISIBILITY_MODES,
   HOTBAR_OVERLAPS,
+  HOVER_SOURCES,
+  HOVER_PLACEMENTS,
+  HOVER_PERMISSIONS,
   SYSTEM_BAR_PRESETS
 } from "./constants.js";
 import { getConfig, saveConfig } from "./settings.js";
@@ -157,6 +160,18 @@ function collectFormData(form) {
     }))
     .filter(field => field.path);
 
+  config.hover = {
+    enabled: checked("hover.enabled"),
+    delay: clamp(value("hover.delay"), 0, 3000, old.hover.delay),
+    source: HOVER_SOURCES.includes(value("hover.source")) ? value("hover.source") : old.hover.source,
+    size: clamp(value("hover.size"), 120, 1200, old.hover.size),
+    placement: HOVER_PLACEMENTS.includes(value("hover.placement")) ? value("hover.placement") : old.hover.placement,
+    permission: HOVER_PERMISSIONS.includes(value("hover.permission")) ? value("hover.permission") : old.hover.permission,
+    caption: checked("hover.caption"),
+    frameless: checked("hover.frameless"),
+    sharedSeconds: clamp(value("hover.sharedSeconds"), 1, 60, old.hover.sharedSeconds)
+  };
+
   config.players.enabled = checked("players.enabled");
   config.players.hideCore = checked("players.hideCore");
   config.players.position = POSITIONS.includes(value("players.position"))
@@ -205,7 +220,9 @@ function collectFormData(form) {
         : null,
       playerLabel: row.querySelector(".pcp-actor-player-label")?.value?.trim() ?? "",
       media: row.querySelector(".pcp-actor-media")?.value?.trim() ?? "",
-      source: row.querySelector(".pcp-actor-source")?.value || null
+      source: row.querySelector(".pcp-actor-source")?.value || null,
+      hoverSource: row.querySelector(".pcp-actor-hover-source")?.value || null,
+      hoverMedia: row.querySelector(".pcp-actor-hover-media")?.value?.trim() ?? ""
     };
 
     if (row.querySelector(".pcp-actor-enabled")?.checked) {
@@ -266,7 +283,7 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       ...options.position
     };
     super({ ...options, position });
-    const tabs = ["general", "appearance", "data", "players", "characters"];
+    const tabs = ["general", "appearance", "data", "hover", "players", "characters"];
     this.activeTab = tabs.includes(this.memoryTab) ? this.memoryTab : "general";
     currentConfigApp = this;
   }
@@ -292,6 +309,13 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
           sourcePortrait: actorConfig.source === "portrait",
           sourceToken: actorConfig.source === "token",
           sourceCustom: actorConfig.source === "custom",
+          hoverMedia: actorConfig.hoverMedia,
+          hoverSource: actorConfig.hoverSource ?? "",
+          hoverToken: actorConfig.hoverSource === "token",
+          hoverPortrait: actorConfig.hoverSource === "portrait",
+          hoverSame: actorConfig.hoverSource === "same",
+          hoverCustom: actorConfig.hoverSource === "custom",
+          globalHoverLabel: localize(`PCP.HoverSource.${capitalize(config.hover.source)}`),
           globalSourceLabel: localize(`PCP.Source.${capitalize(config.appearance.source)}`),
           enabled: orderIndex.has(actor.id),
           order: orderIndex.get(actor.id) ?? 999999,
@@ -363,6 +387,15 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       ),
       sources: buildOptions(["portrait", "token"], config.appearance.source, value =>
         localize(`PCP.Source.${capitalize(value)}`)
+      ),
+      hoverSources: buildOptions(HOVER_SOURCES, config.hover.source, value =>
+        localize(`PCP.HoverSource.${capitalize(value)}`)
+      ),
+      hoverPlacements: buildOptions(HOVER_PLACEMENTS, config.hover.placement, value =>
+        localize(`PCP.HoverPlacement.${value.split("-").map(capitalize).join("")}`)
+      ),
+      hoverPermissions: buildOptions(HOVER_PERMISSIONS, config.hover.permission, value =>
+        localize(`PCP.HoverPermission.${capitalize(value.toLowerCase())}`)
       ),
       hotbarModes: buildOptions(VISIBILITY_MODES, config.ui.hotbar, value =>
         localize(`PCP.Visibility.${capitalize(value)}`)
@@ -598,10 +631,21 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       for (const row of root.querySelectorAll(".pcp-actor-row")) row.refreshSource?.();
     });
 
+    for (const row of root.querySelectorAll(".pcp-actor-row")) {
+      const select = row.querySelector(".pcp-actor-hover-source");
+      const field = row.querySelector(".pcp-hover-media-field");
+      if (!select || !field) continue;
+      const sync = () => {
+        field.hidden = select.value !== "custom";
+      };
+      select.addEventListener("change", sync);
+      sync();
+    }
+
     for (const button of root.querySelectorAll(".pcp-pick-media")) {
       button.addEventListener("click", event => {
         event.preventDefault();
-        const input = button.closest(".pcp-media-field")?.querySelector(".pcp-actor-media");
+        const input = button.closest(".pcp-media-field, .pcp-hover-media-field")?.querySelector("input[type=text]");
         const Picker = foundry.applications.apps.FilePicker.implementation;
         new Picker({
           type: "imagevideo",
