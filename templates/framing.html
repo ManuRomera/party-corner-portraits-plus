@@ -1,0 +1,50 @@
+<div class="pcp-framing">
+  <p class="pcp-framing-name"><i class="fa-solid fa-user"></i> {{actorName}}</p>
+
+  <div class="pcp-framing-stage pcp-frame-{{frame}} pcp-bg-{{background}}" data-fit="{{fit}}">
+    <img src="{{actorImg}}" alt="{{actorName}}" draggable="false" style="object-fit: {{fit}}; object-position: {{x}}% {{y}}%; transform-origin: {{x}}% {{y}}%; transform: scale({{zoom}});">
+    <div class="pcp-framing-grid" aria-hidden="true"></div>
+  </div>
+
+  <p class="notes pcp-framing-hint">
+    <i class="fa-solid fa-hand-pointer"></i>
+    {{localize "PCP.Framing.Hint"}}
+  </p>
+
+  <div class="pcp-framing-controls">
+    <label class="pcp-framing-slider">
+      <span>{{localize "PCP.Framing.Horizontal"}}</span>
+      <input type="range" name="x" min="0" max="100" step="1" value="{{x}}">
+      <output data-for="x">{{x}}%</output>
+    </label>
+
+    <label class="pcp-framing-slider">
+      <span>{{localize "PCP.Framing.Vertical"}}</span>
+      <input type="range" name="y" min="0" max="100" step="1" value="{{y}}">
+      <output data-for="y">{{y}}%</output>
+    </label>
+
+    <label class="pcp-framing-slider">
+      <span>{{localize "PCP.Framing.Zoom"}}</span>
+      <input type="range" name="zoom" min="1" max="4" step="0.01" value="{{zoom}}">
+      <output data-for="zoom">{{zoom}}×</output>
+    </label>
+  </div>
+
+  <div class="pcp-framing-actions">
+    <button type="button" class="pcp-framing-center">
+      <i class="fa-solid fa-crosshairs"></i>
+      {{localize "PCP.Framing.Center"}}
+    </button>
+    <button type="button" class="pcp-framing-reset">
+      <i class="fa-solid fa-rotate-left"></i>
+      {{localize "PCP.Framing.Reset"}}
+    </button>
+    <span class="pcp-framing-spacer"></span>
+    <button type="button" class="pcp-framing-close">{{localize "PCP.Common.Cancel"}}</button>
+    <button type="submit" class="pcp-framing-save">
+      <i class="fa-solid fa-floppy-disk"></i>
+      {{localize "PCP.Common.Save"}}
+    </button>
+  </div>
+</div>
