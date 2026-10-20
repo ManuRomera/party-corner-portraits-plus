@@ -22,6 +22,7 @@ import {
 } from "./utils.js";
 import { dispatchMenuEvent, refreshAll } from "./events.js";
 import { avoidCoreUi } from "./layout.js";
+import { applyFocus, applyLook, buildCountdown } from "./look.js";
 import { attachHover, hideHover } from "./hover.js";
 import { applyFraming, createPortraitElement, portraitSource } from "./media.js";
 
@@ -208,7 +209,12 @@ function buildCard(actor, config, client) {
     still: client.a11y.motion
   });
   applyFraming(img, fit, actorConfig.x, actorConfig.y, actorConfig.zoom);
-  portrait.appendChild(img);
+  const wrap = document.createElement("div");
+  wrap.className = "pcp-media-wrap";
+  wrap.appendChild(img);
+  portrait.appendChild(wrap);
+  const countdown = buildCountdown(actorConfig.countdown);
+  if (countdown) portrait.appendChild(countdown);
 
   const overlay = document.createElement("div");
   overlay.className = "pcp-overlay";
@@ -243,6 +249,8 @@ function buildCard(actor, config, client) {
   }
 
   if (info.children.length) card.appendChild(info);
+
+  applyLook(card, actorConfig, config.appearance.opacity);
 
   card.addEventListener("click", event => {
     if (moveMode || suppressClick) return;
@@ -454,6 +462,7 @@ export function renderHud() {
 
   if (!hud.querySelector(".pcp-card")) return;
 
+  applyFocus(hud);
   if (game.user.isGM) hud.appendChild(createHudHandle());
   document.body.appendChild(hud);
   applyPosition(hud, config);

@@ -39,6 +39,7 @@ import { openFramingApp } from "./framing-app.js";
 import { openConfigApp } from "./config-app.js";
 import { A11yPanel } from "./a11y.js";
 import { showToEveryone } from "./hover.js";
+import { openStudio } from "./studio.js";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -529,6 +530,11 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         children: sourceMenuItems(actorId)
       },
       {
+        label: localize("PCP.Menu.Actor.Studio"),
+        icon: "fa-solid fa-wand-magic-sparkles",
+        action: () => openStudio([actorId])
+      },
+      {
         label: localize("PCP.Menu.Actor.Hover"),
         icon: "fa-solid fa-magnifying-glass-plus",
         children: hoverMenuItems(actorId)
@@ -738,6 +744,11 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
 
   openMenu(
     [
+      {
+        label: localize("PCP.Menu.Hud.Studio"),
+        icon: "fa-solid fa-wand-magic-sparkles",
+        action: () => openStudio()
+      },
       {
         label: isMoveMode() ? localize("PCP.Menu.Hud.StopMoving") : localize("PCP.Menu.Hud.Move"),
         icon: "fa-solid fa-up-down-left-right",

@@ -1,0 +1,145 @@
+<div class="pcp-studio">
+  <div class="pcp-studio-body">
+    <h4 class="pcp-heading">{{localize "PCP.Studio.Characters"}}</h4>
+    <div class="pcp-chips" role="group" aria-label="{{localize 'PCP.Studio.Characters'}}">
+      {{#each chips}}
+        <button type="button" class="pcp-chip {{#if on}}on{{/if}}" data-chip="{{id}}" aria-pressed="{{on}}" title="{{name}}">
+          {{#if video}}<i class="fa-solid fa-film" aria-hidden="true"></i>{{else}}<img src="{{img}}" alt="">{{/if}}
+          <span>{{name}}</span>
+        </button>
+      {{/each}}
+    </div>
+    <div class="pcp-mini-actions">
+      <button type="button" data-act="all" title="{{localize 'PCP.Studio.All'}}"><i class="fa-solid fa-check-double"></i> {{localize "PCP.Studio.All"}}</button>
+      <button type="button" data-act="none"><i class="fa-regular fa-square"></i> {{localize "PCP.Studio.None"}}</button>
+      <button type="button" data-act="invert"><i class="fa-solid fa-shuffle"></i> {{localize "PCP.Studio.Invert"}}</button>
+    </div>
+    {{#unless hasSelection}}<p class="pcp-note">{{localize "PCP.Studio.NoSelection"}}</p>{{/unless}}
+
+    <fieldset class="pcp-studio-controls" {{#unless hasSelection}}disabled{{/unless}}>
+      <h4 class="pcp-heading">{{localize "PCP.Studio.Size"}}</h4>
+      <div class="pcp-card-group">
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.SizePx"}}<small>{{localize "PCP.Studio.SizeHint"}} ({{globalSize}} px)</small></span>
+          <span class="pcp-range"><input type="range" data-live="size" data-unit=" px" min="{{sizeMin}}" max="{{sizeMax}}" step="1" value="{{size}}" aria-label="{{localize 'PCP.Studio.SizePx'}}"><output>{{size}} px</output></span>
+        </div>
+        <div class="pcp-row pcp-row-buttons">
+          <button type="button" data-act="size-down" title="{{localize 'PCP.Studio.SizeDownHint'}}"><i class="fa-solid fa-minus"></i> 10 %</button>
+          <button type="button" data-act="size-up" title="{{localize 'PCP.Studio.SizeUpHint'}}"><i class="fa-solid fa-plus"></i> 10 %</button>
+          <button type="button" data-act="size-factor" data-factor="0.5">×0,5</button>
+          <button type="button" data-act="size-factor" data-factor="0.75">×0,75</button>
+          <button type="button" data-act="size-factor" data-factor="1">×1</button>
+          <button type="button" data-act="size-factor" data-factor="1.5">×1,5</button>
+          <button type="button" data-act="size-factor" data-factor="2">×2</button>
+        </div>
+        <div class="pcp-row pcp-row-buttons">
+          <button type="button" data-act="size-global" title="{{localize 'PCP.Studio.UseGlobalHint'}}"><i class="fa-solid fa-globe"></i> {{localize "PCP.Studio.UseGlobal"}}</button>
+          <button type="button" data-act="equalize" title="{{localize 'PCP.Studio.EqualizeHint'}}"><i class="fa-solid fa-equals"></i> {{localize "PCP.Studio.Equalize"}}</button>
+        </div>
+      </div>
+
+      <h4 class="pcp-heading">{{localize "PCP.Studio.Look"}}</h4>
+      <div class="pcp-card-group">
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.Opacity"}}</span>
+          <span class="pcp-range"><input type="range" data-live="opacity" data-unit=" %" min="10" max="100" step="1" value="{{opacity}}" aria-label="{{localize 'PCP.Studio.Opacity'}}"><output>{{opacity}} %</output></span>
+        </div>
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.Rotation"}}<small>{{localize "PCP.Studio.RotationHint"}}</small></span>
+          <span class="pcp-range"><input type="range" data-live="rotation" data-unit="°" min="-180" max="180" step="1" value="{{rotation}}" aria-label="{{localize 'PCP.Studio.Rotation'}}"><output>{{rotation}}°</output></span>
+        </div>
+        <div class="pcp-row pcp-row-buttons">
+          <button type="button" data-act="flip-x" class="{{#if flipX}}pcp-on{{/if}}" aria-pressed="{{flipX}}"><i class="fa-solid fa-left-right"></i> {{localize "PCP.Studio.FlipX"}}</button>
+          <button type="button" data-act="flip-y" class="{{#if flipY}}pcp-on{{/if}}" aria-pressed="{{flipY}}"><i class="fa-solid fa-up-down"></i> {{localize "PCP.Studio.FlipY"}}</button>
+          <button type="button" data-act="rotation-reset"><i class="fa-solid fa-rotate-left"></i> {{localize "PCP.Studio.RotationReset"}}</button>
+          <button type="button" data-act="framing-reset" title="{{localize 'PCP.Studio.FramingHint'}}"><i class="fa-solid fa-crop-simple"></i> {{localize "PCP.Studio.Framing"}}</button>
+          <button type="button" data-act="framing-open"><i class="fa-solid fa-up-down-left-right"></i> {{localize "PCP.Studio.FramingOpen"}}</button>
+        </div>
+      </div>
+
+      <h4 class="pcp-heading">{{localize "PCP.Studio.Halo"}}</h4>
+      <div class="pcp-card-group">
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.HaloPower"}}<small>{{localize "PCP.Studio.HaloHint"}}</small></span>
+          <span class="pcp-range"><input type="range" data-live="glowPower" min="0" max="100" step="1" value="{{glow.power}}" aria-label="{{localize 'PCP.Studio.HaloPower'}}"><output>{{glow.power}}</output></span>
+        </div>
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.HaloColor"}}</span>
+          <input type="color" data-live="glowColor" value="{{glowColor}}">
+        </div>
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.HaloAlpha"}}</span>
+          <span class="pcp-range"><input type="range" data-live="glowAlpha" min="0" max="100" step="1" value="{{glow.alpha}}" aria-label="{{localize 'PCP.Studio.HaloAlpha'}}"><output>{{glow.alpha}}</output></span>
+        </div>
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.HaloSoft"}}<small>{{localize "PCP.Studio.HaloSoftHint"}}</small></span>
+          <span class="pcp-range"><input type="range" data-live="glowSoft" min="0" max="100" step="1" value="{{glow.soft}}" aria-label="{{localize 'PCP.Studio.HaloSoft'}}"><output>{{glow.soft}}</output></span>
+        </div>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Studio.HaloPulse"}}<small>{{localize "PCP.Studio.HaloPulseHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" data-live="pulse" {{#if glow.pulse}}checked{{/if}}>
+        </label>
+        <div class="pcp-row pcp-row-buttons">
+          <button type="button" data-act="glow-off"><i class="fa-solid fa-ban"></i> {{localize "PCP.Studio.HaloOff"}}</button>
+        </div>
+      </div>
+
+      <h4 class="pcp-heading">{{localize "PCP.Studio.Countdown"}}</h4>
+      <div class="pcp-card-group">
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.CountdownTurns"}}<small>{{localize "PCP.Studio.CountdownHint"}}</small></span>
+          <input type="number" data-live="cdTurns" min="0" max="999" step="1" value="{{countdown.turns}}">
+        </div>
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.CountdownSize"}}</span>
+          <input type="number" data-live="cdSize" min="0.5" max="3" step="0.1" value="{{countdown.size}}">
+        </div>
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.CountdownMode"}}</span>
+          <select data-live="cdMode">
+            <option value="round" {{#if modeRound}}selected{{/if}}>{{localize "PCP.Studio.ModeRound"}}</option>
+            <option value="turn" {{#if modeTurn}}selected{{/if}}>{{localize "PCP.Studio.ModeTurn"}}</option>
+          </select>
+        </div>
+        <div class="pcp-row pcp-row-buttons">
+          <button type="button" data-act="countdown-set"><i class="fa-solid fa-hourglass-start"></i> {{localize "PCP.Studio.CountdownSet"}}</button>
+          <button type="button" data-act="countdown-minus" title="{{localize 'PCP.Studio.CountdownMinus'}}"><i class="fa-solid fa-minus"></i> 1</button>
+          <button type="button" data-act="countdown-plus" title="{{localize 'PCP.Studio.CountdownPlus'}}"><i class="fa-solid fa-plus"></i> 1</button>
+          <button type="button" data-act="countdown-clear"><i class="fa-solid fa-xmark"></i> {{localize "PCP.Studio.CountdownClear"}}</button>
+        </div>
+      </div>
+
+      <h4 class="pcp-heading">{{localize "PCP.Studio.Presets"}}</h4>
+      <div class="pcp-card-group">
+        <div class="pcp-row pcp-row-buttons">
+          {{#each builtin}}<button type="button" data-act="preset" data-preset="{{id}}"><i class="fa-solid {{icon}}"></i> {{label}}</button>{{/each}}
+          {{#each presets}}
+            <span class="pcp-preset"><button type="button" data-act="preset" data-preset="{{id}}"><i class="fa-solid fa-star"></i> {{name}}</button><button type="button" class="pcp-icon-button" data-act="preset-delete" data-preset="{{id}}" title="{{localize 'PCP.Studio.PresetDelete'}}" aria-label="{{localize 'PCP.Studio.PresetDelete'}}"><i class="fa-solid fa-xmark"></i></button></span>
+          {{/each}}
+        </div>
+        <div class="pcp-row pcp-row-buttons">
+          <button type="button" data-act="preset-save" title="{{localize 'PCP.Studio.SavePresetHint'}}"><i class="fa-solid fa-floppy-disk"></i> {{localize "PCP.Studio.SavePreset"}}</button>
+        </div>
+      </div>
+
+      <h4 class="pcp-heading">{{localize "PCP.Studio.Scene"}}</h4>
+      <div class="pcp-card-group">
+        <div class="pcp-row pcp-row-buttons">
+          <button type="button" data-act="focus" title="{{localize 'PCP.Studio.FocusHint'}}"><i class="fa-solid fa-bullseye"></i> Focus</button>
+          <button type="button" data-act="spotlight" title="{{localize 'PCP.Studio.SpotlightHint'}}"><i class="fa-solid fa-circle-dot"></i> Spotlight</button>
+          <button type="button" data-act="focus-clear" {{#unless focusOn}}disabled{{/unless}}><i class="fa-solid fa-eraser"></i> {{localize "PCP.Studio.FocusClear"}}</button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+
+  <footer class="pcp-config-footer pcp-studio-footer">
+    <span class="pcp-footer-hint">{{#if hasSelection}}{{count}} {{localize "PCP.Studio.Selected"}}{{/if}}</span>
+    <div class="pcp-footer-buttons">
+      <button type="button" data-act="copy" {{#unless hasSelection}}disabled{{/unless}} title="{{localize 'PCP.Studio.CopyHint'}}"><i class="fa-regular fa-copy"></i> {{localize "PCP.Studio.Copy"}}</button>
+      <button type="button" data-act="paste" {{#unless hasSelection}}disabled{{/unless}} {{#unless hasClipboard}}disabled{{/unless}}><i class="fa-solid fa-paste"></i> {{localize "PCP.Studio.Paste"}}</button>
+      <button type="button" data-act="undo" {{#unless canUndo}}disabled{{/unless}}><i class="fa-solid fa-rotate-left"></i> {{localize "PCP.Studio.Undo"}}</button>
+      <button type="button" data-act="original" {{#unless hasSelection}}disabled{{/unless}} title="{{localize 'PCP.Studio.OriginalHint'}}"><i class="fa-solid fa-clock-rotate-left"></i> {{localize "PCP.Studio.Original"}}</button>
+    </div>
+  </footer>
+</div>

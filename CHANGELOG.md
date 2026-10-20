@@ -1,5 +1,21 @@
 # Cambios
 
+## 1.5.0
+
+**Estudio de retratos** (botón derecho sobre la barra o sobre un retrato → «Estudio de retratos…»), con las opciones de MR Token Stage que tienen sentido en una barra de retratos. Los controles actúan **en vivo** al arrastrar y se guardan al soltar:
+
+- **Tamaño**: deslizador, ±10 %, atajos ×0,5 … ×2, «Tamaño global» e «Igualar a todos».
+- **Aspecto**: transparencia, giro (rotación), voltear horizontal y vertical, restablecer encuadre.
+- **Halo** sobre la silueta: color, fuerza, opacidad, suavidad (de banda nítida a luz difusa) y pulso (se detiene con «Reducir movimiento»).
+- **Cuenta atrás** sobre el retrato: baja sola al avanzar el combate, por ronda o en el turno del propio personaje; se pone roja en 0 y avisa al máster.
+- **Presets**: Fantasma, Jefe y los tuyos (se guardan por usuario).
+- **Copiar / Pegar** el aspecto, **Deshacer** (30 pasos) y **Original**.
+- **Focus y Spotlight**: atenúan el resto de retratos en tu pantalla, con anillo opcional.
+- Selección de varios personajes a la vez (Todos / Ninguno / Invertir).
+- API para macros: `game.partyCornerPortraitsPlus.size / scale / opacity / glow / flip / rotate / countdown / preset / undo`.
+
+No se han portado las opciones que solo tienen sentido sobre el mapa (humanizar multitudes, modo escénico, regla y orientación al mover).
+
 ## 1.4.0
 
 - **Vista ampliada al dejar el cursor sobre un retrato** (inspirada en Image Hover, pero disparada por los retratos de este módulo). Nueva pestaña «Vista ampliada»: qué se muestra (token, retrato o lo mismo que la barra), espera, tamaño, dónde aparece (junto al retrato, centro o esquinas), nombre debajo y permiso mínimo sobre el personaje.

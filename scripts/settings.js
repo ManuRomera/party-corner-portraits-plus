@@ -83,6 +83,39 @@ function sanitizeField(field) {
   };
 }
 
+/** Aspecto visual de un personaje: transparencia, halo, giro, rotación y cuenta atrás. */
+export function sanitizeLook(value) {
+  const look = value && typeof value === "object" ? value : {};
+  const glow = look.glow && typeof look.glow === "object" ? look.glow : null;
+  const power = glow ? clamp(glow.power, 0, 100, 0) : 0;
+  const countdown = look.countdown && typeof look.countdown === "object" ? look.countdown : null;
+  return {
+    opacity: look.opacity === null || look.opacity === undefined ? null : clamp(look.opacity, 0.1, 1, null),
+    glow:
+      glow && power > 0
+        ? {
+            color: normalizeColor(glow.color, "#7fe3ff"),
+            power,
+            alpha: clamp(glow.alpha, 0, 100, 85),
+            soft: clamp(glow.soft, 0, 100, 60),
+            pulse: Boolean(glow.pulse)
+          }
+        : null,
+    flipX: Boolean(look.flipX),
+    flipY: Boolean(look.flipY),
+    rotation: clamp(look.rotation, -180, 180, 0),
+    countdown:
+      countdown && Number.isFinite(Number(countdown.turns))
+        ? {
+            turns: Math.trunc(clamp(countdown.turns, 0, 999, 0)),
+            size: clamp(countdown.size, 0.5, 3, 1),
+            mode: countdown.mode === "turn" ? "turn" : "round",
+            warned: Boolean(countdown.warned)
+          }
+        : null
+  };
+}
+
 function sanitizeActor(actorId, actor, index) {
   const value = actor && typeof actor === "object" ? actor : {};
   const bars = {};
@@ -108,6 +141,7 @@ function sanitizeActor(actorId, actor, index) {
     namePosition: NAME_POSITIONS.includes(value.namePosition) ? value.namePosition : null,
     playerLabel: String(value.playerLabel ?? ""),
     media: String(value.media ?? "").trim(),
+    ...sanitizeLook(value),
     hoverSource: [...HOVER_SOURCES, "custom"].includes(value.hoverSource) ? value.hoverSource : null,
     hoverMedia: String(value.hoverMedia ?? "").trim(),
     // Versión 1.2.0: un archivo propio sin origen elegido era «archivo propio».
@@ -215,6 +249,15 @@ export function normalizeClientConfig(raw) {
     hideNames: Boolean(merged.hideNames),
     hideBars: Boolean(merged.hideBars),
     hoverOff: Boolean(merged.hoverOff),
+    presets: (Array.isArray(merged.presets) ? merged.presets : [])
+      .filter(preset => preset && typeof preset === "object" && String(preset.name ?? "").trim())
+      .slice(0, 24)
+      .map(preset => ({
+        id: String(preset.id || foundry.utils.randomID()),
+        name: String(preset.name).trim().slice(0, 40),
+        size: preset.size === null || preset.size === undefined ? null : clamp(preset.size, SIZE_MIN, SIZE_MAX, null),
+        look: sanitizeLook(preset.look)
+      })),
     a11y: {
       text: clamp(merged.a11y?.text, 85, 160, 100),
       contrast: Boolean(merged.a11y?.contrast),

@@ -25,6 +25,8 @@ export const HOVER_PERMISSIONS = ["none", "LIMITED", "OBSERVER", "OWNER"];
 export const HOTBAR_OVERLAPS = ["shift", "front"];
 export const BAR_POSITIONS = ["overlay", "below"];
 
+export const DEFAULT_GLOW = { color: "#7fe3ff", power: 50, alpha: 85, soft: 60, pulse: false };
+
 export const DEFAULT_ACTOR = {
   x: 50,
   y: 50,
@@ -40,6 +42,12 @@ export const DEFAULT_ACTOR = {
   source: null,
   hoverSource: null,
   hoverMedia: "",
+  opacity: null,
+  glow: null,
+  flipX: false,
+  flipY: false,
+  rotation: 0,
+  countdown: null,
   bars: {}
 };
 
@@ -176,6 +184,7 @@ export function createDefaultClientConfig() {
     hideNames: false,
     hideBars: false,
     hoverOff: false,
+    presets: [],
     a11y: { text: 100, contrast: false, legible: false, motion: false }
   };
 }

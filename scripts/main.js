@@ -14,6 +14,8 @@ import { onRefresh, refreshAll, refreshDebounced } from "./events.js";
 import { closeMenus } from "./menu.js";
 import { applyA11y } from "./a11y.js";
 import { registerHoverSocket } from "./hover.js";
+import { registerCountdown } from "./countdown.js";
+import * as studio from "./studio.js";
 import { getConfig } from "./settings.js";
 
 function wireMenuEvents() {
@@ -55,12 +57,14 @@ Hooks.once("ready", async () => {
   }
 
   registerHoverSocket();
+  registerCountdown();
   // Primero las clases de la interfaz: el resto mide dónde está el panel original.
   onRefresh(applyUiConfig);
   onRefresh(applyA11y);
   onRefresh(renderPlayerList);
   onRefresh(renderHud);
   onRefresh(placeHotbar);
+  onRefresh(studio.refreshStudio);
 
   refreshAll();
   // La interfaz de Foundry termina de colocarse después de «ready».
@@ -69,7 +73,21 @@ Hooks.once("ready", async () => {
   game.partyCornerPortraitsPlus = {
     openConfig: openConfigApp,
     refresh: refreshAll,
-    closeMenus
+    closeMenus,
+    studio: studio.openStudio,
+    // API para macros: actúan sobre los ids indicados (por defecto, la selección del estudio)
+    size: studio.setSize,
+    scale: studio.scaleBy,
+    equalize: studio.equalize,
+    opacity: studio.setOpacity,
+    glow: studio.setGlow,
+    flip: studio.toggleFlip,
+    rotate: studio.setRotation,
+    countdown: studio.setCountdown,
+    countdownStep: studio.stepCountdown,
+    preset: studio.applyPreset,
+    original: studio.restoreOriginal,
+    undo: studio.undo
   };
 });
 
