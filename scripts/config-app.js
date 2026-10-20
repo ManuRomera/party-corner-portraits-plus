@@ -35,7 +35,7 @@ import {
 import { refreshAll } from "./events.js";
 import { openFramingApp } from "./framing-app.js";
 import { WithMemory } from "./memory.js";
-import { isVideo, portraitSource } from "./media.js";
+import { createPortraitElement, isVideo, portraitSource } from "./media.js";
 import { addA11yButton } from "./a11y.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -111,6 +111,7 @@ function collectFormData(form) {
   config.appearance.radius = clamp(value("radius"), 0, 60, old.appearance.radius);
   config.appearance.shadow = checked("shadow");
   config.appearance.frame = FRAME_MODES.includes(value("frame")) ? value("frame") : old.appearance.frame;
+  config.appearance.source = ["portrait", "token"].includes(value("source")) ? value("source") : old.appearance.source;
   config.appearance.imageFit = IMAGE_FITS.includes(value("imageFit")) ? value("imageFit") : old.appearance.imageFit;
   config.appearance.namePosition = NAME_POSITIONS.includes(value("namePosition"))
     ? value("namePosition")
@@ -203,7 +204,8 @@ function collectFormData(form) {
         ? normalizeColorOrNull(row.querySelector(".pcp-actor-border-color")?.value)
         : null,
       playerLabel: row.querySelector(".pcp-actor-player-label")?.value?.trim() ?? "",
-      media: row.querySelector(".pcp-actor-media")?.value?.trim() ?? ""
+      media: row.querySelector(".pcp-actor-media")?.value?.trim() ?? "",
+      source: row.querySelector(".pcp-actor-source")?.value || null
     };
 
     if (row.querySelector(".pcp-actor-enabled")?.checked) {
@@ -281,9 +283,16 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
         return {
           id: actor.id,
           name: actor.name,
-          img: portraitSource(actor, actorConfig),
-          isVideo: isVideo(portraitSource(actor, actorConfig)),
+          img: portraitSource(actor, actorConfig, config),
+          isVideo: isVideo(portraitSource(actor, actorConfig, config)),
           media: actorConfig.media,
+          portraitImg: actor.img || "",
+          tokenImg: actor.prototypeToken?.texture?.src || "",
+          source: actorConfig.source ?? "",
+          sourcePortrait: actorConfig.source === "portrait",
+          sourceToken: actorConfig.source === "token",
+          sourceCustom: actorConfig.source === "custom",
+          globalSourceLabel: localize(`PCP.Source.${capitalize(config.appearance.source)}`),
           enabled: orderIndex.has(actor.id),
           order: orderIndex.get(actor.id) ?? 999999,
           sortOrder: actorConfig.sortOrder,
@@ -351,6 +360,9 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       ),
       backgrounds: buildOptions(BACKGROUND_MODES, config.appearance.background, value =>
         localize(`PCP.Background.${capitalize(value)}`)
+      ),
+      sources: buildOptions(["portrait", "token"], config.appearance.source, value =>
+        localize(`PCP.Source.${capitalize(value)}`)
       ),
       hotbarModes: buildOptions(VISIBILITY_MODES, config.ui.hotbar, value =>
         localize(`PCP.Visibility.${capitalize(value)}`)
@@ -552,6 +564,40 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       sync();
     }
 
+    // Origen de la imagen por personaje: muestra el archivo propio solo si hace falta y actualiza la vista previa.
+    const globalSource = root.querySelector('select[name="source"]');
+    for (const row of root.querySelectorAll(".pcp-actor-row")) {
+      const select = row.querySelector(".pcp-actor-source");
+      const field = row.querySelector(".pcp-media-field");
+      const media = row.querySelector(".pcp-actor-media");
+      const preview = row.querySelector(".pcp-config-preview");
+      const refresh = () => {
+        const source = select.value || globalSource?.value || "portrait";
+        field.hidden = source !== "custom";
+        const pick =
+          { portrait: row.dataset.portrait, token: row.dataset.token, custom: media.value.trim() }[source] ||
+          row.dataset.portrait ||
+          row.dataset.token ||
+          "icons/svg/mystery-man.svg";
+        const old = preview.querySelector("img, video");
+        const next = createPortraitElement(pick, { alt: "", still: true });
+        if (old) {
+          for (const name of ["objectFit", "objectPosition", "transformOrigin", "transform"]) {
+            next.style[name] = old.style[name];
+          }
+          old.replaceWith(next);
+        }
+      };
+      select.addEventListener("change", refresh);
+      media.addEventListener("change", refresh);
+      media.addEventListener("input", refresh);
+      row.refreshSource = refresh;
+      refresh();
+    }
+    globalSource?.addEventListener("change", () => {
+      for (const row of root.querySelectorAll(".pcp-actor-row")) row.refreshSource?.();
+    });
+
     for (const button of root.querySelectorAll(".pcp-pick-media")) {
       button.addEventListener("click", event => {
         event.preventDefault();
@@ -561,7 +607,9 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
           type: "imagevideo",
           current: input?.value ?? "",
           callback: path => {
-            if (input) input.value = path;
+            if (!input) return;
+            input.value = path;
+            input.dispatchEvent(new Event("input", { bubbles: true }));
           }
         }).render(true);
       });

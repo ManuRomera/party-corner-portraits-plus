@@ -2,10 +2,10 @@
   "id": "party-corner-portraits-plus",
   "title": "Party Corner Portraits +",
   "description": "Mejoras sobre Party Corner Portraits de malatestaabrx: datos y barras configurables, nombres de jugador, posición libre, menús contextuales, encuadre de retratos, accesibilidad y lista de jugadores sustitutiva.",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "url": "https://github.com/ManuRomera/party-corner-portraits-plus",
   "manifest": "https://github.com/ManuRomera/party-corner-portraits-plus/releases/latest/download/module.json",
-  "download": "https://github.com/ManuRomera/party-corner-portraits-plus/releases/download/v1.2.1/party-corner-portraits-plus.zip",
+  "download": "https://github.com/ManuRomera/party-corner-portraits-plus/releases/download/v1.3.0/party-corner-portraits-plus.zip",
   "readme": "https://github.com/ManuRomera/party-corner-portraits-plus/blob/main/README.md",
   "bugs": "https://github.com/ManuRomera/party-corner-portraits-plus/issues",
   "authors": [

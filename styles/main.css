@@ -1355,6 +1355,17 @@ body.pcp-a11y-contrast .pcp-plus-window .window-content input.pcp-switch:checked
   padding-top: 10px;
 }
 
+.pcp-plus-window .pcp-source-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 12px;
+  margin-top: 10px;
+}
+
+.pcp-plus-window .pcp-source-line .pcp-media-field[hidden] { display: none; }
+.pcp-plus-window .pcp-source-line select { min-width: 13em; }
+
 .pcp-plus-window .pcp-span { grid-column: 1 / -1; }
 .pcp-plus-window .pcp-media-field .pcp-inline { display: flex; gap: 6px; }
 .pcp-plus-window .pcp-media-field .pcp-inline input { flex: 1 1 auto; }

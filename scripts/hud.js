@@ -202,7 +202,7 @@ function buildCard(actor, config, client) {
   const portrait = document.createElement("div");
   portrait.className = "pcp-portrait";
 
-  const img = createPortraitElement(portraitSource(actor, actorConfig), {
+  const img = createPortraitElement(portraitSource(actor, actorConfig, config), {
     alt: actor.name,
     still: client.a11y.motion
   });

@@ -219,11 +219,20 @@
   "PCP.Visibility.Show": "Visible",
   "PCP.Visibility.Hide": "Oculta del todo",
   "PCP.Visibility.Hover": "Aparece al acercar el cursor",
-  "PCP.Config.Media": "Animación o vídeo del retrato",
-  "PCP.Config.MediaPlaceholder": "Vacío = imagen del personaje. Admite webm, mp4, GIF, WebP animado",
+  "PCP.Config.Media": "Archivo del personaje",
+  "PCP.Config.MediaPlaceholder": "Imagen, GIF o vídeo en bucle (webm, mp4)",
   "PCP.Config.MediaPick": "Elegir archivo",
   "PCP.Config.HotbarOverlap": "Si la barra de macros tapa los retratos",
   "PCP.Config.HotbarOverlapHint": "Apartarla a un lado, o ponerla delante y semitransparente.",
   "PCP.Overlap.Shift": "Apartarla a un lado",
-  "PCP.Overlap.Front": "Delante, semitransparente"
+  "PCP.Overlap.Front": "Delante, semitransparente",
+  "PCP.Config.Source": "Imagen de los personajes",
+  "PCP.Config.SourceHint": "En Foundry son cosas distintas: el retrato es la imagen de la ficha y el token es la figura del mapa. Cada personaje puede cambiarlo.",
+  "PCP.Config.SourceOf": "Imagen a mostrar",
+  "PCP.Source.Portrait": "Retrato (imagen de la ficha)",
+  "PCP.Source.Token": "Token (figura del mapa)",
+  "PCP.Source.Custom": "Archivo propio (imagen, GIF o vídeo)",
+  "PCP.Menu.Actor.Source": "Imagen a mostrar",
+  "PCP.Menu.Actor.PickMedia": "Elegir archivo propio…",
+  "PCP.Menu.Actor.UseGlobalSource": "Usar el global ({value})"
 }

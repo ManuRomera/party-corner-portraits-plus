@@ -13,7 +13,8 @@ import {
   NAME_POSITIONS,
   BACKGROUND_MODES,
   VISIBILITY_MODES,
-  HOTBAR_OVERLAPS
+  HOTBAR_OVERLAPS,
+  IMAGE_SOURCES
 } from "./constants.js";
 import {
   getConfig,
@@ -137,6 +138,46 @@ function sizeMenuItems(actorId = null) {
   });
 
   return items;
+}
+
+async function pickMedia(actorId) {
+  const current = getActorConfig(getConfig(), actorId).media;
+  const Picker = foundry.applications.apps.FilePicker.implementation;
+  new Picker({
+    type: "imagevideo",
+    current,
+    callback: path => updateActorConfig(actorId, { media: path, source: "custom" })
+  }).render(true);
+}
+
+function sourceMenuItems(actorId) {
+  const config = getConfig();
+  const actorConfig = getActorConfig(config, actorId);
+  const icons = { portrait: "fa-solid fa-image-portrait", token: "fa-solid fa-circle-user", custom: "fa-solid fa-film" };
+  return [
+    {
+      label: localize("PCP.Menu.Actor.UseGlobalSource", {
+        value: localize(`PCP.Source.${capitalize(config.appearance.source)}`)
+      }),
+      icon: "fa-solid fa-globe",
+      checked: !actorConfig.source,
+      action: () => updateActorConfig(actorId, { source: null })
+    },
+    { separator: true },
+    ...IMAGE_SOURCES.map(source => ({
+      label: localize(`PCP.Source.${capitalize(source)}`),
+      icon: icons[source],
+      checked: actorConfig.source === source,
+      disabled: source === "custom" && !actorConfig.media,
+      action: () => updateActorConfig(actorId, { source })
+    })),
+    { separator: true },
+    {
+      label: localize("PCP.Menu.Actor.PickMedia"),
+      icon: "fa-solid fa-folder-open",
+      action: () => pickMedia(actorId)
+    }
+  ];
 }
 
 function frameMenuItems(actorId) {
@@ -425,6 +466,11 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         children: sizeMenuItems(actorId)
       },
       {
+        label: localize("PCP.Menu.Actor.Source"),
+        icon: "fa-solid fa-image-portrait",
+        children: sourceMenuItems(actorId)
+      },
+      {
         label: localize("PCP.Menu.Actor.Framing"),
         icon: "fa-solid fa-crop-simple",
         children: [
@@ -667,6 +713,16 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
             label: localize("PCP.Config.Frame"),
             icon: "fa-regular fa-square",
             children: globalFrameItems(config)
+          },
+          {
+            label: localize("PCP.Config.Source"),
+            icon: "fa-solid fa-image-portrait",
+            children: ["portrait", "token"].map(source => ({
+              label: localize(`PCP.Source.${capitalize(source)}`),
+              icon: source === "token" ? "fa-solid fa-circle-user" : "fa-solid fa-image-portrait",
+              checked: config.appearance.source === source,
+              action: () => setConfigValue("appearance.source", source)
+            }))
           },
           {
             label: localize("PCP.Config.ImageFit"),

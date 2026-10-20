@@ -219,11 +219,20 @@
   "PCP.Visibility.Show": "Visible",
   "PCP.Visibility.Hide": "Fully hidden",
   "PCP.Visibility.Hover": "Show when the cursor is near",
-  "PCP.Config.Media": "Animated portrait or video",
-  "PCP.Config.MediaPlaceholder": "Empty = the character's image. Accepts webm, mp4, GIF, animated WebP",
+  "PCP.Config.Media": "Character file",
+  "PCP.Config.MediaPlaceholder": "Image, GIF or looping video (webm, mp4)",
   "PCP.Config.MediaPick": "Choose file",
   "PCP.Config.HotbarOverlap": "If the macro bar covers the portraits",
   "PCP.Config.HotbarOverlapHint": "Move it aside, or show it in front, semi-transparent.",
   "PCP.Overlap.Shift": "Move it aside",
-  "PCP.Overlap.Front": "In front, semi-transparent"
+  "PCP.Overlap.Front": "In front, semi-transparent",
+  "PCP.Config.Source": "Character image",
+  "PCP.Config.SourceHint": "In Foundry these are different things: the portrait is the sheet image and the token is the map figure. Each character can override it.",
+  "PCP.Config.SourceOf": "Image to show",
+  "PCP.Source.Portrait": "Portrait (sheet image)",
+  "PCP.Source.Token": "Token (map figure)",
+  "PCP.Source.Custom": "Own file (image, GIF or video)",
+  "PCP.Menu.Actor.Source": "Image to show",
+  "PCP.Menu.Actor.PickMedia": "Choose own file…",
+  "PCP.Menu.Actor.UseGlobalSource": "Use the global ({value})"
 }

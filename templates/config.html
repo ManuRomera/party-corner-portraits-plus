@@ -102,6 +102,12 @@
           </select>
         </label>
         <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.Source"}}<small>{{localize "PCP.Config.SourceHint"}}</small></span>
+          <select name="source">
+            {{#each sources}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </label>
+        <label class="pcp-row">
           <span class="pcp-row-text">{{localize "PCP.Config.ImageFit"}}</span>
           <select name="imageFit">
             {{#each fits}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
@@ -311,7 +317,7 @@
 
       <div class="pcp-actor-list">
         {{#each actors}}
-          <div class="pcp-actor-row {{#unless enabled}}pcp-disabled{{/unless}}" data-actor-id="{{id}}" data-actor-name="{{name}}" data-player-label="{{ownerLabel}}">
+          <div class="pcp-actor-row {{#unless enabled}}pcp-disabled{{/unless}}" data-actor-id="{{id}}" data-actor-name="{{name}}" data-player-label="{{ownerLabel}}" data-portrait="{{portraitImg}}" data-token="{{tokenImg}}">
             <div class="pcp-actor-head">
               <input class="pcp-actor-enabled pcp-switch" type="checkbox" {{#if enabled}}checked{{/if}} title="{{localize 'PCP.Config.ShowActor'}}" aria-label="{{localize 'PCP.Config.ShowActor'}}: {{name}}">
               <div class="pcp-config-preview" style="--pcp-preview-border: {{borderColor}}">
@@ -324,16 +330,29 @@
               <button type="button" class="pcp-open-framing"><i class="fa-solid fa-crop-simple"></i> {{localize "PCP.Config.AdjustFraming"}}</button>
             </div>
 
+            <div class="pcp-source-line">
+              <label class="pcp-mini">
+                <span>{{localize "PCP.Config.SourceOf"}}</span>
+                <select class="pcp-actor-source">
+                  <option value="" {{#unless source}}selected{{/unless}}>{{localize "PCP.Config.UseGlobal"}} ({{globalSourceLabel}})</option>
+                  <option value="portrait" {{#if sourcePortrait}}selected{{/if}}>{{localize "PCP.Source.Portrait"}}</option>
+                  <option value="token" {{#if sourceToken}}selected{{/if}}>{{localize "PCP.Source.Token"}}</option>
+                  <option value="custom" {{#if sourceCustom}}selected{{/if}}>{{localize "PCP.Source.Custom"}}</option>
+                </select>
+              </label>
+              <div class="pcp-mini pcp-media-field pcp-grow" {{#unless sourceCustom}}hidden{{/unless}}>
+                <span>{{localize "PCP.Config.Media"}}</span>
+                <span class="pcp-inline">
+                  <input class="pcp-actor-media" type="text" value="{{media}}" placeholder="{{localize 'PCP.Config.MediaPlaceholder'}}">
+                  <button type="button" class="pcp-pick-media pcp-icon-button" title="{{localize 'PCP.Config.MediaPick'}}" aria-label="{{localize 'PCP.Config.MediaPick'}}"><i class="fa-solid fa-folder-open"></i></button>
+                </span>
+              </div>
+            </div>
+
             <details class="pcp-more">
               <summary>{{localize "PCP.Config.MoreOptions"}}</summary>
               <div class="pcp-more-grid">
-                <div class="pcp-mini pcp-media-field pcp-span">
-                  <span>{{localize "PCP.Config.Media"}}</span>
-                  <span class="pcp-inline">
-                    <input class="pcp-actor-media" type="text" value="{{media}}" placeholder="{{localize 'PCP.Config.MediaPlaceholder'}}">
-                    <button type="button" class="pcp-pick-media pcp-icon-button" title="{{localize 'PCP.Config.MediaPick'}}" aria-label="{{localize 'PCP.Config.MediaPick'}}"><i class="fa-solid fa-folder-open"></i></button>
-                  </span>
-                </div>
+
                 <label class="pcp-mini"><span>{{localize "PCP.Config.PlayerLabel"}}</span><input class="pcp-actor-player-label" type="text" value="{{playerLabel}}" placeholder="{{ownerLabel}}"></label>
                 <label class="pcp-mini"><span>{{localize "PCP.Config.Order"}}</span><input class="pcp-actor-order" type="number" value="{{sortOrder}}" min="-9999" max="9999" step="1"></label>
                 <label class="pcp-mini"><span>{{localize "PCP.Config.Size"}}</span><input class="pcp-actor-size" type="number" value="{{size}}" placeholder="{{globalSize}}" min="32" max="320" step="1"></label>

@@ -19,6 +19,7 @@ import {
   BAR_POSITIONS,
   VISIBILITY_MODES,
   HOTBAR_OVERLAPS,
+  IMAGE_SOURCES,
   SIZE_MIN,
   SIZE_MAX
 } from "./constants.js";
@@ -104,6 +105,11 @@ function sanitizeActor(actorId, actor, index) {
     namePosition: NAME_POSITIONS.includes(value.namePosition) ? value.namePosition : null,
     playerLabel: String(value.playerLabel ?? ""),
     media: String(value.media ?? "").trim(),
+    // Versión 1.2.0: un archivo propio sin origen elegido era «archivo propio».
+    source:
+      value.source === undefined
+        ? String(value.media ?? "").trim() ? "custom" : null
+        : IMAGE_SOURCES.includes(value.source) ? value.source : null,
     bars
   };
 }
@@ -133,6 +139,7 @@ export function normalizeConfig(raw) {
   merged.appearance.radius = clamp(merged.appearance.radius, 0, 60, 9);
   merged.appearance.shadow = merged.appearance.shadow !== false;
   merged.appearance.frame = FRAME_MODES.includes(merged.appearance.frame) ? merged.appearance.frame : "full";
+  merged.appearance.source = ["portrait", "token"].includes(merged.appearance.source) ? merged.appearance.source : "portrait";
   merged.appearance.imageFit = IMAGE_FITS.includes(merged.appearance.imageFit) ? merged.appearance.imageFit : "cover";
   merged.appearance.namePosition = NAME_POSITIONS.includes(merged.appearance.namePosition) ? merged.appearance.namePosition : "overlay";
   merged.appearance.nameColor = normalizeColor(merged.appearance.nameColor, "#ffffff");

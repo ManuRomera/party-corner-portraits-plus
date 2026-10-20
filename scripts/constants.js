@@ -18,6 +18,7 @@ export const IMAGE_FITS = ["cover", "contain"];
 export const NAME_POSITIONS = ["overlay", "below", "hidden"];
 export const BACKGROUND_MODES = ["dark", "transparent", "none"];
 export const VISIBILITY_MODES = ["show", "hide", "hover"];
+export const IMAGE_SOURCES = ["portrait", "token", "custom"];
 export const HOTBAR_OVERLAPS = ["shift", "front"];
 export const BAR_POSITIONS = ["overlay", "below"];
 
@@ -33,6 +34,7 @@ export const DEFAULT_ACTOR = {
   namePosition: null,
   playerLabel: "",
   media: "",
+  source: null,
   bars: {}
 };
 
@@ -112,6 +114,7 @@ export function createDefaultConfig() {
       shadow: true,
       frame: "full",
       imageFit: "cover",
+      source: "portrait",
       namePosition: "overlay",
       nameColor: "#ffffff",
       background: "dark",

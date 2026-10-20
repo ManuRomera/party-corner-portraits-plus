@@ -11,9 +11,34 @@ export function isVideo(src) {
   return VIDEO_EXT.test(String(src ?? ""));
 }
 
-/** Origen del retrato: el medio propio del personaje en este módulo, o la imagen del actor. */
-export function portraitSource(actor, actorConfig) {
-  return String(actorConfig?.media || "").trim() || actor?.img || FALLBACK;
+/** Origen efectivo: el del personaje, o el global si no tiene uno propio. */
+export function effectiveSource(config, actorConfig) {
+  return actorConfig?.source ?? config?.appearance?.source ?? "portrait";
+}
+
+/** Ruta usable: sin comodines (los tokens aleatorios usan «*»). */
+const usable = path => {
+  const text = String(path ?? "").trim();
+  return text && !text.includes("*") ? text : "";
+};
+
+/**
+ * Qué archivo se dibuja:
+ *  - portrait: la imagen de la ficha (retrato);
+ *  - token: la imagen del token del personaje (prototype token);
+ *  - custom: el archivo elegido para este personaje en el módulo (imagen, GIF o vídeo en bucle).
+ * Si el elegido no existe, se prueba con el resto antes de caer en la imagen por defecto.
+ */
+export function portraitSource(actor, actorConfig, config) {
+  const portrait = usable(actor?.img);
+  const token = usable(actor?.prototypeToken?.texture?.src);
+  const custom = usable(actorConfig?.media);
+  const order = {
+    custom: [custom, portrait, token],
+    token: [token, portrait],
+    portrait: [portrait, token]
+  }[effectiveSource(config, actorConfig)];
+  return order.find(Boolean) || FALLBACK;
 }
 
 export function applyFraming(element, fit, x, y, zoom) {

@@ -87,7 +87,7 @@ El prefijo `system.` es opcional: `attributes.hp.value` también funciona.
 
 ### Retratos animados
 
-Vídeo (webm, mp4), GIF y WebP animado. En *Personajes → Más opciones* puedes indicar una animación propia para cada personaje sin tocar la imagen de su ficha. El vídeo va sin sonido y en bucle.
+Puedes mostrar el **retrato** (imagen de la ficha), el **token** (figura del mapa) o un **archivo propio** por personaje: imagen, GIF en bucle o vídeo corto en bucle (webm, mp4). Se elige en *Personajes* o con el botón derecho sobre el retrato. El vídeo va sin sonido y en bucle.
 
 ### Accesibilidad
 

@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.3.0
+
+- **Retrato o token:** en Foundry son cosas distintas (la imagen de la ficha frente a la figura del mapa). Ahora eliges qué se muestra: un valor global (Configuración → Aspecto → «Imagen de los personajes») y, por personaje, retrato, token o archivo propio.
+- **Archivo propio por personaje:** desde la pestaña Personajes (campo y selector de archivos) o con el botón derecho sobre el retrato → «Imagen a mostrar». Vale una imagen, un GIF en bucle o un vídeo corto en bucle (webm, mp4). La vista previa se actualiza al momento.
+- Los tokens con ruta aleatoria («*») se ignoran y se usa el retrato; si el archivo elegido no existe se prueba con el resto antes de mostrar la imagen por defecto.
+- Los archivos propios de la 1.2.0 se conservan como «archivo propio».
+
 ## 1.2.1
 
 - **La barra de macros ya no estorba a los retratos.** Si al aparecer (o estando visible) se solapa con la barra de retratos, se aparta hacia el lado contrario o se pone delante y semitransparente, según elijas en Configuración → General («Si la barra de macros tapa los retratos») o en el menú del asa de la barra. Por defecto se aparta.
