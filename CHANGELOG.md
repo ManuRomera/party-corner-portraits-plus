@@ -17,7 +17,6 @@ Revisión completa del módulo: fallos corregidos, interfaz rehecha y accesibili
 **Interfaz**
 - Configuración rehecha: una columna, grupos de filas con interruptores, pestañas segmentadas, barras con color automático y ruta visibles sin desplazamiento lateral, opciones por personaje plegadas.
 - Menús, lista de jugadores y ventanas con un diseño común (cristal oscuro, esquinas redondeadas).
-- Título «MR- Party Corner Portraits +».
 
 **Nuevo**
 - Accesibilidad: tamaño del texto, alto contraste, fuente legible y reducir movimiento (icono en la cabecera de las ventanas).

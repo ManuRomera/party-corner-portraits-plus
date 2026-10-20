@@ -1,4 +1,6 @@
-# MR- Party Corner Portraits +
+# Party Corner Portraits +
+
+> **Todo el mérito de la idea y de la base es de [malatestaabrx](https://github.com/malatestaabrx)**, autor de [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits). Este módulo es una versión con mejoras sobre el suyo, publicada con su nombre y sin marca propia por respeto al autor original. Si te gusta, visita y apoya el módulo original.
 
 Fork de [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits) para **Foundry VTT 13** que añade datos de ficha, barras configurables, posición libre, menús contextuales, encuadre de retratos y sustitución de la lista de jugadores.
 
@@ -143,7 +145,7 @@ Con el botón derecho sobre un retrato o sobre el asa de la barra tienes acceso 
 ## Créditos
 
 - Módulo original: [Party Corner Portraits](https://github.com/malatestaabrx/party-corner-portraits) por **malatestaabrx**.
-- Fork y funciones añadidas: **ManuRomera**.
+- Mejoras y funciones añadidas: **ManuRomera**, sobre la base de malatestaabrx.
 - Este fork conserva la idea y parte de la estructura original, y añade las funciones descritas. Desde la 1.1.0 la interfaz se ha rehecho con otro diseño (cristal oscuro, una columna, accesibilidad).
 
 Registro de cambios en [CHANGELOG.md](CHANGELOG.md).

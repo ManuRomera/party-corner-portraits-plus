@@ -20,4 +20,4 @@ Revisión del módulo 1.0.0 en Foundry 13.351 con dnd5e, un máster y una jugado
 - Probar en Foundry 14 (declarado, no probado).
 - Probar con ratón real el arrastre de la barra y del encuadre (se probó con eventos sintéticos).
 - Con texto al 130 % los nombres largos de los retratos se recortan con puntos suspensivos: la tarjeta no crece. Se resuelve subiendo también el tamaño del retrato.
-- El id del módulo sigue siendo `party-corner-portraits-plus` (el convenio MR- pide `mr-…`); cambiarlo obliga a un paquete nuevo y a migrar la configuración.
+- Sin marca MR-: es una mejora del módulo de malatestaabrx y se publica con su nombre, por respeto al autor original.

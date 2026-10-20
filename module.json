@@ -1,7 +1,7 @@
 {
   "id": "party-corner-portraits-plus",
-  "title": "MR- Party Corner Portraits +",
-  "description": "Fork of Party Corner Portraits with configurable actor data (bars and fields), player names, free positioning, right-click context menus, portrait framing, frameless images, hotbar hiding and an optional replacement for Foundry's player list.",
+  "title": "Party Corner Portraits +",
+  "description": "Mejoras sobre Party Corner Portraits de malatestaabrx: datos y barras configurables, nombres de jugador, posición libre, menús contextuales, encuadre de retratos, accesibilidad y lista de jugadores sustitutiva.",
   "version": "1.1.0",
   "url": "https://github.com/ManuRomera/party-corner-portraits-plus",
   "manifest": "https://github.com/ManuRomera/party-corner-portraits-plus/releases/latest/download/module.json",
@@ -10,11 +10,11 @@
   "bugs": "https://github.com/ManuRomera/party-corner-portraits-plus/issues",
   "authors": [
     {
-      "name": "malatestaabrx",
+      "name": "malatestaabrx (autor original)",
       "url": "https://github.com/malatestaabrx"
     },
     {
-      "name": "ManuRomera",
+      "name": "ManuRomera (mejoras)",
       "url": "https://github.com/ManuRomera"
     }
   ],
