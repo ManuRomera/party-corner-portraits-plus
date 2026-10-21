@@ -310,6 +310,12 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
     addA11yButton(this);
     this.#syncHoverPreview();
     const root = this.element;
+    // Valores actuales del primer personaje en los desplegables de marco e imagen.
+    const firstId = selection()[0];
+    if (firstId) {
+      const current = getActorConfig(getConfig(), firstId);
+      for (const select of root.querySelectorAll("select[data-prop]")) select.value = current[select.dataset.prop] ?? "";
+    }
     if (root.dataset.bound) return;
     root.dataset.bound = "1";
 
@@ -345,6 +351,8 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
     });
 
     root.addEventListener("change", async event => {
+      const prop = event.target.closest("select[data-prop]");
+      if (prop) return commit(selection(), { [prop.dataset.prop]: prop.value || null });
       const input = event.target.closest("[data-live]");
       if (!input) return;
       const ids = selection();
@@ -395,6 +403,10 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
     const read = name => Number(root.querySelector(`[data-live="${name}"]`)?.value);
 
     switch (act) {
+      case "halo-color": {
+        const current = getActorConfig(config, ids[0] ?? "")[K("glow")];
+        return setGlow({ color: button.dataset.color, power: current?.power > 0 ? current.power : 55 }, ids);
+      }
       case "target":
         target = button.dataset.target;
         return this.render();

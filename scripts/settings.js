@@ -23,6 +23,7 @@ import {
   HOVER_SOURCES,
   HOVER_PLACEMENTS,
   HOVER_PERMISSIONS,
+  SHEET_OPENS,
   SIZE_MIN,
   SIZE_MAX
 } from "./constants.js";
@@ -161,6 +162,11 @@ function sanitizeActor(actorId, actor, index) {
     })(),
     hoverSource: [...HOVER_SOURCES, "custom"].includes(value.hoverSource) ? value.hoverSource : null,
     hoverMedia: String(value.hoverMedia ?? "").trim(),
+    // Retrato suelto: centro en fracción de pantalla; null = dentro de la barra.
+    float:
+      value.float && typeof value.float === "object"
+        ? { x: clamp(value.float.x, 0, 1, 0.5), y: clamp(value.float.y, 0, 1, 0.5) }
+        : null,
     // Versión 1.2.0: un archivo propio sin origen elegido era «archivo propio».
     source:
       value.source === undefined
@@ -181,7 +187,8 @@ export function normalizeConfig(raw) {
   merged.bar.orientation = isKnownOrientation(merged.bar.orientation) ? merged.bar.orientation : "horizontal";
   merged.bar.offsetX = clamp(merged.bar.offsetX, 0, 2000, 16);
   merged.bar.offsetY = clamp(merged.bar.offsetY, 0, 2000, 16);
-  merged.bar.gap = clamp(merged.bar.gap, 0, 40, 8);
+  // Un hueco negativo solapa los retratos como cartas apiladas.
+  merged.bar.gap = clamp(merged.bar.gap, -120, 40, 8);
   merged.bar.size = clamp(merged.bar.size, SIZE_MIN, SIZE_MAX, 86);
   merged.bar.free = {
     enabled: Boolean(merged.bar.free?.enabled),
@@ -210,6 +217,7 @@ export function normalizeConfig(raw) {
   merged.data.showPlayerStatus = merged.data.showPlayerStatus !== false;
   merged.data.barPosition = BAR_POSITIONS.includes(merged.data.barPosition) ? merged.data.barPosition : "overlay";
   merged.data.barHeight = clamp(merged.data.barHeight, 2, 24, 6);
+  merged.data.showBars = merged.data.showBars !== false;
   merged.data.fields = (Array.isArray(merged.data.fields) ? merged.data.fields : []).map(sanitizeField);
   merged.data.bars = (Array.isArray(merged.data.bars) ? merged.data.bars : []).map(sanitizeBar);
 
@@ -249,6 +257,7 @@ export function normalizeConfig(raw) {
   merged.ui = {
     hotbar: mode(raw?.ui?.hotbar, legacy.hideHotbar),
     players: mode(raw?.ui?.players, legacy.hidePlayers),
+    openSheet: SHEET_OPENS.includes(raw?.ui?.openSheet) ? raw.ui.openSheet : "click",
     hotbarOverlap: HOTBAR_OVERLAPS.includes(raw?.ui?.hotbarOverlap) ? raw.ui.hotbarOverlap : "shift"
   };
 
@@ -257,6 +266,8 @@ export function normalizeConfig(raw) {
   for (const [actorId, actor] of Object.entries(actors)) {
     merged.actors[actorId] = sanitizeActor(actorId, actor, Object.keys(merged.actors).length);
   }
+
+  merged.hiddenScenes = [...new Set((Array.isArray(merged.hiddenScenes) ? merged.hiddenScenes : []).filter(id => typeof id === "string" && id))];
 
   const order = Array.isArray(merged.order) ? merged.order : [];
   merged.order = [...new Set(order.filter(id => typeof id === "string" && id))];

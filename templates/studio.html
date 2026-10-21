@@ -43,6 +43,39 @@
         </div>
       </div>
 
+      {{#unless isHover}}
+      <h4 class="pcp-heading">{{localize "PCP.Studio.FrameImage"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row"><span class="pcp-row-text">{{localize "PCP.Config.SourceOf"}}</span>
+          <select data-prop="source">
+            <option value="">{{localize "PCP.Config.UseGlobal"}}</option>
+            <option value="portrait">{{localize "PCP.Source.Portrait"}}</option>
+            <option value="token">{{localize "PCP.Source.Token"}}</option>
+            <option value="custom">{{localize "PCP.Source.Custom"}}</option>
+          </select></label>
+        <label class="pcp-row"><span class="pcp-row-text">{{localize "PCP.Config.Frame"}}</span>
+          <select data-prop="frame">
+            <option value="">{{localize "PCP.Config.UseGlobal"}}</option>
+            <option value="full">{{localize "PCP.Frame.Full"}}</option>
+            <option value="minimal">{{localize "PCP.Frame.Minimal"}}</option>
+            <option value="none">{{localize "PCP.Frame.None"}}</option>
+          </select></label>
+        <label class="pcp-row"><span class="pcp-row-text">{{localize "PCP.Config.ImageFit"}}<small>{{localize "PCP.Studio.FitHint"}}</small></span>
+          <select data-prop="fit">
+            <option value="">{{localize "PCP.Config.UseGlobal"}}</option>
+            <option value="cover">{{localize "PCP.Fit.Cover"}}</option>
+            <option value="contain">{{localize "PCP.Fit.Contain"}}</option>
+          </select></label>
+        <label class="pcp-row"><span class="pcp-row-text">{{localize "PCP.Config.NamePosition"}}</span>
+          <select data-prop="namePosition">
+            <option value="">{{localize "PCP.Config.UseGlobal"}}</option>
+            <option value="overlay">{{localize "PCP.NamePosition.Overlay"}}</option>
+            <option value="below">{{localize "PCP.NamePosition.Below"}}</option>
+            <option value="hidden">{{localize "PCP.NamePosition.Hidden"}}</option>
+          </select></label>
+      </div>
+      {{/unless}}
+
       <h4 class="pcp-heading">{{localize "PCP.Studio.Look"}}</h4>
       <div class="pcp-card-group">
         <div class="pcp-row">
@@ -73,6 +106,19 @@
         <div class="pcp-row">
           <span class="pcp-row-text">{{localize "PCP.Studio.HaloColor"}}</span>
           <input type="color" data-live="glowColor" value="{{glowColor}}">
+        </div>
+        <div class="pcp-row pcp-row-swatches" role="group" aria-label="{{localize 'PCP.Studio.HaloSwatches'}}">
+          <span class="pcp-row-text">{{localize "PCP.Studio.HaloSwatches"}}<small>{{localize "PCP.Studio.HaloSwatchesHint"}}</small></span>
+          <span class="pcp-swatches">
+            <button type="button" class="pcp-swatch" data-act="halo-color" data-color="#ffd60a" style="--c:#ffd60a" title="{{localize 'PCP.Studio.SwGold'}}" aria-label="{{localize 'PCP.Studio.SwGold'}}"></button>
+            <button type="button" class="pcp-swatch" data-act="halo-color" data-color="#30d158" style="--c:#30d158" title="{{localize 'PCP.Studio.SwGreen'}}" aria-label="{{localize 'PCP.Studio.SwGreen'}}"></button>
+            <button type="button" class="pcp-swatch" data-act="halo-color" data-color="#7fe3ff" style="--c:#7fe3ff" title="{{localize 'PCP.Studio.SwCyan'}}" aria-label="{{localize 'PCP.Studio.SwCyan'}}"></button>
+            <button type="button" class="pcp-swatch" data-act="halo-color" data-color="#0a84ff" style="--c:#0a84ff" title="{{localize 'PCP.Studio.SwBlue'}}" aria-label="{{localize 'PCP.Studio.SwBlue'}}"></button>
+            <button type="button" class="pcp-swatch" data-act="halo-color" data-color="#bf5af2" style="--c:#bf5af2" title="{{localize 'PCP.Studio.SwPurple'}}" aria-label="{{localize 'PCP.Studio.SwPurple'}}"></button>
+            <button type="button" class="pcp-swatch" data-act="halo-color" data-color="#ff453a" style="--c:#ff453a" title="{{localize 'PCP.Studio.SwRed'}}" aria-label="{{localize 'PCP.Studio.SwRed'}}"></button>
+            <button type="button" class="pcp-swatch" data-act="halo-color" data-color="#ff9f0a" style="--c:#ff9f0a" title="{{localize 'PCP.Studio.SwOrange'}}" aria-label="{{localize 'PCP.Studio.SwOrange'}}"></button>
+            <button type="button" class="pcp-swatch" data-act="halo-color" data-color="#ffffff" style="--c:#ffffff" title="{{localize 'PCP.Studio.SwWhite'}}" aria-label="{{localize 'PCP.Studio.SwWhite'}}"></button>
+          </span>
         </div>
         <div class="pcp-row">
           <span class="pcp-row-text">{{localize "PCP.Studio.HaloAlpha"}}</span>

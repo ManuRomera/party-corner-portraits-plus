@@ -11,6 +11,7 @@ import { applyUiConfig, placeHotbar } from "./ui.js";
 import { PartyPortraitsConfig, openConfigApp } from "./config-app.js";
 import { openActorMenu, openHudMenu, openUserMenu } from "./actions.js";
 import { onRefresh, refreshAll, refreshDebounced } from "./events.js";
+import { openAddActors, initDropZone } from "./addactors.js";
 import { closeMenus } from "./menu.js";
 import { applyA11y } from "./a11y.js";
 import { registerHoverSocket } from "./hover.js";
@@ -29,6 +30,8 @@ function wireMenuEvents() {
     const detail = event.detail ?? {};
     openHudMenu(detail);
   });
+
+  window.addEventListener("pcp:add-actors", () => openAddActors());
 
   window.addEventListener("pcp:user-menu", event => {
     const detail = event.detail ?? {};
@@ -58,6 +61,7 @@ Hooks.once("ready", async () => {
   }
 
   registerHoverSocket();
+  initDropZone();
   registerCountdown();
   // Primero las clases de la interfaz: el resto mide dónde está el panel original.
   onRefresh(applyUiConfig);
@@ -85,6 +89,7 @@ Hooks.once("ready", async () => {
     closeMenus,
     studio: studio.openStudio,
     reset: confirmReset,
+    add: openAddActors,
     // API para macros: actúan sobre los ids indicados (por defecto, la selección del estudio)
     size: studio.setSize,
     scale: studio.scaleBy,
@@ -133,9 +138,6 @@ Hooks.on("userConnected", () => refreshDebounced(80));
 Hooks.on("createUser", () => refreshDebounced(80));
 Hooks.on("deleteUser", () => refreshDebounced(80));
 
-Hooks.on("canvasReady", () => {
-  applyUiConfig();
-  renderHud();
-});
+Hooks.on("canvasReady", () => refreshAll()); // la barra puede estar oculta en esta escena
 
 Hooks.on("closeSettingsConfig", () => refreshAll());

@@ -18,6 +18,7 @@ import {
   HOVER_SOURCES,
   HOVER_PLACEMENTS,
   HOVER_PERMISSIONS,
+  SHEET_OPENS,
   SYSTEM_BAR_PRESETS
 } from "./constants.js";
 import { getConfig, saveConfig } from "./settings.js";
@@ -41,6 +42,7 @@ import { WithMemory } from "./memory.js";
 import { createPortraitElement, isVideo, portraitSource } from "./media.js";
 import { addA11yButton } from "./a11y.js";
 import { confirmReset } from "./reset.js";
+import { openAddActors } from "./addactors.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -102,7 +104,7 @@ function collectFormData(form) {
   config.bar.orientation = ORIENTATIONS.includes(value("orientation")) ? value("orientation") : old.bar.orientation;
   config.bar.offsetX = clamp(value("offsetX"), 0, 2000, old.bar.offsetX);
   config.bar.offsetY = clamp(value("offsetY"), 0, 2000, old.bar.offsetY);
-  config.bar.gap = clamp(value("gap"), 0, 40, old.bar.gap);
+  config.bar.gap = clamp(value("gap"), -120, 40, old.bar.gap);
   config.bar.size = clampSize(value("size"), old.bar.size);
   config.bar.free = {
     enabled: checked("free.enabled"),
@@ -188,6 +190,8 @@ function collectFormData(form) {
   config.players.compact = checked("players.compact");
   config.players.title = value("players.title", "").trim();
 
+  config.ui.openSheet = SHEET_OPENS.includes(value("openSheet")) ? value("openSheet") : old.ui.openSheet;
+  config.data.showBars = checked("showBars");
   config.ui.hotbar = VISIBILITY_MODES.includes(value("hotbar")) ? value("hotbar") : old.ui.hotbar;
   config.ui.hotbarOverlap = HOTBAR_OVERLAPS.includes(value("hotbarOverlap"))
     ? value("hotbarOverlap")
@@ -400,6 +404,9 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       hoverPermissions: buildOptions(HOVER_PERMISSIONS, config.hover.permission, value =>
         localize(`PCP.HoverPermission.${capitalize(value.toLowerCase())}`)
       ),
+      sheetOpens: buildOptions(SHEET_OPENS, config.ui.openSheet, value =>
+        localize(`PCP.SheetOpen.${capitalize(value)}`)
+      ),
       hotbarModes: buildOptions(VISIBILITY_MODES, config.ui.hotbar, value =>
         localize(`PCP.Visibility.${capitalize(value)}`)
       ),
@@ -446,6 +453,11 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       });
     }
     activateTab(this.activeTab);
+
+    root.querySelector(".pcp-add-characters")?.addEventListener("click", event => {
+      event.preventDefault();
+      openAddActors();
+    });
 
     root.querySelector(".pcp-reset-config")?.addEventListener("click", async event => {
       event.preventDefault();

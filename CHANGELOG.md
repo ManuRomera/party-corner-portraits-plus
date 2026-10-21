@@ -1,5 +1,21 @@
 # Cambios
 
+## 1.9.0
+
+Cambios a partir de las pruebas de un beta tester. Gracias.
+
+- **Retratos sueltos:** cualquier personaje o PNJ puede salir de la barra y quedar donde quieras de la pantalla, individualmente (botón derecho → «Sacar de la barra (retrato suelto)» / «Meter en la barra»). Cada uno conserva su aspecto, su vista ampliada y su menú. Sirve para montar disposiciones libres y para PNJ sueltos.
+- **Arrastrar con el botón derecho:** mantén el botón derecho sobre la barra o sobre un retrato suelto y arrástralo; al soltar se queda fijado. Un clic derecho sin arrastrar sigue abriendo el menú.
+- **Añadir personajes:** nuevo selector con buscador («Añadir personajes…» en el menú de la barra y en la pestaña Personajes), con «A la barra» o «Suelto». Si la barra queda vacía, aparece un botón «+» para el máster.
+- **Arrastrar actores desde el directorio:** al arrastrar un personaje o PNJ aparecen dos zonas, «a la barra» y «retrato suelto». (Antes se veía el «+» pero no añadía.)
+- **Cartas solapadas:** el hueco entre retratos admite valores negativos (hasta −120) para apilarlos como cartas; al pasar el cursor, el retrato sube al frente.
+- **Barras de datos (PG…):** interruptor para ocultarlas todas (Datos, y menú de la barra) sin borrar su configuración.
+- **Abrir la ficha:** con un clic, con doble clic o nunca (Configuración → General).
+- **Ajustes de grupo en el Estudio:** nueva sección «Marco e imagen» para cambiar a la vez, en todos los retratos elegidos, la imagen (retrato/token/archivo), el marco, el ajuste («Ver completa»…) y la posición del nombre.
+- **«Ver completa» ya no rellena de gris:** el hueco es transparente y deja ver lo que hay detrás.
+- **Colores rápidos del halo** en el Estudio, además del selector de color.
+- **Barra por escenas:** «Mostrar la barra en esta escena» (menú de la barra) para ocultarla en escenas de carga, mapas, etc.
+
 ## 1.8.1
 
 - Nueva página del repositorio (README con capturas) y créditos al autor original.

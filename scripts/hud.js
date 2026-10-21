@@ -3,7 +3,7 @@
  * Main HUD (party corner) renderer.
  */
 
-import { getConfig, getClientConfig, saveConfig } from "./settings.js";
+import { getConfig, getClientConfig, mutateConfig } from "./settings.js";
 import {
   clamp,
   clampSize,
@@ -24,6 +24,7 @@ import { dispatchMenuEvent, refreshAll } from "./events.js";
 import { avoidCoreUi } from "./layout.js";
 import { applyFocus, applyLook, buildCountdown } from "./look.js";
 import { attachHover, hideHover } from "./hover.js";
+import { closeMenus } from "./menu.js";
 import { applyFraming, createPortraitElement, portraitSource } from "./media.js";
 
 let moveMode = false;
@@ -115,7 +116,7 @@ function buildFields(actor, config) {
 
 function buildBars(actor, config, client, actorConfig) {
   const bars = Array.isArray(config.data.bars) ? config.data.bars : [];
-  if (!bars.length || client.hideBars) return null;
+  if (!bars.length || client.hideBars || !config.data.showBars) return null;
 
   const container = document.createElement("div");
   container.className = "pcp-bars";
@@ -252,10 +253,19 @@ function buildCard(actor, config, client) {
 
   applyLook(card, actorConfig, config.appearance.opacity);
 
-  card.addEventListener("click", event => {
-    if (moveMode || suppressClick) return;
-    event.preventDefault();
+  // Abrir la ficha con un clic, con doble clic o nunca (Configuración → General).
+  const openSheet = () => {
     if (actorCanOpenSheet(actor)) actor.sheet?.render(true);
+  };
+  card.addEventListener("click", event => {
+    if (moveMode || suppressClick || getConfig().ui.openSheet !== "click") return;
+    event.preventDefault();
+    openSheet();
+  });
+  card.addEventListener("dblclick", event => {
+    if (moveMode || suppressClick || getConfig().ui.openSheet !== "dblclick") return;
+    event.preventDefault();
+    openSheet();
   });
 
   attachHover(card, actor);
@@ -264,7 +274,7 @@ function buildCard(actor, config, client) {
     if (moveMode) return;
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      if (actorCanOpenSheet(actor)) actor.sheet?.render(true);
+      if (getConfig().ui.openSheet !== "none") openSheet();
     } else if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) {
       event.preventDefault();
       const rect = card.getBoundingClientRect();
@@ -276,11 +286,7 @@ function buildCard(actor, config, client) {
     event.preventDefault();
     event.stopPropagation();
     if (moveMode) return;
-    dispatchMenuEvent("pcp:actor-menu", {
-      actorId: actor.id,
-      x: event.clientX,
-      y: event.clientY
-    });
+    openMenuOrWait("pcp:actor-menu", { actorId: actor.id, x: event.clientX, y: event.clientY });
   });
 
   return card;
@@ -326,62 +332,116 @@ function applyPosition(hud, config) {
   }
 }
 
-function attachDrag(hud) {
-  hud.addEventListener("pointerdown", event => {
-    if (!moveMode || !game.user.isGM) return;
-    if (event.button !== 0) return;
+/* ------------------------------------------------------------------ arrastre
+ * Se mueve con el botón izquierdo en «modo mover» o, siempre, con el botón derecho mantenido
+ * (como en otros módulos). Un clic derecho sin arrastrar abre el menú. En macOS el evento
+ * «contextmenu» llega al pulsar, así que el menú espera a soltar para saber si era un arrastre.
+ */
 
-    event.preventDefault();
-    closeMoveHintListeners();
+const DRAG_THRESHOLD = 6;
+let rightDown = false;
+let pendingMenu = null;
 
-    const rect = hud.getBoundingClientRect();
-    const offsetX = event.clientX - rect.left;
-    const offsetY = event.clientY - rect.top;
-    const barWidth = hud.offsetWidth || 120;
-    const barHeight = hud.offsetHeight || 120;
+function openMenuOrWait(name, detail) {
+  if (rightDown) pendingMenu = { name, detail };
+  else dispatchMenuEvent(name, detail);
+}
 
-    hud.classList.add("pcp-free", "pcp-moving");
-    hud.classList.remove(
-      "pcp-top-left",
-      "pcp-top-right",
-      "pcp-bottom-left",
-      "pcp-bottom-right",
-      "pcp-position-free"
-    );
-    hud.style.left = `${rect.left}px`;
-    hud.style.top = `${rect.top}px`;
+/** Mueve `el` con el puntero; `save(rect)` guarda al soltar. */
+function trackDrag(el, startEvent, { button, save, prepare }) {
+  const rect = el.getBoundingClientRect();
+  const offsetX = startEvent.clientX - rect.left;
+  const offsetY = startEvent.clientY - rect.top;
+  let started = false;
+  let last = { left: rect.left, top: rect.top };
 
-    let lastX = rect.left;
-    let lastY = rect.top;
+  const begin = () => {
+    started = true;
+    closeMenus();
+    hideHover({ force: true });
+    prepare?.(rect);
+    el.classList.add("pcp-moving");
+    el.style.left = `${rect.left}px`;
+    el.style.top = `${rect.top}px`;
+  };
 
-    const onMove = moveEvent => {
-      const maxX = Math.max(8, window.innerWidth - barWidth - 4);
-      const maxY = Math.max(8, window.innerHeight - barHeight - 4);
-      lastX = clamp(moveEvent.clientX - offsetX, 0, maxX, rect.left);
-      lastY = clamp(moveEvent.clientY - offsetY, 0, maxY, rect.top);
-      hud.style.left = `${lastX}px`;
-      hud.style.top = `${lastY}px`;
+  const onMove = event => {
+    if (!started) {
+      if (Math.hypot(event.clientX - startEvent.clientX, event.clientY - startEvent.clientY) < DRAG_THRESHOLD) return;
+      begin();
+    }
+    last = {
+      left: clamp(event.clientX - offsetX, 0, Math.max(8, window.innerWidth - rect.width - 4), rect.left),
+      top: clamp(event.clientY - offsetY, 0, Math.max(8, window.innerHeight - rect.height - 4), rect.top)
     };
+    el.style.left = `${last.left}px`;
+    el.style.top = `${last.top}px`;
+  };
 
-    const onUp = async () => {
-      window.removeEventListener("pointermove", onMove);
-      hud.classList.remove("pcp-moving");
-      suppressClick = true;
-      window.setTimeout(() => {
-        suppressClick = false;
-      }, 250);
+  const onUp = async event => {
+    if (event.button !== button) return;
+    window.removeEventListener("pointermove", onMove);
+    window.removeEventListener("pointerup", onUp, true);
+    if (button === 2) rightDown = false;
 
-      const config = getConfig();
-      config.bar.free = { enabled: true, x: Math.round(lastX), y: Math.round(lastY) };
-      await saveConfig(config);
-      setMoveMode(false);
-      refreshAll();
-    };
+    if (!started) {
+      if (pendingMenu) dispatchMenuEvent(pendingMenu.name, pendingMenu.detail);
+      pendingMenu = null;
+      return;
+    }
+    pendingMenu = null;
+    el.classList.remove("pcp-moving");
+    suppressClick = true;
+    window.setTimeout(() => {
+      suppressClick = false;
+    }, 250);
+    await save({ ...last, width: rect.width, height: rect.height });
+    refreshAll();
+  };
 
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp, { once: true });
+  window.addEventListener("pointermove", onMove);
+  window.addEventListener("pointerup", onUp, true);
+}
+
+function saveBarPosition({ left, top }) {
+  return mutateConfig(config => {
+    config.bar.free = { enabled: true, x: Math.round(left), y: Math.round(top) };
+  }).then(() => setMoveMode(false));
+}
+
+function saveFloatPosition(actorId) {
+  return ({ left, top, width, height }) =>
+    mutateConfig(config => {
+      config.actors[actorId] = {
+        ...getActorConfig(config, actorId),
+        float: {
+          x: (left + width / 2) / window.innerWidth,
+          y: (top + height / 2) / window.innerHeight
+        }
+      };
+    });
+}
+
+/** Engancha el arrastre (botón derecho siempre; izquierdo en «modo mover») a la barra o a un retrato suelto. */
+function attachDrag(el, { save, prepare }) {
+  el.addEventListener("pointerdown", event => {
+    if (!game.user.isGM) return;
+    if (event.button === 0 && moveMode) {
+      event.preventDefault();
+      closeMoveHintListeners();
+      trackDrag(el, event, { button: 0, save, prepare });
+    } else if (event.button === 2 && !moveMode) {
+      rightDown = true;
+      pendingMenu = null;
+      trackDrag(el, event, { button: 2, save, prepare });
+    }
   });
 }
+
+const prepareBar = hud => () => {
+  hud.classList.add("pcp-free");
+  hud.classList.remove("pcp-top-left", "pcp-top-right", "pcp-bottom-left", "pcp-bottom-right", "pcp-position-free");
+};
 
 function closeMoveHintListeners() {
   if (escapeListener) {
@@ -396,12 +456,14 @@ export function setMoveMode(enabled) {
   moveMode = Boolean(enabled);
 
   const hud = document.getElementById("pcp-party-hud");
+  const floats = document.getElementById("pcp-floats");
   if (!moveMode) {
     hud?.classList.remove("pcp-move-mode");
     hud?.querySelector(".pcp-move-hint")?.remove();
-    if (hud && !hud.querySelector(".pcp-move-hint")) hud.classList.remove("pcp-move-mode");
+    floats?.classList.remove("pcp-move-mode");
     return;
   }
+  floats?.classList.add("pcp-move-mode");
 
   if (!hud) {
     renderHud();
@@ -426,49 +488,105 @@ export function setMoveMode(enabled) {
   document.addEventListener("keydown", escapeListener, true);
 }
 
+/** ¿Se oculta la barra en la escena que se está viendo? */
+function hiddenHere(config) {
+  const sceneId = globalThis.canvas?.scene?.id;
+  return Boolean(sceneId && config.hiddenScenes.includes(sceneId));
+}
+
+function removeFloats() {
+  document.getElementById("pcp-floats")?.remove();
+}
+
+function hudVariables(el, config) {
+  const gap = config.bar.gap;
+  el.style.setProperty("--pcp-gap", `${Math.max(gap, 0)}px`);
+  el.style.setProperty("--pcp-overlap", `${Math.min(gap, 0)}px`);
+  el.style.setProperty("--pcp-offset-x", `${config.bar.offsetX}px`);
+  el.style.setProperty("--pcp-offset-y", `${config.bar.offsetY}px`);
+  el.style.setProperty("--pcp-border-color", normalizeColor(config.appearance.borderColor));
+  el.style.setProperty("--pcp-border-width", `${config.appearance.borderWidth}px`);
+  el.style.setProperty("--pcp-radius", `${config.appearance.radius}px`);
+  el.style.setProperty("--pcp-bar-height", `${config.data.barHeight}px`);
+  el.style.setProperty("--pcp-opacity", `${config.appearance.opacity}`);
+  el.style.setProperty("--pcp-hover-scale", `${config.appearance.hoverScale}`);
+  el.style.setProperty("--pcp-name-color", config.appearance.nameColor);
+}
+
 export function renderHud() {
   if (!game?.ready) return;
 
   removeHud();
+  removeFloats();
   hideHover(); // la tarjeta sobre la que estaba el cursor deja de existir
 
   const client = getClientConfig();
   if (client.hidden) return;
 
   const config = getConfig();
-  const order = Array.isArray(config.order) ? config.order : [];
-  if (!order.length) return;
+  if (hiddenHere(config)) return;
+
+  const actors = (Array.isArray(config.order) ? config.order : [])
+    .map(id => game.actors?.get(id))
+    .filter(Boolean);
+  const inBar = actors.filter(actor => !getActorConfig(config, actor.id).float);
+  const loose = actors.filter(actor => getActorConfig(config, actor.id).float);
+
+  // Retratos sueltos: cada uno donde se haya colocado.
+  if (loose.length) {
+    const layer = document.createElement("div");
+    layer.id = "pcp-floats";
+    hudVariables(layer, config);
+    for (const actor of loose) {
+      const { float } = getActorConfig(config, actor.id);
+      const holder = document.createElement("div");
+      holder.className = "pcp-float";
+      holder.dataset.actorId = actor.id;
+      holder.style.left = `${float.x * 100}%`;
+      holder.style.top = `${float.y * 100}%`;
+      holder.appendChild(buildCard(actor, config, client));
+      attachDrag(holder, {
+        save: saveFloatPosition(actor.id),
+        prepare: () => {
+          holder.style.transform = "none";
+        }
+      });
+      layer.appendChild(holder);
+    }
+    document.body.appendChild(layer);
+    applyFocus(layer);
+    if (moveMode) layer.classList.add("pcp-move-mode");
+  }
+
+  // Sin retratos en la barra, el máster ve un botón para añadir (si no, no habría forma de volver a empezar).
+  if (!inBar.length && !game.user.isGM) return;
 
   const hud = document.createElement("div");
   hud.id = "pcp-party-hud";
   hud.className = "pcp-party-hud";
   hud.classList.add(config.bar.free?.enabled ? "pcp-free" : `pcp-${config.bar.position}`);
   hud.classList.add(`pcp-${config.bar.orientation}`);
-  hud.style.setProperty("--pcp-gap", `${config.bar.gap}px`);
-  hud.style.setProperty("--pcp-offset-x", `${config.bar.offsetX}px`);
-  hud.style.setProperty("--pcp-offset-y", `${config.bar.offsetY}px`);
-  hud.style.setProperty("--pcp-border-color", normalizeColor(config.appearance.borderColor));
-  hud.style.setProperty("--pcp-border-width", `${config.appearance.borderWidth}px`);
-  hud.style.setProperty("--pcp-radius", `${config.appearance.radius}px`);
-  hud.style.setProperty("--pcp-bar-height", `${config.data.barHeight}px`);
-  hud.style.setProperty("--pcp-opacity", `${config.appearance.opacity}`);
-  hud.style.setProperty("--pcp-hover-scale", `${config.appearance.hoverScale}`);
-  hud.style.setProperty("--pcp-name-color", config.appearance.nameColor);
+  hudVariables(hud, config);
 
-  for (const actorId of order) {
-    const actor = game.actors?.get(actorId);
-    if (!actor) continue;
-    hud.appendChild(buildCard(actor, config, client));
+  for (const actor of inBar) hud.appendChild(buildCard(actor, config, client));
+
+  if (!inBar.length) {
+    hud.classList.add("pcp-empty");
+    const add = document.createElement("button");
+    add.type = "button";
+    add.className = "pcp-add-slot";
+    add.title = localize("PCP.Add.Title");
+    add.setAttribute("aria-label", localize("PCP.Add.Title"));
+    add.innerHTML = '<i class="fa-solid fa-plus"></i>';
+    add.addEventListener("click", () => dispatchMenuEvent("pcp:add-actors", {}));
+    hud.appendChild(add);
   }
-
-  if (!hud.querySelector(".pcp-card")) return;
-
   applyFocus(hud);
   if (game.user.isGM) hud.appendChild(createHudHandle());
   document.body.appendChild(hud);
   applyPosition(hud, config);
   if (!config.bar.free?.enabled) avoidCoreUi(hud, config.bar.position);
-  attachDrag(hud);
+  attachDrag(hud, { save: saveBarPosition, prepare: prepareBar(hud) });
 
   if (moveMode) {
     hud.classList.add("pcp-move-mode");

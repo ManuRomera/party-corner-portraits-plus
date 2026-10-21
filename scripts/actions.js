@@ -15,7 +15,8 @@ import {
   VISIBILITY_MODES,
   HOTBAR_OVERLAPS,
   IMAGE_SOURCES,
-  HOVER_SOURCES
+  HOVER_SOURCES,
+  SHEET_OPENS
 } from "./constants.js";
 import {
   getConfig,
@@ -40,6 +41,7 @@ import { openConfigApp } from "./config-app.js";
 import { A11yPanel } from "./a11y.js";
 import { showToEveryone, startHoverMove } from "./hover.js";
 import { openStudio } from "./studio.js";
+import { addToDisplay, openAddActors, setLoose } from "./addactors.js";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -458,6 +460,52 @@ async function addActor(actorId) {
   refreshAll();
 }
 
+/** Sacar el retrato de la barra para dejarlo suelto, o meterlo de nuevo. */
+function looseItem(actorId) {
+  const loose = Boolean(getActorConfig(getConfig(), actorId).float);
+  return {
+    label: loose ? localize("PCP.Menu.Actor.IntoBar") : localize("PCP.Menu.Actor.OutOfBar"),
+    icon: loose ? "fa-solid fa-table-cells-large" : "fa-solid fa-up-down-left-right",
+    action: () => {
+      if (loose) return setLoose(actorId, null);
+      // Sale justo donde está ahora; luego se arrastra con el botón derecho.
+      const card = document.querySelector(`#pcp-party-hud .pcp-card[data-actor-id="${actorId}"]`);
+      const rect = card?.getBoundingClientRect();
+      const pos = rect
+        ? { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 2) / window.innerHeight }
+        : { x: 0.5, y: 0.5 };
+      return setLoose(actorId, pos);
+    }
+  };
+}
+
+function sceneVisibilityItem(config) {
+  const sceneId = globalThis.canvas?.scene?.id;
+  const hidden = Boolean(sceneId && config.hiddenScenes.includes(sceneId));
+  return {
+    label: localize("PCP.Menu.Hud.ShowInScene"),
+    icon: "fa-solid fa-film",
+    checked: !hidden,
+    disabled: !sceneId,
+    action: async () => {
+      await mutateConfig(cfg => {
+        cfg.hiddenScenes = hidden ? cfg.hiddenScenes.filter(id => id !== sceneId) : [...cfg.hiddenScenes, sceneId];
+      });
+      refreshAll();
+    }
+  };
+}
+
+function sheetOpenItems(config) {
+  const icons = { click: "fa-solid fa-computer-mouse", dblclick: "fa-solid fa-hand-pointer", none: "fa-solid fa-ban" };
+  return SHEET_OPENS.map(mode => ({
+    label: localize(`PCP.SheetOpen.${capitalize(mode)}`),
+    icon: icons[mode],
+    checked: config.ui.openSheet === mode,
+    action: () => setConfigValue("ui.openSheet", mode)
+  }));
+}
+
 function capitalize(value) {
   const text = String(value ?? "");
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -638,6 +686,7 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         icon: "fa-solid fa-sort",
         children: orderMenuItems(actorId)
       },
+      looseItem(actorId),
       {
         label: localize("PCP.Menu.Actor.Remove"),
         icon: "fa-solid fa-eye-slash",
@@ -830,6 +879,11 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
     [
       { heading: localize("PCP.Menu.Group.Bar") },
       {
+        label: localize("PCP.Add.Title"),
+        icon: "fa-solid fa-user-plus",
+        action: () => openAddActors()
+      },
+      {
         label: localize("PCP.Menu.Hud.Studio"),
         icon: "fa-solid fa-wand-magic-sparkles",
         action: () => openStudio()
@@ -903,6 +957,18 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
             children: globalNamePositionItems(config)
           }
         ]
+      },
+      sceneVisibilityItem(config),
+      {
+        label: localize("PCP.Menu.Hud.ShowBars"),
+        icon: "fa-solid fa-heart-pulse",
+        checked: config.data.showBars,
+        action: () => toggleConfigValue("data.showBars")
+      },
+      {
+        label: localize("PCP.Menu.Hud.OpenSheet"),
+        icon: "fa-solid fa-address-card",
+        children: sheetOpenItems(config)
       },
       {
         label: localize("PCP.Menu.Hud.CharacterNames"),

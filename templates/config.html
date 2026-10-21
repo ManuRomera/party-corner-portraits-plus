@@ -42,8 +42,8 @@
           <input type="number" name="size" value="{{config.bar.size}}" min="32" max="320" step="1">
         </label>
         <label class="pcp-row">
-          <span class="pcp-row-text">{{localize "PCP.Config.Gap"}}</span>
-          <input type="number" name="gap" value="{{config.bar.gap}}" min="0" max="40" step="1">
+          <span class="pcp-row-text">{{localize "PCP.Config.Gap"}}<small>{{localize "PCP.Config.GapHint"}}</small></span>
+          <input type="number" name="gap" value="{{config.bar.gap}}" min="-120" max="40" step="1">
         </label>
         <label class="pcp-row">
           <span class="pcp-row-text">{{localize "PCP.Config.OffsetX"}}</span>
@@ -73,6 +73,12 @@
 
       <h4 class="pcp-heading">{{localize "PCP.Config.Interface"}}</h4>
       <div class="pcp-card-group">
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Config.OpenSheet"}}<small>{{localize "PCP.Config.OpenSheetHint"}}</small></span>
+          <select name="openSheet">
+            {{#each sheetOpens}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </label>
         <label class="pcp-row">
           <span class="pcp-row-text">{{localize "PCP.Config.Hotbar"}}<small>{{localize "PCP.Config.HotbarHint"}}</small></span>
           <select name="hotbar">
@@ -183,6 +189,13 @@
         <label class="pcp-row pcp-row-check">
           <span class="pcp-row-text">{{localize "PCP.Config.ShowPlayerStatus"}}</span>
           <input type="checkbox" class="pcp-switch" name="showPlayerStatus" {{#if config.data.showPlayerStatus}}checked{{/if}}>
+        </label>
+      </div>
+
+      <div class="pcp-card-group">
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Config.ShowBars"}}<small>{{localize "PCP.Config.ShowBarsHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="showBars" {{#if config.data.showBars}}checked{{/if}}>
         </label>
       </div>
 
@@ -373,6 +386,9 @@
       <div class="pcp-search-wrap">
         <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
         <input class="pcp-actor-search" type="search" placeholder="{{localize 'PCP.Config.Search'}}" aria-label="{{localize 'PCP.Config.Search'}}" autocomplete="off">
+      </div>
+      <div class="pcp-mini-actions">
+        <button type="button" class="pcp-add-characters"><i class="fa-solid fa-user-plus"></i> {{localize "PCP.Config.AddCharacters"}}</button>
       </div>
       <p class="pcp-note pcp-note-top">{{localize "PCP.Config.CharactersHelp"}}</p>
 
