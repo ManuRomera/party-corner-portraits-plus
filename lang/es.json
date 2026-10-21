@@ -414,5 +414,11 @@
   "PCP.Studio.SwPurple": "Púrpura",
   "PCP.Studio.SwRed": "Rojo",
   "PCP.Studio.SwOrange": "Naranja",
-  "PCP.Studio.SwWhite": "Blanco"
+  "PCP.Studio.SwWhite": "Blanco",
+  "PCP.Tools.Hide": "Ocultar a los jugadores",
+  "PCP.Tools.Show": "Mostrar a los jugadores",
+  "PCP.Tools.ResetTilt": "Quitar la inclinación",
+  "PCP.Tools.Menu": "Más opciones",
+  "PCP.Studio.Tilt": "Inclinar la carta",
+  "PCP.Studio.TiltHint": "Gira el retrato entero. También con Ctrl + rueda del ratón sobre él."
 }

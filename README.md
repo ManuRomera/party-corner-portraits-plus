@@ -37,6 +37,7 @@ Actívalo en tu mundo y abre **Configuración → Ajustes del módulo → Config
 - Elige qué personajes salen, en cualquier orden, con **varios personajes por jugador**.
 - **Cuatro esquinas o posición libre**: mantén el **botón derecho** sobre la barra y arrástrala; al soltar se queda fijada (o botón derecho → *Mover la barra de retratos*).
 - **Retratos sueltos**: saca a cualquier personaje o PNJ de la barra y colócalo donde quieras, individualmente (y vuelve a meterlo cuando quieras). Hueco negativo para **apilarlos como cartas**.
+- **Ctrl + rueda** sobre un retrato lo inclina (solo ese). **Botones rápidos** al pasar el cursor (máster): ocultar/mostrar a los jugadores, sacar de la barra, estudio…
 - **Añadir personajes** con un selector con buscador, o **arrastrando actores** del directorio a la barra o a un retrato suelto.
 - **Barra por escenas**: ocúltala en escenas de carga o mapas.
 - Tamaño global y por personaje, marcos (completo, mínimo o ninguno), fondo oscuro o transparente, bordes, sombra y opacidad.

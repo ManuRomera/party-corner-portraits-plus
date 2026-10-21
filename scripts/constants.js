@@ -51,6 +51,8 @@ export const DEFAULT_ACTOR = {
   countdown: null,
   hoverSize: null,
   float: null,
+  hidden: false,
+  tilt: 0,
   hoverOpacity: null,
   hoverGlow: null,
   hoverFlipX: false,

@@ -414,5 +414,11 @@
   "PCP.Studio.SwPurple": "Purple",
   "PCP.Studio.SwRed": "Red",
   "PCP.Studio.SwOrange": "Orange",
-  "PCP.Studio.SwWhite": "White"
+  "PCP.Studio.SwWhite": "White",
+  "PCP.Tools.Hide": "Hide from players",
+  "PCP.Tools.Show": "Show to players",
+  "PCP.Tools.ResetTilt": "Remove the tilt",
+  "PCP.Tools.Menu": "More options",
+  "PCP.Studio.Tilt": "Tilt the card",
+  "PCP.Studio.TiltHint": "Rotates the whole portrait. Also with Ctrl + mouse wheel over it."
 }

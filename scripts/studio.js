@@ -184,7 +184,7 @@ export async function applyPreset(id, ids = selection()) {
 
 export async function restoreOriginal(ids = selection()) {
   const reset = mapKeys({ size: null, opacity: null, glow: null, flipX: false, flipY: false, rotation: 0 });
-  await commit(ids, target === "hover" ? reset : { ...reset, countdown: null });
+  await commit(ids, target === "hover" ? reset : { ...reset, countdown: null, tilt: 0 });
 }
 
 export async function undo() {
@@ -291,6 +291,7 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
       flipX: first[K("flipX")],
       flipY: first[K("flipY")],
       rotation: first[K("rotation")],
+      tilt: first.tilt ?? 0,
       countdown: first.countdown ?? { turns: 3, size: 1, mode: "round" },
       hasCountdown: Boolean(first.countdown),
       modeRound: (first.countdown?.mode ?? "round") === "round",
@@ -345,6 +346,7 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
       if (input.dataset.live === "size") preview(ids, { size: clampSizeFor(value, baseSize(getConfig())) });
       else if (input.dataset.live === "opacity") preview(ids, { opacity: value >= 100 ? null : value / 100 });
       else if (input.dataset.live === "rotation") preview(ids, { rotation: value });
+      else if (input.dataset.live === "tilt") preview(ids, { tilt: value });
       else if (input.dataset.live.startsWith("glow") || input.dataset.live === "pulse") {
         preview(ids, { glow: this.#glowFrom(root, getActorConfig(getConfig(), ids[0] ?? "")) });
       }
@@ -361,6 +363,7 @@ export class StudioApp extends WithMemory(HandlebarsApplicationMixin(Application
         case "size": await setSize(value, ids); break;
         case "opacity": await setOpacity(value / 100, ids); break;
         case "rotation": await setRotation(value, ids); break;
+        case "tilt": await commit(ids, { tilt: Math.max(-180, Math.min(180, value)) }); break;
         case "pulse": case "glowColor": case "glowPower": case "glowAlpha": case "glowSoft":
           await setGlow(this.#glowFrom(root, getActorConfig(getConfig(), ids[0] ?? "")), ids);
           break;

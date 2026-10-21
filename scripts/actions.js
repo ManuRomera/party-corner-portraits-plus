@@ -42,6 +42,7 @@ import { A11yPanel } from "./a11y.js";
 import { showToEveryone, startHoverMove } from "./hover.js";
 import { openStudio } from "./studio.js";
 import { addToDisplay, openAddActors, setLoose } from "./addactors.js";
+import { setHidden, setTilt } from "./tools.js";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -685,6 +686,17 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         label: localize("PCP.Menu.Actor.Order"),
         icon: "fa-solid fa-sort",
         children: orderMenuItems(actorId)
+      },
+      {
+        label: getActorConfig(getConfig(), actorId).hidden ? localize("PCP.Tools.Show") : localize("PCP.Tools.Hide"),
+        icon: getActorConfig(getConfig(), actorId).hidden ? "fa-solid fa-eye" : "fa-solid fa-eye-slash",
+        action: () => setHidden(actorId, !getActorConfig(getConfig(), actorId).hidden)
+      },
+      {
+        label: localize("PCP.Tools.ResetTilt"),
+        icon: "fa-solid fa-rotate-left",
+        disabled: !getActorConfig(getConfig(), actorId).tilt,
+        action: () => setTilt(actorId, 0)
       },
       looseItem(actorId),
       {

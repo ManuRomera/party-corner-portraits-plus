@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.10.0
+
+- **Ctrl + rueda del ratón** sobre un retrato lo inclina (5° por muesca; con Mayús, 1°). Solo gira ese retrato, no los demás, y se guarda solo. También hay un deslizador «Inclinar la carta» en el Estudio y un botón para quitar la inclinación.
+- **Ocultar y mostrar un retrato al momento**, como el HUD de un token: al pasar el cursor por un retrato el máster ve una columna de botones (ocultar/mostrar a los jugadores, quitar la inclinación, sacar/meter en la barra, estudio y menú). Un retrato oculto desaparece para los jugadores y el máster lo ve atenuado y con un ojo tachado.
+- El menú del botón derecho tiene también «Ocultar a los jugadores» / «Mostrar a los jugadores» y «Quitar la inclinación».
+
 ## 1.9.0
 
 Cambios a partir de las pruebas de un beta tester. Gracias.

@@ -86,6 +86,12 @@
           <span class="pcp-row-text">{{localize "PCP.Studio.Rotation"}}<small>{{localize "PCP.Studio.RotationHint"}}</small></span>
           <span class="pcp-range"><input type="range" data-live="rotation" data-unit="°" min="-180" max="180" step="1" value="{{rotation}}" aria-label="{{localize 'PCP.Studio.Rotation'}}"><output>{{rotation}}°</output></span>
         </div>
+        {{#unless isHover}}
+        <div class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Studio.Tilt"}}<small>{{localize "PCP.Studio.TiltHint"}}</small></span>
+          <span class="pcp-range"><input type="range" data-live="tilt" data-unit="°" min="-180" max="180" step="1" value="{{tilt}}" aria-label="{{localize 'PCP.Studio.Tilt'}}"><output>{{tilt}}°</output></span>
+        </div>
+        {{/unless}}
         <div class="pcp-row pcp-row-buttons">
           <button type="button" data-act="flip-x" class="{{#if flipX}}pcp-on{{/if}}" aria-pressed="{{flipX}}"><i class="fa-solid fa-left-right"></i> {{localize "PCP.Studio.FlipX"}}</button>
           <button type="button" data-act="flip-y" class="{{#if flipY}}pcp-on{{/if}}" aria-pressed="{{flipY}}"><i class="fa-solid fa-up-down"></i> {{localize "PCP.Studio.FlipY"}}</button>

@@ -34,6 +34,9 @@ export function applyLook(card, actorConfig, globalOpacity = 1) {
   card.style.setProperty("--pcp-opacity", String(opacity));
   card.style.opacity = String(opacity);
 
+  card.style.setProperty("--pcp-tilt", `${actorConfig.tilt ?? 0}deg`);
+  card.classList.toggle("pcp-hidden-gm", Boolean(actorConfig.hidden));
+
   const glow = actorConfig.glow;
   card.classList.toggle("pcp-glow", Boolean(glow));
   card.classList.toggle("pcp-glow-pulse", Boolean(glow?.pulse));

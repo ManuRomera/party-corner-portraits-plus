@@ -162,6 +162,8 @@ function sanitizeActor(actorId, actor, index) {
     })(),
     hoverSource: [...HOVER_SOURCES, "custom"].includes(value.hoverSource) ? value.hoverSource : null,
     hoverMedia: String(value.hoverMedia ?? "").trim(),
+    hidden: Boolean(value.hidden),
+    tilt: clamp(value.tilt, -180, 180, 0),
     // Retrato suelto: centro en fracción de pantalla; null = dentro de la barra.
     float:
       value.float && typeof value.float === "object"

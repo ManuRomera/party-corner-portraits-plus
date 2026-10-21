@@ -130,6 +130,7 @@ body.pcp-a11y-calm .pcp-plus-window * {
   border-radius: var(--pcp-card-radius, var(--pcp-radius));
   background: #0c0d10;
   opacity: var(--pcp-opacity);
+  transform: rotate(var(--pcp-tilt, 0deg));
   pointer-events: auto;
   cursor: pointer;
   transition:
@@ -382,7 +383,7 @@ body.pcp-a11y-contrast :is(#pcp-party-hud, #pcp-floats) .pcp-info {
 }
 
 :is(#pcp-party-hud, #pcp-floats):not(.pcp-move-mode) .pcp-card:hover {
-  transform: scale(var(--pcp-hover-scale));
+  transform: rotate(var(--pcp-tilt, 0deg)) scale(var(--pcp-hover-scale));
 }
 
 /* Asa (solo el máster) */
@@ -2030,3 +2031,62 @@ body.pcp-a11y-calm :is(#pcp-party-hud, #pcp-floats) .pcp-card.pcp-glow-pulse { a
 .pcp-plus-window .window-content .pcp-swatch { width: 1.9em; min-height: 1.9em; height: 1.9em; padding: 0; border: 2px solid rgba(255,255,255,0.55); border-radius: 50%; background: var(--c); }
 .pcp-plus-window .window-content .pcp-swatch:hover { transform: scale(1.12); border-color: #fff; }
 .pcp-plus-window .pcp-row-swatches { flex-wrap: wrap; }
+
+/* Retrato oculto a los jugadores: el máster lo ve atenuado y marcado */
+:is(#pcp-party-hud, #pcp-floats) .pcp-card.pcp-hidden-gm { opacity: 0.38 !important; filter: grayscale(0.5); }
+:is(#pcp-party-hud, #pcp-floats) .pcp-card.pcp-hidden-gm::after {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-family: "Font Awesome 6 Pro";
+  font-size: 13px;
+  font-weight: 900;
+  content: "\f070";
+  pointer-events: none;
+}
+
+/* Botones rápidos junto al retrato (máster) */
+#pcp-card-tools {
+  position: fixed;
+  z-index: 96;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--pcp-font);
+}
+
+#pcp-card-tools .pcp-tool {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--pcp-line);
+  border-radius: 10px;
+  background: var(--pcp-surface);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  color: var(--pcp-ink);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--pcp-ease), transform var(--pcp-ease);
+}
+
+#pcp-card-tools .pcp-tool:hover,
+#pcp-card-tools .pcp-tool:focus-visible {
+  background: var(--pcp-accent);
+  color: var(--pcp-accent-ink);
+  outline: none;
+  transform: scale(1.06);
+}
+
+#pcp-card-tools .pcp-tool.pcp-on { border-color: var(--pcp-accent); color: var(--pcp-accent); }
+#pcp-card-tools .pcp-tool.pcp-on:hover { color: var(--pcp-accent-ink); }

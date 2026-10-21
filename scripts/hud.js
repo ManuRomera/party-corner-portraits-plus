@@ -25,6 +25,7 @@ import { avoidCoreUi } from "./layout.js";
 import { applyFocus, applyLook, buildCountdown } from "./look.js";
 import { attachHover, hideHover } from "./hover.js";
 import { closeMenus } from "./menu.js";
+import { hideTools, setTilt, showTools } from "./tools.js";
 import { applyFraming, createPortraitElement, portraitSource } from "./media.js";
 
 let moveMode = false;
@@ -269,6 +270,34 @@ function buildCard(actor, config, client) {
   });
 
   attachHover(card, actor);
+
+  // Botones rápidos (máster) al pasar el cursor.
+  if (game.user.isGM) {
+    card.addEventListener("pointerenter", () => {
+      if (!moveMode) showTools(card, actor.id);
+    });
+    card.addEventListener("pointerleave", () => hideTools(220));
+    card.addEventListener("focus", () => showTools(card, actor.id));
+  }
+
+  // Ctrl + rueda: inclina solo este retrato (5° por muesca; con Mayús, 1°).
+  card.addEventListener(
+    "wheel",
+    event => {
+      if (!game.user.isGM || !event.ctrlKey) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const step = event.shiftKey ? 1 : 5;
+      const current = Number.parseFloat(card.style.getPropertyValue("--pcp-tilt")) || 0;
+      let next = current + (event.deltaY < 0 ? step : -step);
+      next = Math.max(-180, Math.min(180, next));
+      card.style.setProperty("--pcp-tilt", `${next}deg`);
+      hideHover({ force: true });
+      window.clearTimeout(card._pcpTiltTimer);
+      card._pcpTiltTimer = window.setTimeout(() => setTilt(actor.id, next), 350);
+    },
+    { passive: false }
+  );
 
   card.addEventListener("keydown", event => {
     if (moveMode) return;
@@ -518,6 +547,7 @@ export function renderHud() {
 
   removeHud();
   removeFloats();
+  hideTools();
   hideHover(); // la tarjeta sobre la que estaba el cursor deja de existir
 
   const client = getClientConfig();
@@ -526,9 +556,11 @@ export function renderHud() {
   const config = getConfig();
   if (hiddenHere(config)) return;
 
+  // Los retratos ocultos solo los ve el máster (atenuados).
   const actors = (Array.isArray(config.order) ? config.order : [])
     .map(id => game.actors?.get(id))
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter(actor => game.user.isGM || !getActorConfig(config, actor.id).hidden);
   const inBar = actors.filter(actor => !getActorConfig(config, actor.id).float);
   const loose = actors.filter(actor => getActorConfig(config, actor.id).float);
 
