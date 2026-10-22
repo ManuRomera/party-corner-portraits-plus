@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/img/banner.png" alt="Party Corner Portraits +" width="100%">
+  <img src="docs/img/banner.webp" alt="Party Corner Portraits +" width="100%">
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@ Actívalo en tu mundo y abre **Configuración → Ajustes del módulo → Config
 > El módulo es independiente del original (id distinto): puedes tener los dos instalados, pero no los actives a la vez.
 
 <p align="center">
-  <img src="docs/img/hero.png" alt="Barra de retratos con halo, cuenta atrás y vista ampliada sobre la escena" width="100%">
+  <img src="docs/img/hero.webp" alt="Barra de retratos con halo, cuenta atrás y vista ampliada del retrato sobre la escena del banquete" width="100%">
 </p>
 
 ## ✨ Qué hace
@@ -67,21 +67,21 @@ Un panel en vivo, con las opciones de [MR Token Stage](https://github.com/ManuRo
 | **Focus y Spotlight** | Atenúan el resto de retratos con un anillo opcional |
 
 <p align="center">
-  <img src="docs/img/studio.png" alt="Estudio de retratos editando la imagen ampliada" width="100%">
+  <img src="docs/img/studio.webp" alt="Estudio de retratos editando la imagen ampliada" width="100%">
 </p>
 
 ### 🧭 Menú del botón derecho, por grupos
 Todo a mano y ordenado: **Retrato de la barra**, **Imagen ampliada** y **Barra de retratos**.
 
 <p align="center">
-  <img src="docs/img/menu.png" alt="Menú contextual agrupado" width="100%">
+  <img src="docs/img/menu.webp" alt="Menú contextual agrupado" width="100%">
 </p>
 
 ### ⚙️ Configuración clara
 Una columna, jerarquía limpia y todo en español e inglés. Hay un botón para **volver a la configuración original** por si algo se rompe.
 
 <p align="center">
-  <img src="docs/img/config.png" alt="Ventana de configuración" width="100%">
+  <img src="docs/img/config.webp" alt="Ventana de configuración" width="100%">
 </p>
 
 ### 🖥️ Interfaz de Foundry a tu medida
