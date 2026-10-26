@@ -25,6 +25,7 @@ import { avoidCoreUi } from "./layout.js";
 import { applyFocus, applyLook, buildCountdown } from "./look.js";
 import { attachHover, hideHover } from "./hover.js";
 import { closeMenus } from "./menu.js";
+import { visiblePortraits } from "./scene.js";
 import { hideTools, setTilt, showTools } from "./tools.js";
 import { applyFraming, createPortraitElement, portraitSource } from "./media.js";
 
@@ -252,7 +253,7 @@ function buildCard(actor, config, client) {
 
   if (info.children.length) card.appendChild(info);
 
-  applyLook(card, actorConfig, config.appearance.opacity);
+  applyLook(card, { ...actorConfig, hidden: actorConfig.hidden || Boolean(config._tokenHidden?.has(actor.id)) }, config.appearance.opacity);
 
   // Abrir la ficha con un clic, con doble clic o nunca (Configuración → General).
   const openSheet = () => {
@@ -557,10 +558,13 @@ export function renderHud() {
   if (hiddenHere(config)) return;
 
   // Los retratos ocultos solo los ve el máster (atenuados).
-  const actors = (Array.isArray(config.order) ? config.order : [])
+  const { ids, tokenHidden } = visiblePortraits(config);
+  config._tokenHidden = tokenHidden; // lo lee buildCard para atenuar al máster
+  const isHidden = id => getActorConfig(config, id).hidden || tokenHidden.has(id);
+  const actors = ids
     .map(id => game.actors?.get(id))
     .filter(Boolean)
-    .filter(actor => game.user.isGM || !getActorConfig(config, actor.id).hidden);
+    .filter(actor => game.user.isGM || !isHidden(actor.id));
   const inBar = actors.filter(actor => !getActorConfig(config, actor.id).float);
   const loose = actors.filter(actor => getActorConfig(config, actor.id).float);
 

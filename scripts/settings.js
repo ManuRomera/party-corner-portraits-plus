@@ -24,6 +24,7 @@ import {
   HOVER_PLACEMENTS,
   HOVER_PERMISSIONS,
   SHEET_OPENS,
+  SCENE_MODES,
   SIZE_MIN,
   SIZE_MAX
 } from "./constants.js";
@@ -163,6 +164,7 @@ function sanitizeActor(actorId, actor, index) {
     hoverSource: [...HOVER_SOURCES, "custom"].includes(value.hoverSource) ? value.hoverSource : null,
     hoverMedia: String(value.hoverMedia ?? "").trim(),
     hidden: Boolean(value.hidden),
+    pinned: Boolean(value.pinned),
     tilt: clamp(value.tilt, -180, 180, 0),
     // Retrato suelto: centro en fracción de pantalla; null = dentro de la barra.
     float:
@@ -269,6 +271,10 @@ export function normalizeConfig(raw) {
     merged.actors[actorId] = sanitizeActor(actorId, actor, Object.keys(merged.actors).length);
   }
 
+  merged.scene = {
+    mode: SCENE_MODES.includes(merged.scene?.mode) ? merged.scene.mode : "all",
+    auto: merged.scene?.auto === true
+  };
   merged.hiddenScenes = [...new Set((Array.isArray(merged.hiddenScenes) ? merged.hiddenScenes : []).filter(id => typeof id === "string" && id))];
 
   const order = Array.isArray(merged.order) ? merged.order : [];

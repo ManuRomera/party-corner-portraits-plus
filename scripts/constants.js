@@ -22,6 +22,7 @@ export const IMAGE_SOURCES = ["portrait", "token", "custom"];
 export const HOVER_SOURCES = ["token", "portrait", "same"];
 export const HOVER_PLACEMENTS = ["free", "center", "top-left", "top-right", "bottom-left", "bottom-right"];
 export const HOVER_PERMISSIONS = ["none", "LIMITED", "OBSERVER", "OWNER"];
+export const SCENE_MODES = ["all", "scene"];
 export const SHEET_OPENS = ["click", "dblclick", "none"];
 export const HOTBAR_OVERLAPS = ["shift", "front"];
 export const BAR_POSITIONS = ["overlay", "below"];
@@ -52,6 +53,7 @@ export const DEFAULT_ACTOR = {
   hoverSize: null,
   float: null,
   hidden: false,
+  pinned: false,
   tilt: 0,
   hoverOpacity: null,
   hoverGlow: null,
@@ -187,6 +189,7 @@ export function createDefaultConfig() {
       players: "show"
     },
     order: [],
+    scene: { mode: "all", auto: false },
     hiddenScenes: [],
     actors: {}
   };

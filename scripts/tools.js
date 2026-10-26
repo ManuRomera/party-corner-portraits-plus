@@ -21,6 +21,13 @@ export async function setHidden(actorId, hidden) {
   refreshAll();
 }
 
+export async function setPinned(actorId, pinned) {
+  await mutateConfig(config => {
+    config.actors[actorId] = { ...getActorConfig(config, actorId), pinned };
+  });
+  refreshAll();
+}
+
 export async function setTilt(actorId, tilt) {
   await mutateConfig(config => {
     config.actors[actorId] = { ...getActorConfig(config, actorId), tilt: Math.max(-180, Math.min(180, tilt)) };
@@ -74,6 +81,12 @@ export function showTools(card, actorId) {
       actorConfig.hidden ? localize("PCP.Tools.Show") : localize("PCP.Tools.Hide"),
       () => setHidden(actorId, !actorConfig.hidden),
       actorConfig.hidden
+    ),
+    button(
+      "fa-solid fa-thumbtack",
+      actorConfig.pinned ? localize("PCP.Tools.Unpin") : localize("PCP.Tools.Pin"),
+      () => setPinned(actorId, !actorConfig.pinned),
+      actorConfig.pinned
     ),
     button("fa-solid fa-rotate-left", localize("PCP.Tools.ResetTilt"), () => setTilt(actorId, 0)),
     button(

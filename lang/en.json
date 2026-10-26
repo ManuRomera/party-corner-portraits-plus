@@ -420,5 +420,17 @@
   "PCP.Tools.ResetTilt": "Remove the tilt",
   "PCP.Tools.Menu": "More options",
   "PCP.Studio.Tilt": "Tilt the card",
-  "PCP.Studio.TiltHint": "Rotates the whole portrait. Also with Ctrl + mouse wheel over it."
+  "PCP.Studio.TiltHint": "Rotates the whole portrait. Also with Ctrl + mouse wheel over it.",
+  "PCP.Scene.Title": "Portraits per scene",
+  "PCP.Scene.Mode": "Which portraits are shown",
+  "PCP.Scene.ModeHint": "With «Pinned + scene tokens», each scene shows the pinned ones and the characters that have a token in it, in the same state (a hidden token means a hidden portrait).",
+  "PCP.Scene.All": "Everyone on the list",
+  "PCP.Scene.Scene": "Pinned + scene tokens",
+  "PCP.Scene.Auto": "Also include scene tokens that are not on the list",
+  "PCP.Scene.AutoHint": "Any actor with a token in the scene shows up by itself, no need to add it. Handy for NPCs; with many monsters it can fill the bar.",
+  "PCP.Scene.Pinned": "Pinned",
+  "PCP.Scene.PinnedHint": "Always visible, even without a token in the scene («per scene» mode).",
+  "PCP.Menu.Actor.Pinned": "Pinned (always visible)",
+  "PCP.Tools.Pin": "Pin (always visible)",
+  "PCP.Tools.Unpin": "Unpin"
 }

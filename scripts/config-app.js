@@ -19,6 +19,7 @@ import {
   HOVER_PLACEMENTS,
   HOVER_PERMISSIONS,
   SHEET_OPENS,
+  SCENE_MODES,
   SYSTEM_BAR_PRESETS
 } from "./constants.js";
 import { getConfig, saveConfig } from "./settings.js";
@@ -192,6 +193,10 @@ function collectFormData(form) {
 
   config.ui.openSheet = SHEET_OPENS.includes(value("openSheet")) ? value("openSheet") : old.ui.openSheet;
   config.data.showBars = checked("showBars");
+  config.scene = {
+    mode: SCENE_MODES.includes(value("sceneMode")) ? value("sceneMode") : old.scene.mode,
+    auto: checked("sceneAuto")
+  };
   config.ui.hotbar = VISIBILITY_MODES.includes(value("hotbar")) ? value("hotbar") : old.ui.hotbar;
   config.ui.hotbarOverlap = HOTBAR_OVERLAPS.includes(value("hotbarOverlap"))
     ? value("hotbarOverlap")
@@ -227,6 +232,7 @@ function collectFormData(form) {
         : null,
       playerLabel: row.querySelector(".pcp-actor-player-label")?.value?.trim() ?? "",
       media: row.querySelector(".pcp-actor-media")?.value?.trim() ?? "",
+      pinned: Boolean(row.querySelector(".pcp-actor-pinned")?.checked),
       source: row.querySelector(".pcp-actor-source")?.value || null,
       hoverSource: row.querySelector(".pcp-actor-hover-source")?.value || null,
       hoverMedia: row.querySelector(".pcp-actor-hover-media")?.value?.trim() ?? ""
@@ -312,6 +318,7 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
           media: actorConfig.media,
           portraitImg: actor.img || "",
           tokenImg: actor.prototypeToken?.texture?.src || "",
+          pinned: actorConfig.pinned,
           source: actorConfig.source ?? "",
           sourcePortrait: actorConfig.source === "portrait",
           sourceToken: actorConfig.source === "token",
@@ -403,6 +410,9 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
       ),
       hoverPermissions: buildOptions(HOVER_PERMISSIONS, config.hover.permission, value =>
         localize(`PCP.HoverPermission.${capitalize(value.toLowerCase())}`)
+      ),
+      sceneModes: buildOptions(SCENE_MODES, config.scene.mode, value =>
+        localize(`PCP.Scene.${capitalize(value)}`)
       ),
       sheetOpens: buildOptions(SHEET_OPENS, config.ui.openSheet, value =>
         localize(`PCP.SheetOpen.${capitalize(value)}`)

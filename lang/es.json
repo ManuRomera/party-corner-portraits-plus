@@ -420,5 +420,17 @@
   "PCP.Tools.ResetTilt": "Quitar la inclinación",
   "PCP.Tools.Menu": "Más opciones",
   "PCP.Studio.Tilt": "Inclinar la carta",
-  "PCP.Studio.TiltHint": "Gira el retrato entero. También con Ctrl + rueda del ratón sobre él."
+  "PCP.Studio.TiltHint": "Gira el retrato entero. También con Ctrl + rueda del ratón sobre él.",
+  "PCP.Scene.Title": "Retratos por escena",
+  "PCP.Scene.Mode": "Qué retratos se muestran",
+  "PCP.Scene.ModeHint": "Con «Fijos + tokens de la escena», cada escena enseña a los fijos y a los personajes que tienen token en ella, con el mismo estado (si el token está oculto, el retrato también).",
+  "PCP.Scene.All": "Todos los de la lista",
+  "PCP.Scene.Scene": "Fijos + tokens de la escena",
+  "PCP.Scene.Auto": "Incluir también los tokens de la escena que no están en la lista",
+  "PCP.Scene.AutoHint": "Cualquier actor con token en la escena sale solo, sin tener que añadirlo. Útil para PNJ; en escenas con muchos monstruos puede llenar la barra.",
+  "PCP.Scene.Pinned": "Fijo",
+  "PCP.Scene.PinnedHint": "Siempre visible, aunque no tenga token en la escena (modo «por escena»).",
+  "PCP.Menu.Actor.Pinned": "Fijo (siempre visible)",
+  "PCP.Tools.Pin": "Fijar (siempre visible)",
+  "PCP.Tools.Unpin": "Quitar de los fijos"
 }

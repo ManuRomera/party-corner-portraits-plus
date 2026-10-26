@@ -39,7 +39,7 @@ Actívalo en tu mundo y abre **Configuración → Ajustes del módulo → Config
 - **Retratos sueltos**: saca a cualquier personaje o PNJ de la barra y colócalo donde quieras, individualmente (y vuelve a meterlo cuando quieras). Hueco negativo para **apilarlos como cartas**.
 - **Ctrl + rueda** sobre un retrato lo inclina (solo ese). **Botones rápidos** al pasar el cursor (máster): ocultar/mostrar a los jugadores, sacar de la barra, estudio…
 - **Añadir personajes** con un selector con buscador, o **arrastrando actores** del directorio a la barra o a un retrato suelto.
-- **Barra por escenas**: ocúltala en escenas de carga o mapas.
+- **Retratos por escena**: muestra solo los **fijos** y los personajes con **token en la escena** (con su mismo estado oculto/visible), u oculta la barra en escenas de carga.
 - Tamaño global y por personaje, marcos (completo, mínimo o ninguno), fondo oscuro o transparente, bordes, sombra y opacidad.
 - **Nombre del personaje y del jugador**, con indicador de conexión.
 - **Barras y campos configurables** de la ficha (PG, CA, nivel, estrés…): ruta del valor y del máximo, color o **automático** (verde → rojo). Presets para D&D 5e, PF2e, Call of Cthulhu 7e, Alien, WoD5, Cyberpunk RED, SWADE y Fate, y sugerencias de rutas sacadas de tus fichas reales.

@@ -2090,3 +2090,5 @@ body.pcp-a11y-calm :is(#pcp-party-hud, #pcp-floats) .pcp-card.pcp-glow-pulse { a
 
 #pcp-card-tools .pcp-tool.pcp-on { border-color: var(--pcp-accent); color: var(--pcp-accent); }
 #pcp-card-tools .pcp-tool.pcp-on:hover { color: var(--pcp-accent-ink); }
+
+.pcp-plus-window .pcp-pin { display: inline-flex; align-items: center; gap: 8px; margin: 0; color: var(--pcp-ink-2); font-size: 0.86em; white-space: nowrap; cursor: pointer; }

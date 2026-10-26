@@ -1,5 +1,13 @@
 # Cambios
 
+## 1.11.0
+
+- **Retratos por escena.** Nuevo modo «Fijos + tokens de la escena» (Configuración → General → «Retratos por escena», o menú de la barra): cada escena muestra a los personajes **marcados como fijos** y a los que **tienen un token en la escena que se está viendo**, y los demás desaparecen. Sigue a los tokens en directo: al colocar, borrar u ocultar un token cambia el retrato.
+- **Mismo estado que el token:** si el token está oculto, el retrato queda oculto para los jugadores y el máster lo ve atenuado. Con varios tokens del mismo personaje, solo se oculta si lo están todos.
+- **Fijo:** interruptor por personaje (pestaña Personajes, botón rápido de la chincheta, o botón derecho → «Fijo»). Los personajes de jugador que se añaden quedan fijos por defecto; los PNJ salen con su token.
+- **Incluir tokens que no están en la lista** (opcional): cualquier actor con token en la escena sale solo, sin añadirlo antes.
+- El modo por defecto sigue siendo «Todos los de la lista»: nada cambia hasta que lo actives.
+
 ## 1.10.0
 
 - **Ctrl + rueda del ratón** sobre un retrato lo inclina (5° por muesca; con Mayús, 1°). Solo gira ese retrato, no los demás, y se guarda solo. También hay un deslizador «Inclinar la carta» en el Estudio y un botón para quitar la inclinación.

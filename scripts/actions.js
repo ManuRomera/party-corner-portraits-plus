@@ -16,7 +16,8 @@ import {
   HOTBAR_OVERLAPS,
   IMAGE_SOURCES,
   HOVER_SOURCES,
-  SHEET_OPENS
+  SHEET_OPENS,
+  SCENE_MODES
 } from "./constants.js";
 import {
   getConfig,
@@ -42,7 +43,7 @@ import { A11yPanel } from "./a11y.js";
 import { showToEveryone, startHoverMove } from "./hover.js";
 import { openStudio } from "./studio.js";
 import { addToDisplay, openAddActors, setLoose } from "./addactors.js";
-import { setHidden, setTilt } from "./tools.js";
+import { setHidden, setPinned, setTilt } from "./tools.js";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -693,6 +694,12 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         action: () => setHidden(actorId, !getActorConfig(getConfig(), actorId).hidden)
       },
       {
+        label: localize("PCP.Menu.Actor.Pinned"),
+        icon: "fa-solid fa-thumbtack",
+        checked: getActorConfig(getConfig(), actorId).pinned,
+        action: () => setPinned(actorId, !getActorConfig(getConfig(), actorId).pinned)
+      },
+      {
         label: localize("PCP.Tools.ResetTilt"),
         icon: "fa-solid fa-rotate-left",
         disabled: !getActorConfig(getConfig(), actorId).tilt,
@@ -967,6 +974,26 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
             label: localize("PCP.Config.NamePosition"),
             icon: "fa-solid fa-signature",
             children: globalNamePositionItems(config)
+          }
+        ]
+      },
+      {
+        label: localize("PCP.Scene.Mode"),
+        icon: "fa-solid fa-clapperboard",
+        children: [
+          ...SCENE_MODES.map(mode => ({
+            label: localize(`PCP.Scene.${capitalize(mode)}`),
+            icon: mode === "scene" ? "fa-solid fa-film" : "fa-solid fa-users",
+            checked: config.scene.mode === mode,
+            action: () => setConfigValue("scene.mode", mode)
+          })),
+          { separator: true },
+          {
+            label: localize("PCP.Scene.Auto"),
+            icon: "fa-solid fa-wand-magic-sparkles",
+            checked: config.scene.auto,
+            disabled: config.scene.mode !== "scene",
+            action: () => toggleConfigValue("scene.auto")
           }
         ]
       },

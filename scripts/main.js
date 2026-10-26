@@ -119,6 +119,13 @@ Hooks.on("updateActor", actor => inBar(actor) && refreshDebounced(120));
 Hooks.on("createActor", () => refreshDebounced(120));
 Hooks.on("deleteActor", () => refreshDebounced(120));
 
+// El modo «por escena» sigue a los tokens: aparecer, desaparecer u ocultarse.
+for (const hook of ["createToken", "deleteToken", "updateToken"]) {
+  Hooks.on(hook, token => {
+    if (token.parent?.id === globalThis.canvas?.scene?.id) refreshDebounced(120);
+  });
+}
+
 // Los valores derivados (CA, PG máximos…) cambian también al tocar objetos y efectos.
 for (const hook of ["createItem", "updateItem", "deleteItem", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect"]) {
   Hooks.on(hook, doc => {

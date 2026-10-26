@@ -19,7 +19,9 @@ export async function addToDisplay(actorId, pos = null) {
     config.actors[actorId] = {
       ...getActorConfig(config, actorId),
       sortOrder: maxSort + 1,
-      float: pos ? { x: pos.x, y: pos.y } : null
+      float: pos ? { x: pos.x, y: pos.y } : null,
+      // Los personajes de jugador quedan fijos; los PNJ aparecen con su token (modo «por escena»).
+      pinned: game.actors.get(actorId)?.type === "character"
     };
   });
   refreshAll();

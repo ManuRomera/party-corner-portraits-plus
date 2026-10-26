@@ -71,6 +71,20 @@
         </div>
       </div>
 
+      <h4 class="pcp-heading">{{localize "PCP.Scene.Title"}}</h4>
+      <div class="pcp-card-group">
+        <label class="pcp-row">
+          <span class="pcp-row-text">{{localize "PCP.Scene.Mode"}}<small>{{localize "PCP.Scene.ModeHint"}}</small></span>
+          <select name="sceneMode">
+            {{#each sceneModes}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </label>
+        <label class="pcp-row pcp-row-check">
+          <span class="pcp-row-text">{{localize "PCP.Scene.Auto"}}<small>{{localize "PCP.Scene.AutoHint"}}</small></span>
+          <input type="checkbox" class="pcp-switch" name="sceneAuto" {{#if config.scene.auto}}checked{{/if}}>
+        </label>
+      </div>
+
       <h4 class="pcp-heading">{{localize "PCP.Config.Interface"}}</h4>
       <div class="pcp-card-group">
         <label class="pcp-row">
@@ -404,6 +418,7 @@
                 <div class="pcp-actor-name">{{name}}</div>
                 <div class="pcp-actor-owner">{{#if ownerLabel}}{{ownerLabel}}{{else}}<em>{{localize "PCP.Config.NoOwner"}}</em>{{/if}}</div>
               </div>
+              <label class="pcp-pin" title="{{localize 'PCP.Scene.PinnedHint'}}"><input class="pcp-actor-pinned pcp-switch" type="checkbox" {{#if pinned}}checked{{/if}} aria-label="{{localize 'PCP.Menu.Actor.Pinned'}}: {{name}}"><span>{{localize "PCP.Scene.Pinned"}}</span></label>
               <button type="button" class="pcp-open-framing"><i class="fa-solid fa-crop-simple"></i> {{localize "PCP.Config.AdjustFraming"}}</button>
             </div>
 
