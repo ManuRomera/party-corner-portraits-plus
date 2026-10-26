@@ -20,6 +20,7 @@ import { addA11yButton } from "./a11y.js";
 import { applyLook, focusState, setFocus } from "./look.js";
 import { isVideo, portraitSource } from "./media.js";
 import { hideHover, refreshHoverPreview, showHover } from "./hover.js";
+import { visiblePortraits } from "./scene.js";
 import { openFramingApp } from "./framing-app.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
@@ -65,7 +66,8 @@ const BUILTIN = [
 
 /* ------------------------------------------------------------------ estado */
 
-const barIds = () => getConfig().order.filter(id => game.actors?.get(id));
+/** Los retratos que se están mostrando (incluye jugadores, tokens de la escena y sueltos), no solo la lista guardada. */
+const barIds = () => visiblePortraits(getConfig()).ids.filter(id => game.actors?.get(id));
 
 function selection() {
   const ids = new Set(barIds());

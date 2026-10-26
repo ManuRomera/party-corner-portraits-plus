@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.14.1
+
+- **Estudio de retratos:** ahora lista y permite elegir **todos los retratos que se están mostrando** (jugadores, tokens de la escena y sueltos), no solo los de la lista guardada. Antes, en el modo por escena con la lista vacía, el estudio salía sin personajes.
+- Página del repositorio con capturas nuevas hechas sobre la aventura *El Trono de la Sed* (Legend in the Mist), portada nueva y sección de pilas de fichas.
+
 ## 1.14.0
 
 - **Pilas de fichas en los dos modos.** Un jugador con varios personajes los ve apilados (uno tras otro, abanico al pasar el cursor, clic para cambiar) también con «Mostrar todos los de la lista», no solo en el modo por escena.

@@ -39,12 +39,17 @@ Actívalo en tu mundo y abre **Configuración → Ajustes del módulo → Config
 - **Retratos sueltos**: saca a cualquier personaje o PNJ de la barra y colócalo donde quieras, individualmente (y vuelve a meterlo cuando quieras). Hueco negativo para **apilarlos como cartas**.
 - **Ctrl + rueda** sobre un retrato lo inclina (solo ese). **Botones rápidos** al pasar el cursor (máster): ocultar/mostrar a los jugadores, sacar de la barra, estudio…
 - **Añadir personajes** con un selector con buscador, o **arrastrando actores** del directorio a la barra o a un retrato suelto.
-- **Retratos por escena**: muestra solo los **fijos** y los personajes con **token en la escena** (con su mismo estado oculto/visible), u oculta la barra en escenas de carga.
+- **Retratos por escena**: un interruptor y cada escena muestra a los **jugadores (siempre)**, a los **fijos** y a todo lo que tenga **token en ella**, con su mismo estado oculto/visible.
+- **Pilas de fichas**: un jugador con varias fichas las ve apiladas; un clic cambia de ficha (con animación) y **la elegida pasa a primer plano para todos**. Al pasar el cursor se abren en **abanico**.
 - Tamaño global y por personaje, marcos (completo, mínimo o ninguno), fondo oscuro o transparente, bordes, sombra y opacidad.
 - **Nombre del personaje y del jugador**, con indicador de conexión.
 - **Barras y campos configurables** de la ficha (PG, CA, nivel, estrés…): ruta del valor y del máximo, color o **automático** (verde → rojo). Presets para D&D 5e, PF2e, Call of Cthulhu 7e, Alien, WoD5, Cyberpunk RED, SWADE y Fate, y sugerencias de rutas sacadas de tus fichas reales.
 - **Retrato, token o archivo propio** para cada personaje: imagen, **GIF en bucle o vídeo corto** (webm, mp4). Los recortes con transparencia (WebP/PNG o webm con alfa) se integran en la escena sin marco.
 - **Encuadre por personaje** (zona + zoom) con arrastre y rueda.
+
+<p align="center">
+  <img src="docs/img/stack.webp" alt="Pilas de fichas abiertas en abanico, con la ficha oculta de un PNJ atenuada" width="62%">
+</p>
 
 ### 🔍 Vista ampliada
 Deja el cursor sobre un retrato y se ve **en grande** el token, el retrato o el archivo que hayas elegido para ese personaje (inspirado en *Image Hover*, pero disparado por los retratos del grupo).
