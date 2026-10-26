@@ -38,6 +38,10 @@ export function visiblePortraits(config) {
   if (config.scene.mode === "scene") {
     const actors = globalThis.game?.actors;
     ids = ids.filter(id => getActorConfig(config, id).pinned || isPlayerActor(actors?.get(id)) || tokens.has(id));
+    // Los personajes de jugador salen siempre, aunque no estuvieran en la lista.
+    for (const actor of actors?.contents ?? []) {
+      if (actor.type === "character" && !ids.includes(actor.id) && isPlayerActor(actor)) ids.push(actor.id);
+    }
     // Lo que ya está puesto en la escena sale solo, aunque no estuviera en la lista.
     for (const id of tokens.keys()) if (!ids.includes(id) && actors?.get(id)) ids.push(id);
     for (const id of ids) {

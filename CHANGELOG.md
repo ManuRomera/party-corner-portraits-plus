@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.12.1
+
+- En el modo por escena, los personajes de jugador salen **siempre**, también si no estaban en la lista de la barra.
+
 ## 1.12.0
 
 - **Retratos por escena, más simple.** Un solo interruptor (menú de la barra → «Retratos por escena (fijos + tokens)», o Configuración → General): al activarlo, cada escena muestra **todo lo que tiene token en ella** (aunque no estuviera en la lista), **más los marcados como fijos**, y **los personajes de jugador siempre**. Desaparece la opción extra de «incluir tokens»: ya va incluida. Un token oculto sigue dando un retrato oculto.
