@@ -273,6 +273,11 @@ export function normalizeConfig(raw) {
     merged.actors[actorId] = sanitizeActor(actorId, actor, Object.keys(merged.actors).length);
   }
 
+  merged.stackTop = Object.fromEntries(
+    Object.entries(merged.stackTop && typeof merged.stackTop === "object" ? merged.stackTop : {}).filter(
+      ([key, value]) => typeof key === "string" && typeof value === "string"
+    )
+  );
   merged.scene = {
     mode: SCENE_MODES.includes(merged.scene?.mode) ? merged.scene.mode : "all"
   };

@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.14.0
+
+- **Pilas de fichas en los dos modos.** Un jugador con varios personajes los ve apilados (uno tras otro, abanico al pasar el cursor, clic para cambiar) también con «Mostrar todos los de la lista», no solo en el modo por escena.
+- **La ficha activa se comparte con todos.** Cuando un jugador elige una de sus fichas, esa pasa a primer plano **para él, para el máster y para el resto de jugadores**, con la misma animación. El máster también puede cambiar la ficha activa de cualquier jugador y lo ven todos. Un jugador solo puede cambiar entre fichas que son suyas. El cambio se guarda en el mundo, así que quien entre después, o recargue, ve la misma ficha activa.
+
 ## 1.13.2
 
 Revisión a fondo tras comprobar que varias cosas dadas por hechas no lo estaban.

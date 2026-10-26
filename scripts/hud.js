@@ -26,6 +26,7 @@ import { applyFocus, applyLook, buildCountdown } from "./look.js";
 import { attachHover, hideHover } from "./hover.js";
 import { closeMenus } from "./menu.js";
 import { ownerKey, visiblePortraits } from "./scene.js";
+import { MODULE_ID } from "./constants.js";
 import { hideTools, setTilt, showTools } from "./tools.js";
 import { applyFraming, createPortraitElement, portraitSource } from "./media.js";
 
@@ -524,10 +525,43 @@ export function setMoveMode(enabled) {
  * y se puede elegir una directamente. La ficha activa se recuerda mientras dure la sesión.
  */
 
-const stackTop = new Map(); // clave de jugador → actorId activo
+const stackTop = new Map(); // clave de jugador → actorId activo (se comparte con todos por socket y se guarda en el mundo)
+
+/** Guarda en el mundo la ficha activa de un jugador (solo lo hace un máster), para quien entre después. */
+async function persistTop(key, actorId) {
+  if ((getConfig().stackTop ?? {})[key] === actorId) return;
+  await mutateConfig(config => {
+    config.stackTop = { ...config.stackTop, [key]: actorId };
+  });
+}
+
+/** Avisa a todos del cambio de ficha activa. */
+function announceTop(key, actorId) {
+  game.socket.emit(`module.${MODULE_ID}`, { type: "stackTop", key, actorId });
+  if (game.user.isGM) persistTop(key, actorId);
+}
+
+/**
+ * Escucha los cambios de ficha activa de los demás. Un jugador solo puede cambiar entre fichas
+ * de las que es propietario; el máster, cualquiera.
+ */
+export function registerStackSocket() {
+  game.socket.on(`module.${MODULE_ID}`, (data, userId) => {
+    if (data?.type !== "stackTop" || typeof data.key !== "string" || typeof data.actorId !== "string") return;
+    const sender = game.users.get(userId);
+    const target = game.actors.get(data.actorId);
+    if (!sender || !target || !(sender.isGM || target.testUserPermission(sender, "OWNER"))) return;
+    const stack = document.querySelector(`#pcp-party-hud .pcp-stack[data-owner="${data.key}"]`);
+    if (stack?._slot) bringToTop(stack, stack._slot, data.actorId, true, false);
+    else stackTop.set(data.key, data.actorId);
+    if (game.users.activeGM?.isSelf) persistTop(data.key, data.actorId);
+  });
+}
 
 function stackOrder(slot) {
   const ids = slot.members.map(actor => actor.id);
+  // Lo último elegido en esta sesión manda; si no hay nada, lo guardado en el mundo.
+  if (!stackTop.has(slot.key) && slot.saved) stackTop.set(slot.key, slot.saved);
   const top = stackTop.get(slot.key);
   const start = ids.includes(top) ? ids.indexOf(top) : 0;
   return [...ids.slice(start), ...ids.slice(0, start)]; // la primera es la de arriba
@@ -545,10 +579,11 @@ function applyStackDepths(stack, order) {
 }
 
 /** Sube `actorId` a la cima; la que estaba arriba se desliza hacia fuera y se esconde detrás. */
-function bringToTop(stack, slot, actorId, animate = true) {
+function bringToTop(stack, slot, actorId, animate = true, announce = true) {
   const current = stackOrder(slot);
   if (current[0] === actorId) return;
   stackTop.set(slot.key, actorId);
+  if (announce) announceTop(slot.key, actorId);
   const next = stackOrder(slot);
   const leaving = stack.querySelector(`.pcp-stack-item[data-actor-id="${current[0]}"]`);
   hideHover({ force: true });
@@ -567,6 +602,8 @@ function bringToTop(stack, slot, actorId, animate = true) {
 function buildStack(slot, config, client) {
   const stack = document.createElement("div");
   stack.className = "pcp-stack";
+  stack.dataset.owner = slot.key;
+  stack._slot = slot;
   stack.style.setProperty("--n", String(slot.members.length));
   const first = getActorConfig(config, slot.members[0].id);
   stack.style.setProperty("--w", `${clampSize((first.size ?? config.bar.size) * client.scale, config.bar.size)}px`);
@@ -692,10 +729,10 @@ export function renderHud() {
   const slots = [];
   const byOwner = new Map();
   for (const actor of inBar) {
-    const key = config.scene.mode === "scene" ? ownerKey(actor) : null;
+    const key = ownerKey(actor);
     if (key && byOwner.has(key)) byOwner.get(key).members.push(actor);
     else {
-      const slot = { key, members: [actor] };
+      const slot = { key, members: [actor], saved: key ? config.stackTop?.[key] : null };
       slots.push(slot);
       if (key) byOwner.set(key, slot);
     }

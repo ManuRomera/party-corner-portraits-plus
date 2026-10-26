@@ -421,7 +421,7 @@
   "PCP.Studio.TiltHint": "Gira el retrato entero. También con Ctrl + rueda del ratón sobre él.",
   "PCP.Scene.Title": "Retratos por escena",
   "PCP.Scene.Mode": "Qué retratos se muestran",
-  "PCP.Scene.ModeHint": "Con «Fijos + tokens de la escena», cada escena muestra a los personajes de jugador (siempre), a los marcados como fijos y a todo lo que tenga token en ella, con el mismo estado (si el token está oculto, el retrato también). Un jugador con varias fichas las ve apiladas: al pulsar cambia de una a otra.",
+  "PCP.Scene.ModeHint": "Con «Fijos + tokens de la escena», cada escena muestra a los personajes de jugador (siempre), a los marcados como fijos y a todo lo que tenga token en ella, con el mismo estado (si el token está oculto, el retrato también).",
   "PCP.Scene.All": "Todos los de la lista",
   "PCP.Scene.Scene": "Fijos + tokens de la escena",
   "PCP.Scene.Pinned": "Fijo",

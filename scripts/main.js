@@ -5,7 +5,7 @@
 
 import { MODULE_ID } from "./constants.js";
 import { registerSettings, ensureInitialized } from "./settings.js";
-import { renderHud } from "./hud.js";
+import { renderHud, registerStackSocket } from "./hud.js";
 import { renderPlayerList } from "./players.js";
 import { applyUiConfig, placeHotbar } from "./ui.js";
 import { PartyPortraitsConfig, openConfigApp } from "./config-app.js";
@@ -61,6 +61,7 @@ Hooks.once("ready", async () => {
   }
 
   registerHoverSocket();
+  registerStackSocket();
   initDropZone();
   registerCountdown();
   // Primero las clases de la interfaz: el resto mide dónde está el panel original.

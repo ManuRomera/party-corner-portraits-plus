@@ -191,6 +191,7 @@ export function createDefaultConfig() {
     },
     order: [],
     scene: { mode: "all" },
+    stackTop: {},
     actors: {}
   };
 }
