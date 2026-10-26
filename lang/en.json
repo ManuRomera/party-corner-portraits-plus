@@ -433,5 +433,7 @@
   "PCP.Tools.Unpin": "Unpin",
   "PCP.Scene.Toggle": "Portraits per scene (pinned + tokens)",
   "PCP.Scene.ToggleHint": "Shows player characters, pinned ones and everything that has a token in the scene.",
-  "PCP.Stack.Hint": "Click: switch character · double click: open the sheet"
+  "PCP.Stack.Hint": "Click: switch character · double click: open the sheet",
+  "PCP.Scene.SwitchToScene": "Show pinned + scene tokens",
+  "PCP.Scene.SwitchToAll": "Show everyone on the list"
 }

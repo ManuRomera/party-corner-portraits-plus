@@ -433,5 +433,7 @@
   "PCP.Tools.Unpin": "Quitar de los fijos",
   "PCP.Scene.Toggle": "Retratos por escena (fijos + tokens)",
   "PCP.Scene.ToggleHint": "Muestra los personajes de jugador, los fijos y todo lo que tenga token en la escena.",
-  "PCP.Stack.Hint": "Clic: cambiar de ficha · doble clic: abrir la ficha"
+  "PCP.Stack.Hint": "Clic: cambiar de ficha · doble clic: abrir la ficha",
+  "PCP.Scene.SwitchToScene": "Mostrar fijos + tokens de la escena",
+  "PCP.Scene.SwitchToAll": "Mostrar todos los de la lista"
 }

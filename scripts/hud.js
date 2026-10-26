@@ -275,13 +275,10 @@ function buildCard(actor, config, client) {
   // Botones rápidos (máster) al pasar el cursor.
   if (game.user.isGM) {
     card.addEventListener("pointerenter", () => {
-      // En una pila los botones taparían el abanico: ahí se usa el menú del botón derecho.
-      if (!moveMode && !card.dataset.stacked) showTools(card, actor.id);
+      if (!moveMode) showTools(card, actor.id, { row: Boolean(card.dataset.stacked) });
     });
     card.addEventListener("pointerleave", () => hideTools(220));
-    card.addEventListener("focus", () => {
-      if (!card.dataset.stacked) showTools(card, actor.id);
-    });
+    card.addEventListener("focus", () => showTools(card, actor.id, { row: Boolean(card.dataset.stacked) }));
   }
 
   // Ctrl + rueda: inclina solo este retrato (5° por muesca; con Mayús, 1°).

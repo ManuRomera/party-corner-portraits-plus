@@ -2145,3 +2145,4 @@ body.pcp-a11y-calm :is(#pcp-party-hud, #pcp-floats) .pcp-card.pcp-glow-pulse { a
 body.pcp-a11y-calm #pcp-party-hud .pcp-stack-item { transition: none; }
 #pcp-party-hud.pcp-horizontal .pcp-stack:not(:first-child) { margin-left: var(--pcp-overlap, 0px); }
 #pcp-party-hud.pcp-vertical .pcp-stack:not(:first-child) { margin-top: var(--pcp-overlap, 0px); }
+#pcp-card-tools.pcp-tools-row { flex-direction: row; }

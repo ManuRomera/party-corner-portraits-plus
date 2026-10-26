@@ -11,6 +11,7 @@ import { refreshAll } from "./events.js";
 import { getActorConfig, getActorPlayerLabel, localize } from "./utils.js";
 import { createPortraitElement, hoverSource, naturalSize } from "./media.js";
 import { applyHoverLook } from "./look.js";
+import { visiblePortraits } from "./scene.js";
 
 const ID = "pcp-hover";
 const MARGIN = 8;
@@ -173,7 +174,10 @@ export function attachHover(card, actor) {
 export function startHoverMove() {
   if (!game.user.isGM) return;
   const config = getConfig();
-  const actorId = config.order.find(id => game.actors?.get(id));
+  const actorId =
+    visiblePortraits(config).ids.find(id => game.actors?.get(id)) ??
+    config.order.find(id => game.actors?.get(id)) ??
+    game.actors?.contents[0]?.id;
   if (!actorId) {
     ui.notifications.warn(localize("PCP.Hover.NoCharacters"));
     return;

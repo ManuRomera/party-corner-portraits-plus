@@ -9,15 +9,24 @@ import { getConfig, mutateConfig } from "./settings.js";
 import { refreshAll, dispatchMenuEvent } from "./events.js";
 import { setLoose } from "./addactors.js";
 import { openStudio } from "./studio.js";
+import { effectiveHidden, tokensOf } from "./scene.js";
 
 let panel = null;
 let hideTimer = null;
 let currentCard = null;
 
+/**
+ * Oculta o muestra un retrato. En modo «por escena» hace lo mismo con sus tokens de la escena, para
+ * gestionar la escena desde un solo sitio.
+ */
 export async function setHidden(actorId, hidden) {
   await mutateConfig(config => {
     config.actors[actorId] = { ...getActorConfig(config, actorId), hidden };
   });
+  if (getConfig().scene.mode === "scene") {
+    const tokens = tokensOf(actorId).filter(token => token.hidden !== hidden);
+    if (tokens.length) await canvas.scene.updateEmbeddedDocuments("Token", tokens.map(token => ({ _id: token.id, hidden })));
+  }
   refreshAll();
 }
 
@@ -63,7 +72,7 @@ function button(icon, title, action, active = false) {
 }
 
 /** Muestra los botones junto a la tarjeta (a su derecha, o a su izquierda si no cabe). */
-export function showTools(card, actorId) {
+export function showTools(card, actorId, { row = false } = {}) {
   if (!game.user.isGM) return;
   window.clearTimeout(hideTimer);
   if (currentCard === card && panel) return;
@@ -72,15 +81,17 @@ export function showTools(card, actorId) {
   const config = getConfig();
   const actorConfig = getActorConfig(config, actorId);
   const loose = Boolean(actorConfig.float);
+  const hidden = effectiveHidden(config, actorId);
 
   panel = document.createElement("div");
   panel.id = "pcp-card-tools";
+  panel.classList.toggle("pcp-tools-row", row);
   panel.append(
     button(
-      actorConfig.hidden ? "fa-solid fa-eye-slash" : "fa-solid fa-eye",
-      actorConfig.hidden ? localize("PCP.Tools.Show") : localize("PCP.Tools.Hide"),
-      () => setHidden(actorId, !actorConfig.hidden),
-      actorConfig.hidden
+      hidden ? "fa-solid fa-eye-slash" : "fa-solid fa-eye",
+      hidden ? localize("PCP.Tools.Show") : localize("PCP.Tools.Hide"),
+      () => setHidden(actorId, !hidden),
+      hidden
     ),
     button(
       "fa-solid fa-thumbtack",
@@ -115,6 +126,12 @@ export function showTools(card, actorId) {
   const rect = card.getBoundingClientRect();
   const width = panel.offsetWidth || 38;
   const height = panel.offsetHeight || 190;
+  if (row) {
+    // En una pila, los botones van en fila encima: así no tapan el abanico.
+    panel.style.left = `${Math.round(Math.min(Math.max(4, rect.left), window.innerWidth - width - 4))}px`;
+    panel.style.top = `${Math.round(Math.max(4, rect.top - height - 6))}px`;
+    return;
+  }
   const right = rect.right + 6 + width <= window.innerWidth - 4;
   panel.style.left = `${Math.round(right ? rect.right + 6 : rect.left - 6 - width)}px`;
   panel.style.top = `${Math.round(Math.min(Math.max(4, rect.top), window.innerHeight - height - 4))}px`;

@@ -28,20 +28,28 @@ export function isPlayerActor(actor) {
 
 /**
  * Qué retratos toca pintar, en orden, y cuáles quedan ocultos por el estado de sus tokens.
+ * Los personajes de jugador salen siempre (en cualquier modo) salvo que se hayan quitado a mano.
  * @returns {{ids: string[], tokenHidden: Set<string>}}
  */
 export function visiblePortraits(config) {
   const tokens = sceneTokens();
   const tokenHidden = new Set();
+  const actors = globalThis.game?.actors;
+  const excluded = id => getActorConfig(config, id).excluded;
   let ids = [...config.order];
 
   if (config.scene.mode === "scene") {
-    const actors = globalThis.game?.actors;
     ids = ids.filter(id => getActorConfig(config, id).pinned || isPlayerActor(actors?.get(id)) || tokens.has(id));
-    // Los personajes de jugador salen siempre, aunque no estuvieran en la lista.
-    for (const actor of actors?.contents ?? []) {
-      if (actor.type === "character" && !ids.includes(actor.id) && isPlayerActor(actor)) ids.push(actor.id);
+  }
+
+  // Los personajes de jugador salen siempre, aunque no estuvieran en la lista.
+  for (const actor of actors?.contents ?? []) {
+    if (actor.type === "character" && !ids.includes(actor.id) && !excluded(actor.id) && isPlayerActor(actor)) {
+      ids.push(actor.id);
     }
+  }
+
+  if (config.scene.mode === "scene") {
     // Lo que ya está puesto en la escena sale solo, aunque no estuviera en la lista.
     for (const id of tokens.keys()) if (!ids.includes(id) && actors?.get(id)) ids.push(id);
     for (const id of ids) {
@@ -50,6 +58,16 @@ export function visiblePortraits(config) {
     }
   }
   return { ids, tokenHidden };
+}
+
+/** ¿Está oculto ahora mismo (por el retrato o por el estado de sus tokens en modo escena)? */
+export function effectiveHidden(config, actorId) {
+  return Boolean(getActorConfig(config, actorId).hidden || visiblePortraits(config).tokenHidden.has(actorId));
+}
+
+/** Los tokens del actor en la escena que se está viendo. */
+export function tokensOf(actorId) {
+  return sceneTokens().get(actorId) ?? [];
 }
 
 /** Clave del jugador al que pertenece un retrato, para apilar sus fichas (null si no es de nadie). */

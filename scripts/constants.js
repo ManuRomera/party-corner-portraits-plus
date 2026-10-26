@@ -53,6 +53,7 @@ export const DEFAULT_ACTOR = {
   hoverSize: null,
   float: null,
   hidden: false,
+  excluded: false,
   pinned: false,
   tilt: 0,
   hoverOpacity: null,

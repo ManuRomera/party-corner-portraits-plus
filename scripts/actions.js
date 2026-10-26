@@ -44,6 +44,7 @@ import { showToEveryone, startHoverMove } from "./hover.js";
 import { openStudio } from "./studio.js";
 import { addToDisplay, openAddActors, setLoose } from "./addactors.js";
 import { setHidden, setPinned, setTilt } from "./tools.js";
+import { effectiveHidden } from "./scene.js";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -441,6 +442,8 @@ function syncSortOrders(config) {
 async function removeActor(actorId) {
   await mutateConfig(config => {
     config.order = (config.order || []).filter(id => id !== actorId);
+    // Un personaje de jugador sale siempre; «quitar» lo excluye a propósito.
+    config.actors[actorId] = { ...getActorConfig(config, actorId), excluded: true };
   });
   refreshAll();
 }
@@ -455,7 +458,8 @@ async function addActor(actorId) {
     );
     config.actors[actorId] = {
       ...getActorConfig(config, actorId),
-      sortOrder: maxSort + 1
+      sortOrder: maxSort + 1,
+      excluded: false
     };
     config.order = [...order, actorId];
   });
@@ -478,6 +482,17 @@ function looseItem(actorId) {
         : { x: 0.5, y: 0.5 };
       return setLoose(actorId, pos);
     }
+  };
+}
+
+/** Cambia de modo: el menú ofrece siempre el contrario del actual. */
+function sceneModeItem(config) {
+  const next = config.scene.mode === "scene" ? "all" : "scene";
+  return {
+    label: localize(next === "scene" ? "PCP.Scene.SwitchToScene" : "PCP.Scene.SwitchToAll"),
+    icon: next === "scene" ? "fa-solid fa-film" : "fa-solid fa-users",
+    title: localize("PCP.Scene.ModeHint"),
+    action: () => setConfigValue("scene.mode", next)
   };
 }
 
@@ -689,9 +704,9 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
         children: orderMenuItems(actorId)
       },
       {
-        label: getActorConfig(getConfig(), actorId).hidden ? localize("PCP.Tools.Show") : localize("PCP.Tools.Hide"),
-        icon: getActorConfig(getConfig(), actorId).hidden ? "fa-solid fa-eye" : "fa-solid fa-eye-slash",
-        action: () => setHidden(actorId, !getActorConfig(getConfig(), actorId).hidden)
+        label: effectiveHidden(getConfig(), actorId) ? localize("PCP.Tools.Show") : localize("PCP.Tools.Hide"),
+        icon: effectiveHidden(getConfig(), actorId) ? "fa-solid fa-eye" : "fa-solid fa-eye-slash",
+        action: () => setHidden(actorId, !effectiveHidden(getConfig(), actorId))
       },
       {
         label: localize("PCP.Menu.Actor.Pinned"),
@@ -742,6 +757,7 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
 
       // ── Barra y módulo ──
       { heading: localize("PCP.Menu.Group.Bar") },
+      sceneModeItem(getConfig()),
       {
         label: localize("PCP.Menu.Hud.MoveBar"),
         icon: "fa-solid fa-up-down-left-right",
@@ -977,13 +993,7 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
           }
         ]
       },
-      {
-        label: localize("PCP.Scene.Toggle"),
-        icon: "fa-solid fa-clapperboard",
-        checked: config.scene.mode === "scene",
-        title: localize("PCP.Scene.ToggleHint"),
-        action: () => setConfigValue("scene.mode", config.scene.mode === "scene" ? "all" : "scene")
-      },
+      sceneModeItem(config),
       sceneVisibilityItem(config),
       {
         label: localize("PCP.Menu.Hud.ShowBars"),

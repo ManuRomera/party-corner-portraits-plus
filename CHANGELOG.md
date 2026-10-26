@@ -1,5 +1,13 @@
 # Cambios
 
+## 1.13.0
+
+- **Los personajes de jugador salen siempre, en cualquier modo** (también con «Todos los de la lista» y aunque no estén en ella), salvo que los ocultes o los quites a mano («Quitar de la lista» los excluye a propósito; «Añadir personajes» los devuelve).
+- **Cambio de modo desde el botón derecho:** el menú (sobre un retrato o sobre la barra) ofrece siempre el modo contrario al actual: «Mostrar fijos + tokens de la escena» o «Mostrar todos los de la lista».
+- **Mostrar/ocultar un retrato mueve también sus tokens** de la escena (en modo por escena): al mostrar el retrato, su token deja de estar oculto, y al ocultarlo, se oculta. El ojo refleja el estado real, aunque el retrato estuviera oculto solo porque lo estaba su token.
+- **Botones rápidos también en las pilas** de fichas: salen en una fila encima, sin tapar el abanico.
+- **«Mover la imagen ampliada» ya funciona sin retratos en la barra** (usa el primer retrato visible, o cualquier actor del mundo, como ejemplo).
+
 ## 1.12.1
 
 - En el modo por escena, los personajes de jugador salen **siempre**, también si no estaban en la lista de la barra.

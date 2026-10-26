@@ -165,6 +165,7 @@ function sanitizeActor(actorId, actor, index) {
     hoverMedia: String(value.hoverMedia ?? "").trim(),
     hidden: Boolean(value.hidden),
     pinned: Boolean(value.pinned),
+    excluded: Boolean(value.excluded),
     tilt: clamp(value.tilt, -180, 180, 0),
     // Retrato suelto: centro en fracción de pantalla; null = dentro de la barra.
     float:
