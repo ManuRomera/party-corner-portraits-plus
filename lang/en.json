@@ -423,14 +423,15 @@
   "PCP.Studio.TiltHint": "Rotates the whole portrait. Also with Ctrl + mouse wheel over it.",
   "PCP.Scene.Title": "Portraits per scene",
   "PCP.Scene.Mode": "Which portraits are shown",
-  "PCP.Scene.ModeHint": "With «Pinned + scene tokens», each scene shows the pinned ones and the characters that have a token in it, in the same state (a hidden token means a hidden portrait).",
+  "PCP.Scene.ModeHint": "With «Pinned + scene tokens», each scene shows player characters (always), pinned ones and everything that has a token in it, in the same state (a hidden token means a hidden portrait). A player with several characters sees them stacked: click to switch between them.",
   "PCP.Scene.All": "Everyone on the list",
   "PCP.Scene.Scene": "Pinned + scene tokens",
-  "PCP.Scene.Auto": "Also include scene tokens that are not on the list",
-  "PCP.Scene.AutoHint": "Any actor with a token in the scene shows up by itself, no need to add it. Handy for NPCs; with many monsters it can fill the bar.",
   "PCP.Scene.Pinned": "Pinned",
   "PCP.Scene.PinnedHint": "Always visible, even without a token in the scene («per scene» mode).",
   "PCP.Menu.Actor.Pinned": "Pinned (always visible)",
   "PCP.Tools.Pin": "Pin (always visible)",
-  "PCP.Tools.Unpin": "Unpin"
+  "PCP.Tools.Unpin": "Unpin",
+  "PCP.Scene.Toggle": "Portraits per scene (pinned + tokens)",
+  "PCP.Scene.ToggleHint": "Shows player characters, pinned ones and everything that has a token in the scene.",
+  "PCP.Stack.Hint": "Click: switch character · double click: open the sheet"
 }

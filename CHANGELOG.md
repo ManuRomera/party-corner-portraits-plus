@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.12.0
+
+- **Retratos por escena, más simple.** Un solo interruptor (menú de la barra → «Retratos por escena (fijos + tokens)», o Configuración → General): al activarlo, cada escena muestra **todo lo que tiene token en ella** (aunque no estuviera en la lista), **más los marcados como fijos**, y **los personajes de jugador siempre**. Desaparece la opción extra de «incluir tokens»: ya va incluida. Un token oculto sigue dando un retrato oculto.
+- **Pilas de fichas por jugador.** Si un jugador tiene varios personajes, se ven apilados en un solo hueco, uno tras otro. **Clic izquierdo**: pasa a la siguiente ficha (con su nombre) y la anterior se desliza y se esconde detrás. **Al pasar el cursor**, las fichas se abren en **abanico** (las vecinas se apartan) y se puede elegir una directamente. **Doble clic**: abre la ficha. La ficha activa se recuerda durante la sesión.
+- En una pila no salen los botones rápidos (taparían el abanico); el menú del botón derecho sigue disponible.
+
 ## 1.11.0
 
 - **Retratos por escena.** Nuevo modo «Fijos + tokens de la escena» (Configuración → General → «Retratos por escena», o menú de la barra): cada escena muestra a los personajes **marcados como fijos** y a los que **tienen un token en la escena que se está viendo**, y los demás desaparecen. Sigue a los tokens en directo: al colocar, borrar u ocultar un token cambia el retrato.

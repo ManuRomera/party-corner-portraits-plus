@@ -978,24 +978,11 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
         ]
       },
       {
-        label: localize("PCP.Scene.Mode"),
+        label: localize("PCP.Scene.Toggle"),
         icon: "fa-solid fa-clapperboard",
-        children: [
-          ...SCENE_MODES.map(mode => ({
-            label: localize(`PCP.Scene.${capitalize(mode)}`),
-            icon: mode === "scene" ? "fa-solid fa-film" : "fa-solid fa-users",
-            checked: config.scene.mode === mode,
-            action: () => setConfigValue("scene.mode", mode)
-          })),
-          { separator: true },
-          {
-            label: localize("PCP.Scene.Auto"),
-            icon: "fa-solid fa-wand-magic-sparkles",
-            checked: config.scene.auto,
-            disabled: config.scene.mode !== "scene",
-            action: () => toggleConfigValue("scene.auto")
-          }
-        ]
+        checked: config.scene.mode === "scene",
+        title: localize("PCP.Scene.ToggleHint"),
+        action: () => setConfigValue("scene.mode", config.scene.mode === "scene" ? "all" : "scene")
       },
       sceneVisibilityItem(config),
       {

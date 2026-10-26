@@ -25,7 +25,7 @@ import { avoidCoreUi } from "./layout.js";
 import { applyFocus, applyLook, buildCountdown } from "./look.js";
 import { attachHover, hideHover } from "./hover.js";
 import { closeMenus } from "./menu.js";
-import { visiblePortraits } from "./scene.js";
+import { ownerKey, visiblePortraits } from "./scene.js";
 import { hideTools, setTilt, showTools } from "./tools.js";
 import { applyFraming, createPortraitElement, portraitSource } from "./media.js";
 
@@ -260,12 +260,12 @@ function buildCard(actor, config, client) {
     if (actorCanOpenSheet(actor)) actor.sheet?.render(true);
   };
   card.addEventListener("click", event => {
-    if (moveMode || suppressClick || getConfig().ui.openSheet !== "click") return;
+    if (card.dataset.stacked || moveMode || suppressClick || getConfig().ui.openSheet !== "click") return;
     event.preventDefault();
     openSheet();
   });
   card.addEventListener("dblclick", event => {
-    if (moveMode || suppressClick || getConfig().ui.openSheet !== "dblclick") return;
+    if (card.dataset.stacked || moveMode || suppressClick || getConfig().ui.openSheet !== "dblclick") return;
     event.preventDefault();
     openSheet();
   });
@@ -275,10 +275,13 @@ function buildCard(actor, config, client) {
   // Botones rápidos (máster) al pasar el cursor.
   if (game.user.isGM) {
     card.addEventListener("pointerenter", () => {
-      if (!moveMode) showTools(card, actor.id);
+      // En una pila los botones taparían el abanico: ahí se usa el menú del botón derecho.
+      if (!moveMode && !card.dataset.stacked) showTools(card, actor.id);
     });
     card.addEventListener("pointerleave", () => hideTools(220));
-    card.addEventListener("focus", () => showTools(card, actor.id));
+    card.addEventListener("focus", () => {
+      if (!card.dataset.stacked) showTools(card, actor.id);
+    });
   }
 
   // Ctrl + rueda: inclina solo este retrato (5° por muesca; con Mayús, 1°).
@@ -518,6 +521,88 @@ export function setMoveMode(enabled) {
   document.addEventListener("keydown", escapeListener, true);
 }
 
+/* ------------------------------------------------------------------ pilas de fichas
+ * Un jugador con varios personajes ve una pila: arriba el activo; al pulsar, pasa al fondo y sube
+ * el siguiente (con una pequeña animación). Al pasar el cursor, las fichas se abren en abanico
+ * y se puede elegir una directamente. La ficha activa se recuerda mientras dure la sesión.
+ */
+
+const stackTop = new Map(); // clave de jugador → actorId activo
+
+function stackOrder(slot) {
+  const ids = slot.members.map(actor => actor.id);
+  const top = stackTop.get(slot.key);
+  const start = ids.includes(top) ? ids.indexOf(top) : 0;
+  return [...ids.slice(start), ...ids.slice(0, start)]; // la primera es la de arriba
+}
+
+function applyStackDepths(stack, order) {
+  stack.dataset.top = order[0];
+  for (const item of stack.querySelectorAll(".pcp-stack-item")) {
+    const depth = order.indexOf(item.dataset.actorId);
+    item.style.setProperty("--d", String(depth));
+    item.style.zIndex = String(100 - depth);
+    item.classList.toggle("pcp-top", depth === 0);
+    item.querySelector(".pcp-card")?.setAttribute("tabindex", depth === 0 ? "0" : "-1");
+  }
+}
+
+/** Sube `actorId` a la cima; la que estaba arriba se desliza hacia fuera y se esconde detrás. */
+function bringToTop(stack, slot, actorId, animate = true) {
+  const current = stackOrder(slot);
+  if (current[0] === actorId) return;
+  stackTop.set(slot.key, actorId);
+  const next = stackOrder(slot);
+  const leaving = stack.querySelector(`.pcp-stack-item[data-actor-id="${current[0]}"]`);
+  hideHover({ force: true });
+  hideTools();
+  if (!animate || getClientConfig().a11y.motion) {
+    applyStackDepths(stack, next);
+    return;
+  }
+  leaving?.classList.add("pcp-out");
+  window.setTimeout(() => {
+    applyStackDepths(stack, next);
+    leaving?.classList.remove("pcp-out");
+  }, 170);
+}
+
+function buildStack(slot, config, client) {
+  const stack = document.createElement("div");
+  stack.className = "pcp-stack";
+  stack.style.setProperty("--n", String(slot.members.length));
+  const first = getActorConfig(config, slot.members[0].id);
+  stack.style.setProperty("--w", `${clampSize((first.size ?? config.bar.size) * client.scale, config.bar.size)}px`);
+
+  for (const actor of slot.members) {
+    const item = document.createElement("div");
+    item.className = "pcp-stack-item";
+    item.dataset.actorId = actor.id;
+    const card = buildCard(actor, config, client);
+    card.dataset.stacked = "1";
+    card.title = `${actor.name} — ${localize("PCP.Stack.Hint")}`;
+    item.appendChild(card);
+    stack.appendChild(item);
+
+    // Pulsar: la ficha de arriba pasa a la siguiente; una de las de atrás sube a la cima.
+    card.addEventListener("click", event => {
+      if (moveMode || suppressClick) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const order = stackOrder(slot);
+      bringToTop(stack, slot, order[0] === actor.id ? order[1] : actor.id);
+    });
+    // Doble clic: abre la ficha (si no está desactivado).
+    card.addEventListener("dblclick", event => {
+      if (moveMode || getConfig().ui.openSheet === "none") return;
+      event.preventDefault();
+      if (actorCanOpenSheet(actor)) actor.sheet?.render(true);
+    });
+  }
+  applyStackDepths(stack, stackOrder(slot));
+  return stack;
+}
+
 /** ¿Se oculta la barra en la escena que se está viendo? */
 function hiddenHere(config) {
   const sceneId = globalThis.canvas?.scene?.id;
@@ -604,7 +689,22 @@ export function renderHud() {
   hud.classList.add(`pcp-${config.bar.orientation}`);
   hudVariables(hud, config);
 
-  for (const actor of inBar) hud.appendChild(buildCard(actor, config, client));
+  // En modo «escena», las fichas de un mismo jugador se apilan en un solo hueco.
+  const slots = [];
+  const byOwner = new Map();
+  for (const actor of inBar) {
+    const key = config.scene.mode === "scene" ? ownerKey(actor) : null;
+    if (key && byOwner.has(key)) byOwner.get(key).members.push(actor);
+    else {
+      const slot = { key, members: [actor] };
+      slots.push(slot);
+      if (key) byOwner.set(key, slot);
+    }
+  }
+  for (const slot of slots) {
+    if (slot.members.length === 1) hud.appendChild(buildCard(slot.members[0], config, client));
+    else hud.appendChild(buildStack(slot, config, client));
+  }
 
   if (!inBar.length) {
     hud.classList.add("pcp-empty");

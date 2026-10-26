@@ -189,7 +189,7 @@ export function createDefaultConfig() {
       players: "show"
     },
     order: [],
-    scene: { mode: "all", auto: false },
+    scene: { mode: "all" },
     hiddenScenes: [],
     actors: {}
   };

@@ -193,10 +193,7 @@ function collectFormData(form) {
 
   config.ui.openSheet = SHEET_OPENS.includes(value("openSheet")) ? value("openSheet") : old.ui.openSheet;
   config.data.showBars = checked("showBars");
-  config.scene = {
-    mode: SCENE_MODES.includes(value("sceneMode")) ? value("sceneMode") : old.scene.mode,
-    auto: checked("sceneAuto")
-  };
+  config.scene = { mode: SCENE_MODES.includes(value("sceneMode")) ? value("sceneMode") : old.scene.mode };
   config.ui.hotbar = VISIBILITY_MODES.includes(value("hotbar")) ? value("hotbar") : old.ui.hotbar;
   config.ui.hotbarOverlap = HOTBAR_OVERLAPS.includes(value("hotbarOverlap"))
     ? value("hotbarOverlap")

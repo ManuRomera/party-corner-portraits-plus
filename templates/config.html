@@ -79,10 +79,6 @@
             {{#each sceneModes}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
         </label>
-        <label class="pcp-row pcp-row-check">
-          <span class="pcp-row-text">{{localize "PCP.Scene.Auto"}}<small>{{localize "PCP.Scene.AutoHint"}}</small></span>
-          <input type="checkbox" class="pcp-switch" name="sceneAuto" {{#if config.scene.auto}}checked{{/if}}>
-        </label>
       </div>
 
       <h4 class="pcp-heading">{{localize "PCP.Config.Interface"}}</h4>
