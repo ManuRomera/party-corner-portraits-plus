@@ -2107,11 +2107,7 @@ body.pcp-a11y-calm :is(#pcp-party-hud, #pcp-floats) .pcp-card.pcp-glow-pulse { a
   transition: padding-right 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Abierto, la pila ocupa sitio: las vecinas se apartan en lugar de quedar tapadas. */
-#pcp-party-hud .pcp-stack:hover,
-#pcp-party-hud .pcp-stack:focus-within {
-  padding-right: calc((var(--n) - 1) * var(--w, 86px) * 0.52 + var(--step));
-}
+
 
 #pcp-party-hud .pcp-stack:hover,
 #pcp-party-hud .pcp-stack:focus-within { z-index: 5; }
@@ -2130,7 +2126,7 @@ body.pcp-a11y-calm :is(#pcp-party-hud, #pcp-floats) .pcp-card.pcp-glow-pulse { a
 /* Al pasar el cursor, abanico: las fichas se abren hacia la derecha, algo giradas. */
 #pcp-party-hud .pcp-stack:hover .pcp-stack-item,
 #pcp-party-hud .pcp-stack:focus-within .pcp-stack-item {
-  transform: translate(calc(var(--d, 0) * var(--w, 86px) * 0.52), calc(var(--d, 0) * -3px)) rotate(calc(var(--d, 0) * 4deg));
+  transform: translate(0, calc(var(--d, 0) * var(--fan-dir, -1) * 62%));
   filter: none;
 }
 
@@ -2146,3 +2142,26 @@ body.pcp-a11y-calm #pcp-party-hud .pcp-stack-item { transition: none; }
 #pcp-party-hud.pcp-horizontal .pcp-stack:not(:first-child) { margin-left: var(--pcp-overlap, 0px); }
 #pcp-party-hud.pcp-vertical .pcp-stack:not(:first-child) { margin-top: var(--pcp-overlap, 0px); }
 #pcp-card-tools.pcp-tools-row { flex-direction: row; }
+
+/* Nombre de cada ficha en el abanico (la de arriba ya lleva el suyo) */
+#pcp-party-hud .pcp-stack-tag {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  max-width: calc(100% - 12px);
+  padding: 2px 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: calc(11px * var(--pcp-text-scale));
+  font-weight: 700;
+  opacity: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+#pcp-party-hud .pcp-stack:hover .pcp-stack-item:not(.pcp-top) .pcp-stack-tag,
+#pcp-party-hud .pcp-stack:focus-within .pcp-stack-item:not(.pcp-top) .pcp-stack-tag { opacity: 1; }
+#pcp-party-hud .pcp-stack-item { position: relative; }

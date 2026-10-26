@@ -246,7 +246,6 @@
   "PCP.Hover.Size": "Size",
   "PCP.Hover.SizeHint": "Longest side of the image, in pixels. It never exceeds the screen.",
   "PCP.Hover.Placement": "Where it appears",
-  "PCP.Hover.Caption": "Show the name below",
   "PCP.Hover.WhoTitle": "Who sees it",
   "PCP.Hover.Permission": "Minimum permission over the character",
   "PCP.Hover.PermissionHint": "The GM always sees it. Each player can also turn it off for themselves from the portrait menu.",

@@ -617,6 +617,8 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
 
   openMenu(
     [
+      sceneModeItem(getConfig()),
+      { separator: true },
       {
         label: localize("PCP.Menu.Actor.OpenSheet"),
         icon: "fa-solid fa-address-card",
@@ -739,7 +741,6 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
 
       // ── Barra y módulo ──
       { heading: localize("PCP.Menu.Group.Bar") },
-      sceneModeItem(getConfig()),
       {
         label: localize("PCP.Menu.Hud.MoveBar"),
         icon: "fa-solid fa-up-down-left-right",
@@ -894,8 +895,9 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
 
   openMenu(
     [
-      { heading: localize("PCP.Menu.Group.Bar") },
       sceneModeItem(config),
+      { separator: true },
+      { heading: localize("PCP.Menu.Group.Bar") },
       {
         label: localize("PCP.Add.Title"),
         icon: "fa-solid fa-user-plus",

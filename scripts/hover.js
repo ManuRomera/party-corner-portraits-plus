@@ -41,7 +41,7 @@ export function hideHover({ force = false } = {}) {
 let dragging = false;
 
 /** Coloca el panel: en el punto fijo elegido por el máster (o en una esquina/centro), siempre dentro de la pantalla. */
-function place(placement, pos) {
+function place(placement, pos, moving = false) {
   if (!element || dragging) return;
   const box = element.getBoundingClientRect();
   const { innerWidth: vw, innerHeight: vh } = window;
@@ -64,8 +64,19 @@ function place(placement, pos) {
   }
 
   // Posiciones enteras: con medios píxeles el navegador reescala la imagen y se ve borrosa.
-  element.style.left = `${Math.round(Math.min(Math.max(MARGIN, x), Math.max(MARGIN, vw - box.width - MARGIN)))}px`;
-  element.style.top = `${Math.round(Math.min(Math.max(MARGIN, y), Math.max(MARGIN, vh - box.height - MARGIN)))}px`;
+  if (placement === "free") {
+    // Punto libre: puede quedar parcialmente (o del todo) fuera de la pantalla si así se ha colocado.
+    // Solo en el modo de colocar se mantiene un trozo visible para poder agarrarla.
+    if (moving) {
+      x = Math.min(Math.max(-box.width + 80, x), vw - 80);
+      y = Math.min(Math.max(-box.height + 80, y), vh - 80);
+    }
+    element.style.left = `${Math.round(x)}px`;
+    element.style.top = `${Math.round(y)}px`;
+  } else {
+    element.style.left = `${Math.round(Math.min(Math.max(MARGIN, x), Math.max(MARGIN, vw - box.width - MARGIN)))}px`;
+    element.style.top = `${Math.round(Math.min(Math.max(MARGIN, y), Math.max(MARGIN, vh - box.height - MARGIN)))}px`;
+  }
   element.style.visibility = "visible";
 }
 
@@ -111,25 +122,10 @@ export function showHover(actorId, { card = null, shared = false, moving = false
   element.appendChild(stage);
   applyHoverLook(stage, media, actorConfig, config);
 
-  if (config.hover.caption) {
-    const caption = document.createElement("div");
-    caption.className = "pcp-hover-caption";
-    const name = document.createElement("strong");
-    name.textContent = actor.name;
-    caption.appendChild(name);
-    const player = getActorPlayerLabel(actor, actorConfig);
-    if (player && config.data.showPlayerName) {
-      const label = document.createElement("span");
-      label.textContent = player;
-      caption.appendChild(label);
-    }
-    element.appendChild(caption);
-  }
-
   document.body.appendChild(element);
   // El panel puede cambiar de tamaño al cargar el medio o el texto: se recoloca siempre dentro de la pantalla.
-  new ResizeObserver(() => place(placement, config.hover.pos)).observe(element);
-  const reposition = () => place(placement, config.hover.pos);
+  new ResizeObserver(() => place(placement, config.hover.pos, moving)).observe(element);
+  const reposition = () => place(placement, config.hover.pos, moving);
   live = { actorId, media, stage, reposition };
   const refit = () => fit(media, actorConfig.hoverSize ?? config.hover.size, config.hover.sharp, reposition);
   media.addEventListener("load", refit, { once: true });
@@ -213,8 +209,9 @@ export function startHoverMove() {
     const dx = event.clientX - rect.left;
     const dy = event.clientY - rect.top;
     const move = e => {
-      element.style.left = `${Math.min(Math.max(0, e.clientX - dx), window.innerWidth - rect.width)}px`;
-      element.style.top = `${Math.min(Math.max(0, e.clientY - dy), window.innerHeight - rect.height)}px`;
+      // Sin límites: se puede sacar de los márgenes de la pantalla.
+      element.style.left = `${e.clientX - dx}px`;
+      element.style.top = `${e.clientY - dy}px`;
     };
     const up = async () => {
       window.removeEventListener("pointermove", move);

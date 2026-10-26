@@ -246,7 +246,6 @@
   "PCP.Hover.Size": "Tamaño",
   "PCP.Hover.SizeHint": "Lado mayor de la imagen, en píxeles. Nunca pasa de la pantalla.",
   "PCP.Hover.Placement": "Dónde aparece",
-  "PCP.Hover.Caption": "Mostrar el nombre debajo",
   "PCP.Hover.WhoTitle": "Quién la ve",
   "PCP.Hover.Permission": "Permiso mínimo sobre el personaje",
   "PCP.Hover.PermissionHint": "El máster siempre la ve. Cada jugador puede además desactivarla para sí mismo desde el menú del retrato.",

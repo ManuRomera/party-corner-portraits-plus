@@ -172,7 +172,6 @@ function collectFormData(form) {
     size: clamp(value("hover.size"), 120, 1200, old.hover.size),
     placement: HOVER_PLACEMENTS.includes(value("hover.placement")) ? value("hover.placement") : old.hover.placement,
     permission: HOVER_PERMISSIONS.includes(value("hover.permission")) ? value("hover.permission") : old.hover.permission,
-    caption: checked("hover.caption"),
     box: checked("hover.box"),
     sharp: checked("hover.sharp"),
     pos: old.hover.pos,
@@ -238,7 +237,8 @@ function collectFormData(form) {
 
     // Un personaje de jugador sale siempre; desmarcarlo aquí lo excluye a propósito.
     const shown = Boolean(row.querySelector(".pcp-actor-enabled")?.checked);
-    actors[actorId].excluded = !shown;
+    // Solo cuenta para personajes de jugador; para el resto se limpia (así nunca queda un «excluido» huérfano).
+    actors[actorId].excluded = isPlayerActor(game.actors.get(actorId)) ? !shown : false;
 
     if (shown) {
       selected.push({
@@ -333,7 +333,7 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
           hoverCustom: actorConfig.hoverSource === "custom",
           globalHoverLabel: localize(`PCP.HoverSource.${capitalize(config.hover.source)}`),
           globalSourceLabel: localize(`PCP.Source.${capitalize(config.appearance.source)}`),
-          enabled: orderIndex.has(actor.id) || (actor.type === "character" && isPlayerActor(actor) && !actorConfig.excluded),
+          enabled: orderIndex.has(actor.id) || (isPlayerActor(actor) && !actorConfig.excluded),
           order: orderIndex.get(actor.id) ?? 999999,
           sortOrder: actorConfig.sortOrder,
           playerLabel: actorConfig.playerLabel,

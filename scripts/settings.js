@@ -35,6 +35,7 @@ import {
   normalizeColorOrNull
 } from "./utils.js";
 import { refreshDebounced } from "./events.js";
+import { isPlayerActor } from "./scene.js";
 
 function mergeDefaults(defaults, stored) {
   if (Array.isArray(defaults)) {
@@ -186,6 +187,7 @@ export function normalizeConfig(raw) {
 
   merged.initialized = Boolean(merged.initialized);
   merged.migrated = Boolean(merged.migrated);
+  merged.playersFixed = Boolean(merged.playersFixed);
 
   merged.bar = merged.bar || {};
   merged.bar.position = isKnownPosition(merged.bar.position) ? merged.bar.position : "bottom-left";
@@ -234,11 +236,10 @@ export function normalizeConfig(raw) {
   // «Junto al retrato» (1.4) cambió de sitio con cada personaje: ahora la posición es fija.
   merged.hover.placement = HOVER_PLACEMENTS.includes(merged.hover.placement) ? merged.hover.placement : "free";
   merged.hover.pos = {
-    x: clamp(merged.hover.pos?.x, 0, 1, 0.5),
-    y: clamp(merged.hover.pos?.y, 0, 1, 0.4)
+    x: clamp(merged.hover.pos?.x, -2, 3, 0.5),
+    y: clamp(merged.hover.pos?.y, -2, 3, 0.4)
   };
   merged.hover.permission = HOVER_PERMISSIONS.includes(merged.hover.permission) ? merged.hover.permission : "none";
-  merged.hover.caption = merged.hover.caption !== false;
   merged.hover.box = merged.hover.box === true;
   merged.hover.sharp = merged.hover.sharp === true;
   merged.hover.sharedSeconds = clamp(merged.hover.sharedSeconds, 1, 60, 6);
@@ -352,6 +353,17 @@ export async function ensureInitialized() {
   if (!game.user?.isGM) return;
 
   const raw = game.settings.get(MODULE_ID, SETTING_CONFIG) || {};
+  if (raw.initialized && !raw.playersFixed) {
+    // 1.13.2: guardar la configuración llegó a marcar como «excluidos» a jugadores que nunca se quitaron.
+    const config = normalizeConfig(raw);
+    config.playersFixed = true;
+    config.migrated = true;
+    for (const [id, actor] of Object.entries(config.actors)) {
+      if (actor.excluded) actor.excluded = false; // quitar a mano vuelve a marcarse al hacerlo de nuevo
+    }
+    await game.settings.set(MODULE_ID, SETTING_CONFIG, config);
+    return;
+  }
   if (raw.initialized && !raw.migrated) {
     // 1.1.1: la lista de jugadores original se queda en su sitio salvo que se pida lo contrario.
     const config = normalizeConfig(raw);
@@ -365,6 +377,7 @@ export async function ensureInitialized() {
   const config = normalizeConfig(raw);
   config.initialized = true;
   config.migrated = true;
+  config.playersFixed = true;
   if (!config.data.bars.length) config.data.bars = presetBars();
   if (!config.order.length) {
     // On first run, pre-select player-owned actors so the bar is not empty.

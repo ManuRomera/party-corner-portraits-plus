@@ -124,6 +124,7 @@ export function createDefaultConfig() {
   return {
     initialized: false,
     migrated: false,
+    playersFixed: false,
     bar: {
       position: "bottom-left",
       orientation: "horizontal",
@@ -166,7 +167,6 @@ export function createDefaultConfig() {
       placement: "free",
       pos: { x: 0.5, y: 0.4 },
       permission: "none",
-      caption: true,
       box: false,
       sharp: false,
       sharedSeconds: 6

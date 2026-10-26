@@ -21,9 +21,18 @@ export function sceneTokens() {
   return map;
 }
 
-/** Los personajes de un jugador son siempre fijos. */
+/**
+ * ¿Es un personaje de jugador? Sí si algún jugador lo tiene como personaje, o es propietario explícito
+ * del actor (no cuenta el permiso «por defecto»: si no, todo actor sería de todos), o es de tipo
+ * «character» con propietario jugador. No depende del nombre del tipo de actor del sistema.
+ */
 export function isPlayerActor(actor) {
-  return Boolean(actor) && actorOwners(actor).length > 0;
+  if (!actor) return false;
+  const users = globalThis.game?.users?.contents ?? [];
+  const owner = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
+  return users.some(
+    user => !user.isGM && (user.character?.id === actor.id || (actor.ownership?.[user.id] ?? 0) >= owner)
+  );
 }
 
 /**
@@ -44,7 +53,7 @@ export function visiblePortraits(config) {
 
   // Los personajes de jugador salen siempre, aunque no estuvieran en la lista.
   for (const actor of actors?.contents ?? []) {
-    if (actor.type === "character" && !ids.includes(actor.id) && !excluded(actor.id) && isPlayerActor(actor)) {
+    if (!ids.includes(actor.id) && !excluded(actor.id) && isPlayerActor(actor)) {
       ids.push(actor.id);
     }
   }

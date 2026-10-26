@@ -275,10 +275,10 @@ function buildCard(actor, config, client) {
   // Botones rápidos (máster) al pasar el cursor.
   if (game.user.isGM) {
     card.addEventListener("pointerenter", () => {
-      if (!moveMode) showTools(card, actor.id, { row: Boolean(card.dataset.stacked) });
+      if (!moveMode) showTools(card, actor.id);
     });
     card.addEventListener("pointerleave", () => hideTools(220));
-    card.addEventListener("focus", () => showTools(card, actor.id, { row: Boolean(card.dataset.stacked) }));
+    card.addEventListener("focus", () => showTools(card, actor.id));
   }
 
   // Ctrl + rueda: inclina solo este retrato (5° por muesca; con Mayús, 1°).
@@ -579,6 +579,10 @@ function buildStack(slot, config, client) {
     card.dataset.stacked = "1";
     card.title = `${actor.name} — ${localize("PCP.Stack.Hint")}`;
     item.appendChild(card);
+    const tag = document.createElement("span"); // nombre visible en el abanico
+    tag.className = "pcp-stack-tag";
+    tag.textContent = actor.name;
+    item.appendChild(tag);
     stack.appendChild(item);
 
     // Pulsar: la ficha de arriba pasa a la siguiente; una de las de atrás sube a la cima.
@@ -596,6 +600,11 @@ function buildStack(slot, config, client) {
       if (actorCanOpenSheet(actor)) actor.sheet?.render(true);
     });
   }
+  // El abanico se abre hacia arriba; si la pila está en la mitad superior de la pantalla, hacia abajo.
+  stack.addEventListener("pointerenter", () => {
+    const rect = stack.getBoundingClientRect();
+    stack.style.setProperty("--fan-dir", rect.top + rect.height / 2 > window.innerHeight * 0.5 ? "-1" : "1");
+  });
   applyStackDepths(stack, stackOrder(slot));
   return stack;
 }

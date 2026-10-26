@@ -7,6 +7,7 @@
 import { getActorConfig, localize, escapeHTML } from "./utils.js";
 import { getConfig, mutateConfig } from "./settings.js";
 import { refreshAll } from "./events.js";
+import { isPlayerActor } from "./scene.js";
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -22,7 +23,7 @@ export async function addToDisplay(actorId, pos = null) {
       excluded: false,
       float: pos ? { x: pos.x, y: pos.y } : null,
       // Los personajes de jugador quedan fijos; los PNJ aparecen con su token (modo «por escena»).
-      pinned: game.actors.get(actorId)?.type === "character"
+      pinned: isPlayerActor(game.actors.get(actorId))
     };
   });
   refreshAll();
