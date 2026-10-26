@@ -391,7 +391,6 @@
   "PCP.Add.Added": "{name} añadido.",
   "PCP.Menu.Actor.OutOfBar": "Sacar de la barra (retrato suelto)",
   "PCP.Menu.Actor.IntoBar": "Meter en la barra",
-  "PCP.Menu.Hud.ShowInScene": "Mostrar la barra en esta escena",
   "PCP.Menu.Hud.ShowBars": "Barras de datos (PG…)",
   "PCP.Menu.Hud.OpenSheet": "Abrir la ficha con…",
   "PCP.SheetOpen.Click": "Un clic",

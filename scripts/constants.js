@@ -191,7 +191,6 @@ export function createDefaultConfig() {
     },
     order: [],
     scene: { mode: "all" },
-    hiddenScenes: [],
     actors: {}
   };
 }

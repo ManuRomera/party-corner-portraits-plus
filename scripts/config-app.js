@@ -44,6 +44,7 @@ import { createPortraitElement, isVideo, portraitSource } from "./media.js";
 import { addA11yButton } from "./a11y.js";
 import { confirmReset } from "./reset.js";
 import { openAddActors } from "./addactors.js";
+import { isPlayerActor } from "./scene.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -235,7 +236,11 @@ function collectFormData(form) {
       hoverMedia: row.querySelector(".pcp-actor-hover-media")?.value?.trim() ?? ""
     };
 
-    if (row.querySelector(".pcp-actor-enabled")?.checked) {
+    // Un personaje de jugador sale siempre; desmarcarlo aquí lo excluye a propósito.
+    const shown = Boolean(row.querySelector(".pcp-actor-enabled")?.checked);
+    actors[actorId].excluded = !shown;
+
+    if (shown) {
       selected.push({
         id: actorId,
         sortOrder,
@@ -328,7 +333,7 @@ export class PartyPortraitsConfig extends WithMemory(HandlebarsApplicationMixin(
           hoverCustom: actorConfig.hoverSource === "custom",
           globalHoverLabel: localize(`PCP.HoverSource.${capitalize(config.hover.source)}`),
           globalSourceLabel: localize(`PCP.Source.${capitalize(config.appearance.source)}`),
-          enabled: orderIndex.has(actor.id),
+          enabled: orderIndex.has(actor.id) || (actor.type === "character" && isPlayerActor(actor) && !actorConfig.excluded),
           order: orderIndex.get(actor.id) ?? 999999,
           sortOrder: actorConfig.sortOrder,
           playerLabel: actorConfig.playerLabel,

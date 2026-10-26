@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.13.1
+
+- **El cambio de modo está siempre en el mismo sitio** en los dos menús (sobre un retrato y sobre la barra): primera opción del grupo «Barra de retratos», sin textos de ayuda que tapen el menú. Ofrece siempre el modo contrario al actual.
+- **Quitada la opción «Mostrar la barra en esta escena»** (ocultaba la barra entera sin forma fácil de recuperarla). Si algún mundo la tenía activada, ahora se ignora y la barra vuelve a verse.
+- **Pestaña Personajes:** los personajes de jugador aparecen marcados como visibles aunque no estén en la lista; desmarcar uno lo excluye a propósito, y volver a marcarlo lo devuelve.
+
 ## 1.13.0
 
 - **Los personajes de jugador salen siempre, en cualquier modo** (también con «Todos los de la lista» y aunque no estén en ella), salvo que los ocultes o los quites a mano («Quitar de la lista» los excluye a propósito; «Añadir personajes» los devuelve).

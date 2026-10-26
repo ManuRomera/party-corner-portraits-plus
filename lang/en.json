@@ -391,7 +391,6 @@
   "PCP.Add.Added": "{name} added.",
   "PCP.Menu.Actor.OutOfBar": "Take out of the bar (loose portrait)",
   "PCP.Menu.Actor.IntoBar": "Put back in the bar",
-  "PCP.Menu.Hud.ShowInScene": "Show the bar in this scene",
   "PCP.Menu.Hud.ShowBars": "Data bars (HP…)",
   "PCP.Menu.Hud.OpenSheet": "Open the sheet with…",
   "PCP.SheetOpen.Click": "Single click",

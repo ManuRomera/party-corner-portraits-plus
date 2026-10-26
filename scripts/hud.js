@@ -600,12 +600,6 @@ function buildStack(slot, config, client) {
   return stack;
 }
 
-/** ¿Se oculta la barra en la escena que se está viendo? */
-function hiddenHere(config) {
-  const sceneId = globalThis.canvas?.scene?.id;
-  return Boolean(sceneId && config.hiddenScenes.includes(sceneId));
-}
-
 function removeFloats() {
   document.getElementById("pcp-floats")?.remove();
 }
@@ -637,7 +631,6 @@ export function renderHud() {
   if (client.hidden) return;
 
   const config = getConfig();
-  if (hiddenHere(config)) return;
 
   // Los retratos ocultos solo los ve el máster (atenuados).
   const { ids, tokenHidden } = visiblePortraits(config);

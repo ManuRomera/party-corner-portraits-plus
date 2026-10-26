@@ -491,25 +491,7 @@ function sceneModeItem(config) {
   return {
     label: localize(next === "scene" ? "PCP.Scene.SwitchToScene" : "PCP.Scene.SwitchToAll"),
     icon: next === "scene" ? "fa-solid fa-film" : "fa-solid fa-users",
-    title: localize("PCP.Scene.ModeHint"),
     action: () => setConfigValue("scene.mode", next)
-  };
-}
-
-function sceneVisibilityItem(config) {
-  const sceneId = globalThis.canvas?.scene?.id;
-  const hidden = Boolean(sceneId && config.hiddenScenes.includes(sceneId));
-  return {
-    label: localize("PCP.Menu.Hud.ShowInScene"),
-    icon: "fa-solid fa-film",
-    checked: !hidden,
-    disabled: !sceneId,
-    action: async () => {
-      await mutateConfig(cfg => {
-        cfg.hiddenScenes = hidden ? cfg.hiddenScenes.filter(id => id !== sceneId) : [...cfg.hiddenScenes, sceneId];
-      });
-      refreshAll();
-    }
   };
 }
 
@@ -913,6 +895,7 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
   openMenu(
     [
       { heading: localize("PCP.Menu.Group.Bar") },
+      sceneModeItem(config),
       {
         label: localize("PCP.Add.Title"),
         icon: "fa-solid fa-user-plus",
@@ -993,8 +976,6 @@ export function openHudMenu({ x = 0, y = 0 } = {}) {
           }
         ]
       },
-      sceneModeItem(config),
-      sceneVisibilityItem(config),
       {
         label: localize("PCP.Menu.Hud.ShowBars"),
         icon: "fa-solid fa-heart-pulse",

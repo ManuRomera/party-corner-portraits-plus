@@ -275,8 +275,6 @@ export function normalizeConfig(raw) {
   merged.scene = {
     mode: SCENE_MODES.includes(merged.scene?.mode) ? merged.scene.mode : "all"
   };
-  merged.hiddenScenes = [...new Set((Array.isArray(merged.hiddenScenes) ? merged.hiddenScenes : []).filter(id => typeof id === "string" && id))];
-
   const order = Array.isArray(merged.order) ? merged.order : [];
   merged.order = [...new Set(order.filter(id => typeof id === "string" && id))];
 
