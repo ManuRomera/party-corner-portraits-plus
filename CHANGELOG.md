@@ -1,5 +1,16 @@
 # Cambios
 
+## 1.13.2
+
+Revisión a fondo tras comprobar que varias cosas dadas por hechas no lo estaban.
+
+- **Cambio de modo (fijos + tokens / lista):** ahora es la **primera opción, arriba del todo, en los dos menús** (sobre un retrato y sobre la barra), antes del resto de grupos. Antes estaba en el grupo «Barra de retratos», que en un menú quedaba abajo y en el otro arriba.
+- **Los personajes de jugador salen siempre en los dos modos.** Causas corregidas:
+  - guardar la configuración marcaba como «excluidos» a todos los actores desmarcados, incluidos jugadores que nunca se habían quitado; ahora solo se excluye a un jugador si se desmarca a propósito, y se limpia en el resto. Una migración única limpia las exclusiones heredadas;
+  - la detección dependía de que el actor fuera de tipo «character»; ahora vale cualquier actor del que un jugador sea propietario explícito (o su personaje asignado), sea cual sea el tipo del sistema.
+- **Pilas de fichas:** las otras fichas se abren **hacia arriba** (hacia abajo si la pila está en la mitad superior de la pantalla) y cada una muestra su nombre, de modo que los botones rápidos salen a la derecha como en un personaje suelto.
+- **Imagen ampliada:** **sin nombre del personaje ni del jugador** (opción eliminada) y, al moverla, **se puede sacar de los márgenes de la pantalla**; la posición queda guardada aunque esté fuera.
+
 ## 1.13.1
 
 - **El cambio de modo está siempre en el mismo sitio** en los dos menús (sobre un retrato y sobre la barra): primera opción del grupo «Barra de retratos», sin textos de ayuda que tapen el menú. Ofrece siempre el modo contrario al actual.
