@@ -433,5 +433,18 @@
   "PCP.Scene.ToggleHint": "Muestra los personajes de jugador, los fijos y todo lo que tenga token en la escena.",
   "PCP.Stack.Hint": "Clic: cambiar de ficha · doble clic: abrir la ficha",
   "PCP.Scene.SwitchToScene": "Mostrar fijos + tokens de la escena",
-  "PCP.Scene.SwitchToAll": "Mostrar todos los de la lista"
+  "PCP.Scene.SwitchToAll": "Mostrar todos los de la lista",
+  "PCP.Size.Open": "Ajustar con deslizador…",
+  "PCP.Size.Title": "Tamaño de mis retratos",
+  "PCP.Size.TitleAll": "Tamaño de todos los retratos",
+  "PCP.Size.Note": "Solo cambia tu pantalla. Los retratos se ajustan mientras arrastras.",
+  "PCP.Size.NoteAll": "Cambia el tamaño de todos los retratos para todos. Se ve al instante.",
+  "PCP.Size.Reset": "Tamaño original",
+  "PCP.Size.Done": "Listo",
+  "PCP.Menu.Mine.Heading": "Mi pantalla",
+  "PCP.Menu.Mine.MoveBar": "Mover mi barra",
+  "PCP.Menu.Mine.ResetBar": "Barra: volver a la posición del máster",
+  "PCP.Menu.Mine.Size": "Tamaño de mis retratos (deslizador)…",
+  "PCP.Menu.Mine.MoveHover": "Mover la imagen ampliada",
+  "PCP.Menu.Mine.ResetHover": "Imagen ampliada: volver al sitio del máster"
 }

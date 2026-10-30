@@ -6,7 +6,7 @@
  */
 
 import { MODULE_ID } from "./constants.js";
-import { getClientConfig, getConfig, mutateConfig } from "./settings.js";
+import { getClientConfig, getConfig, mutateClientConfig, mutateConfig } from "./settings.js";
 import { refreshAll } from "./events.js";
 import { getActorConfig, getActorPlayerLabel, localize } from "./utils.js";
 import { createPortraitElement, hoverSource, naturalSize } from "./media.js";
@@ -104,7 +104,10 @@ export function showHover(actorId, { card = null, shared = false, moving = false
   hideHover({ force: true });
 
   const src = hoverSource(actor, actorConfig, config);
-  const placement = shared ? "center" : moving ? "free" : config.hover.placement;
+  // Si el jugador ha colocado la imagen ampliada en su pantalla, manda su sitio sobre el del máster.
+  const mine = !game.user.isGM && client.hoverPos ? client.hoverPos : null;
+  const pos = mine ?? config.hover.pos;
+  const placement = shared ? "center" : moving || mine ? "free" : config.hover.placement;
 
   element = document.createElement("div");
   element.id = ID;
@@ -124,8 +127,8 @@ export function showHover(actorId, { card = null, shared = false, moving = false
 
   document.body.appendChild(element);
   // El panel puede cambiar de tamaño al cargar el medio o el texto: se recoloca siempre dentro de la pantalla.
-  new ResizeObserver(() => place(placement, config.hover.pos, moving)).observe(element);
-  const reposition = () => place(placement, config.hover.pos, moving);
+  new ResizeObserver(() => place(placement, pos, moving)).observe(element);
+  const reposition = () => place(placement, pos, moving);
   live = { actorId, media, stage, reposition };
   const refit = () => fit(media, actorConfig.hoverSize ?? config.hover.size, config.hover.sharp, reposition);
   media.addEventListener("load", refit, { once: true });
@@ -168,7 +171,6 @@ export function attachHover(card, actor) {
  * el punto que convenga; al soltar se fija ahí para todos los personajes. Esc cancela.
  */
 export function startHoverMove() {
-  if (!game.user.isGM) return;
   const config = getConfig();
   const actorId =
     visiblePortraits(config).ids.find(id => game.actors?.get(id)) ??
@@ -221,10 +223,17 @@ export function startHoverMove() {
         y: (box.top + box.height / 2) / window.innerHeight
       };
       finish();
-      await mutateConfig(cfg => {
-        cfg.hover.placement = "free";
-        cfg.hover.pos = pos;
-      });
+      // El máster fija el sitio de todos; un jugador, solo el de su pantalla.
+      if (game.user.isGM) {
+        await mutateConfig(cfg => {
+          cfg.hover.placement = "free";
+          cfg.hover.pos = pos;
+        });
+      } else {
+        await mutateClientConfig(client => {
+          client.hoverPos = pos;
+        });
+      }
       refreshAll();
       ui.notifications.info(localize("PCP.Hover.MoveSaved"));
     };
@@ -257,4 +266,12 @@ export function refreshHoverPreview(actorId, override) {
   applyHoverLook(live.stage, live.media, actorConfig, config);
   fit(live.media, actorConfig.hoverSize ?? config.hover.size, config.hover.sharp, live.reposition);
   return true;
+}
+
+/** El jugador vuelve al sitio que fijó el máster para la imagen ampliada. */
+export async function resetMyHoverPosition() {
+  await mutateClientConfig(client => {
+    client.hoverPos = null;
+  });
+  refreshAll();
 }

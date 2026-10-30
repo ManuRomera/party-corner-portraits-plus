@@ -433,5 +433,18 @@
   "PCP.Scene.ToggleHint": "Shows player characters, pinned ones and everything that has a token in the scene.",
   "PCP.Stack.Hint": "Click: switch character · double click: open the sheet",
   "PCP.Scene.SwitchToScene": "Show pinned + scene tokens",
-  "PCP.Scene.SwitchToAll": "Show everyone on the list"
+  "PCP.Scene.SwitchToAll": "Show everyone on the list",
+  "PCP.Size.Open": "Adjust with a slider…",
+  "PCP.Size.Title": "My portraits' size",
+  "PCP.Size.TitleAll": "Size of every portrait",
+  "PCP.Size.Note": "Only changes your screen. Portraits resize as you drag.",
+  "PCP.Size.NoteAll": "Changes every portrait's size for everyone. You see it instantly.",
+  "PCP.Size.Reset": "Original size",
+  "PCP.Size.Done": "Done",
+  "PCP.Menu.Mine.Heading": "My screen",
+  "PCP.Menu.Mine.MoveBar": "Move my bar",
+  "PCP.Menu.Mine.ResetBar": "Bar: back to the GM's position",
+  "PCP.Menu.Mine.Size": "My portraits' size (slider)…",
+  "PCP.Menu.Mine.MoveHover": "Move the enlarged image",
+  "PCP.Menu.Mine.ResetHover": "Enlarged image: back to the GM's spot"
 }

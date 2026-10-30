@@ -295,6 +295,15 @@ export function normalizeClientConfig(raw) {
     hideNames: Boolean(merged.hideNames),
     hideBars: Boolean(merged.hideBars),
     hoverOff: Boolean(merged.hoverOff),
+    // Posición propia de esta pantalla: si existe, manda sobre la que fijó el máster.
+    barFree:
+      merged.barFree && typeof merged.barFree === "object"
+        ? { x: clamp(merged.barFree.x, 0, 10000, 40), y: clamp(merged.barFree.y, 0, 10000, 40) }
+        : null,
+    hoverPos:
+      merged.hoverPos && typeof merged.hoverPos === "object"
+        ? { x: clamp(merged.hoverPos.x, -2, 3, 0.5), y: clamp(merged.hoverPos.y, -2, 3, 0.4) }
+        : null,
     presets: (Array.isArray(merged.presets) ? merged.presets : [])
       .filter(preset => preset && typeof preset === "object" && String(preset.name ?? "").trim())
       .slice(0, 24)

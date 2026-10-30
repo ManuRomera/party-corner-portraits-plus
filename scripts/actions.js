@@ -36,11 +36,12 @@ import {
 } from "./utils.js";
 import { openMenu } from "./menu.js";
 import { refreshAll } from "./events.js";
-import { setMoveMode, isMoveMode } from "./hud.js";
+import { setMoveMode, isMoveMode, resetMyBar } from "./hud.js";
+import { openSizeSlider } from "./sizeslider.js";
 import { openFramingApp } from "./framing-app.js";
 import { openConfigApp } from "./config-app.js";
 import { A11yPanel } from "./a11y.js";
-import { showToEveryone, startHoverMove } from "./hover.js";
+import { resetMyHoverPosition, showToEveryone, startHoverMove } from "./hover.js";
 import { openStudio } from "./studio.js";
 import { addToDisplay, openAddActors, setLoose } from "./addactors.js";
 import { setHidden, setPinned, setTilt } from "./tools.js";
@@ -176,6 +177,16 @@ function sizeMenuItems(actorId = null) {
   const current = actorId ? actorConfig.size : config.bar.size;
 
   const items = [];
+  if (!actorId) {
+    items.push(
+      {
+        label: localize("PCP.Size.Open"),
+        icon: "fa-solid fa-sliders",
+        action: () => openSizeSlider({ x: window.innerWidth / 2 - 130, y: window.innerHeight / 2 })
+      },
+      { separator: true }
+    );
+  }
   if (actorId) {
     items.push({
       label: localize("PCP.Menu.Size.UseGlobal", { size: config.bar.size }),
@@ -532,7 +543,41 @@ function clientScaleItems() {
 
 function localPreferenceItems() {
   const client = getClientConfig();
+  // Solo para jugadores: colocar su propia barra, su tamaño y dónde ven la imagen ampliada.
+  const mine = game.user.isGM
+    ? []
+    : [
+        {
+          label: localize("PCP.Menu.Mine.MoveBar"),
+          icon: "fa-solid fa-up-down-left-right",
+          action: () => setMoveMode(true)
+        },
+        {
+          label: localize("PCP.Menu.Mine.ResetBar"),
+          icon: "fa-solid fa-rotate-left",
+          disabled: !client.barFree,
+          action: () => resetMyBar()
+        },
+        {
+          label: localize("PCP.Menu.Mine.Size"),
+          icon: "fa-solid fa-up-right-and-down-left-from-center",
+          action: () => openSizeSlider({ x: window.innerWidth / 2 - 130, y: window.innerHeight / 2 })
+        },
+        {
+          label: localize("PCP.Menu.Mine.MoveHover"),
+          icon: "fa-solid fa-magnifying-glass-plus",
+          action: () => startHoverMove()
+        },
+        {
+          label: localize("PCP.Menu.Mine.ResetHover"),
+          icon: "fa-solid fa-rotate-left",
+          disabled: !client.hoverPos,
+          action: () => resetMyHoverPosition()
+        },
+        { separator: true }
+      ];
   return [
+    ...mine,
     {
       label: client.hidden ? localize("PCP.Menu.Local.ShowBar") : localize("PCP.Menu.Local.HideBar"),
       icon: client.hidden ? "fa-solid fa-eye" : "fa-solid fa-eye-slash",
@@ -603,12 +648,8 @@ export function openActorMenu(actorId, { x = 0, y = 0 } = {}) {
           disabled: !actorCanOpenSheet(actor),
           action: () => openActorSheet(actorId)
         },
-        { separator: true },
-        {
-          label: localize("PCP.Menu.Local.Preferences"),
-          icon: "fa-solid fa-sliders",
-          children: localPreferenceItems()
-        }
+        { heading: localize("PCP.Menu.Mine.Heading") },
+        ...localPreferenceItems()
       ],
       { x, y, title: actor.name }
     );

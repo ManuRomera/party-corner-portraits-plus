@@ -185,7 +185,7 @@ export function createDefaultConfig() {
     },
     ui: {
       hotbar: "show",
-      openSheet: "click",
+      openSheet: "dblclick",
       hotbarOverlap: "shift",
       players: "show"
     },
@@ -203,6 +203,8 @@ export function createDefaultClientConfig() {
     hideNames: false,
     hideBars: false,
     hoverOff: false,
+    barFree: null,
+    hoverPos: null,
     presets: [],
     a11y: { text: 100, contrast: false, legible: false, motion: false }
   };

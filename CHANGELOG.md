@@ -1,5 +1,15 @@
 # Cambios
 
+## 1.15.0
+
+Más control para cada jugador sobre su propia pantalla.
+
+- **Cada jugador coloca su barra.** La primera posición es la que fija el máster; en cuanto un jugador la mueve (menú → «Mover mi barra», o botón derecho mantenido), manda la suya, solo en su pantalla. «Volver a la posición del máster» la restablece.
+- **Imagen ampliada a tu gusto.** Los jugadores pueden elegir dónde ven la imagen ampliada («Mover la imagen ampliada») y restablecerla.
+- **Deslizador de tamaño en vivo.** Nueva opción «Ajustar con deslizador…»: los retratos cambian de tamaño mientras arrastras. Para el máster cambia el tamaño global; para un jugador, el de su pantalla.
+- **Doble clic en el retrato abre la ficha** siempre que se tengan permisos; si no, avisa.
+- Los jugadores encuentran todo esto en su menú del retrato, bajo «Mi pantalla», junto a mostrar/ocultar barras de datos y nombres.
+
 ## 1.14.1
 
 - **Estudio de retratos:** ahora lista y permite elegir **todos los retratos que se están mostrando** (jugadores, tokens de la escena y sueltos), no solo los de la lista guardada. Antes, en el modo por escena con la lista vacía, el estudio salía sin personajes.

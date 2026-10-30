@@ -3,7 +3,7 @@
  * Main HUD (party corner) renderer.
  */
 
-import { getConfig, getClientConfig, mutateConfig } from "./settings.js";
+import { getConfig, getClientConfig, mutateClientConfig, mutateConfig } from "./settings.js";
 import {
   clamp,
   clampSize,
@@ -195,6 +195,7 @@ function buildCard(actor, config, client) {
   const card = document.createElement("div");
   card.className = "pcp-card";
   card.dataset.actorId = actor.id;
+  card.dataset.baseSize = String(actorConfig.size ?? config.bar.size);
   card.title = actor.name;
   card.tabIndex = 0;
   card.setAttribute("role", "button");
@@ -259,6 +260,7 @@ function buildCard(actor, config, client) {
   // Abrir la ficha con un clic, con doble clic o nunca (Configuración → General).
   const openSheet = () => {
     if (actorCanOpenSheet(actor)) actor.sheet?.render(true);
+    else ui.notifications.warn(localize("PCP.Notifications.NoPermission"));
   };
   card.addEventListener("click", event => {
     if (card.dataset.stacked || moveMode || suppressClick || getConfig().ui.openSheet !== "click") return;
@@ -266,7 +268,8 @@ function buildCard(actor, config, client) {
     openSheet();
   });
   card.addEventListener("dblclick", event => {
-    if (card.dataset.stacked || moveMode || suppressClick || getConfig().ui.openSheet !== "dblclick") return;
+    // El doble clic abre la ficha siempre (con permiso suficiente), salvo que se haya puesto «nunca».
+    if (card.dataset.stacked || moveMode || suppressClick || getConfig().ui.openSheet === "none") return;
     event.preventDefault();
     openSheet();
   });
@@ -435,9 +438,24 @@ function trackDrag(el, startEvent, { button, save, prepare }) {
 }
 
 function saveBarPosition({ left, top }) {
-  return mutateConfig(config => {
-    config.bar.free = { enabled: true, x: Math.round(left), y: Math.round(top) };
-  }).then(() => setMoveMode(false));
+  const free = { x: Math.round(left), y: Math.round(top) };
+  // El máster fija la posición de todos; un jugador, solo la de su pantalla.
+  const saved = game.user.isGM
+    ? mutateConfig(config => {
+        config.bar.free = { enabled: true, ...free };
+      })
+    : mutateClientConfig(client => {
+        client.barFree = free;
+      });
+  return saved.then(() => setMoveMode(false));
+}
+
+/** El jugador vuelve a la posición que puso el máster. */
+export async function resetMyBar() {
+  await mutateClientConfig(client => {
+    client.barFree = null;
+  });
+  refreshAll();
 }
 
 function saveFloatPosition(actorId) {
@@ -454,9 +472,9 @@ function saveFloatPosition(actorId) {
 }
 
 /** Engancha el arrastre (botón derecho siempre; izquierdo en «modo mover») a la barra o a un retrato suelto. */
-function attachDrag(el, { save, prepare }) {
+function attachDrag(el, { save, prepare, players = false }) {
   el.addEventListener("pointerdown", event => {
-    if (!game.user.isGM) return;
+    if (!game.user.isGM && !players) return;
     if (event.button === 0 && moveMode) {
       event.preventDefault();
       closeMoveHintListeners();
@@ -482,7 +500,6 @@ function closeMoveHintListeners() {
 }
 
 export function setMoveMode(enabled) {
-  if (!game.user?.isGM) return;
   closeMoveHintListeners();
   moveMode = Boolean(enabled);
 
@@ -677,6 +694,8 @@ export function renderHud() {
   if (client.hidden) return;
 
   const config = getConfig();
+  // La posición que fija el máster es la de partida; si el jugador coloca su barra, manda la suya.
+  if (!game.user.isGM && client.barFree) config.bar.free = { enabled: true, ...client.barFree };
 
   // Los retratos ocultos solo los ve el máster (atenuados).
   const { ids, tokenHidden } = visiblePortraits(config);
@@ -758,7 +777,7 @@ export function renderHud() {
   document.body.appendChild(hud);
   applyPosition(hud, config);
   if (!config.bar.free?.enabled) avoidCoreUi(hud, config.bar.position);
-  attachDrag(hud, { save: saveBarPosition, prepare: prepareBar(hud) });
+  attachDrag(hud, { save: saveBarPosition, prepare: prepareBar(hud), players: true });
 
   if (moveMode) {
     hud.classList.add("pcp-move-mode");
